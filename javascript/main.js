@@ -1,192 +1,87 @@
 var gamejs = require('gamejs');
-var sprites = require('./sprites');
-var scenes = require('./scenes');
-var Director = require('./game').Director;
 
-var Walkman = sprites.Walkman;
+var Scene = require('./gramework/scenes').Scene;
+var Actor = require('./gramework/actors').Actor;
+var Director = require('./gramework/game').Director;
+var Branch = require('./trees').Branch,
+    Animal = require('./trees').Animal;
+var config = require('./config');
 
-gamejs.preload([
-  //backgrounds
-  './static/backgrounds/title.png',
-  './static/backgrounds/death_01b.png',
-  './static/backgrounds/death_02.png',
-  './static/backgrounds/death_04.png',
-  './static/backgrounds/death_05.png',
-  './static/backgrounds/death_06.png',
-  './static/backgrounds/death_07.png',
-  './static/backgrounds/death_08.png',
-  './static/backgrounds/death_10.png',
-  './static/backgrounds/death_12.png',
-  './static/backgrounds/death_24.png',
-  './static/backgrounds/death_27.png',
-  './static/backgrounds/death_28.png',
-  './static/backgrounds/death_29.png',
-  './static/backgrounds/death_30.png',
-  './static/backgrounds/death_31.png',
-  './static/backgrounds/death_33.png',
-  './static/backgrounds/death_35.png',
-  './static/backgrounds/death_36.png',
-  './static/backgrounds/death_39.png',
-  './static/backgrounds/death_15a.png',
-  './static/backgrounds/death_15b.png',
-  './static/backgrounds/death_15c.png',
-  './static/backgrounds/death_15d.png',
-  './static/backgrounds/death_15e.png',
-  './static/backgrounds/death_05.png',
-  './static/backgrounds/death_06.png',
-  './static/backgrounds/death_14.png',
-  './static/backgrounds/victory_01.png',
-  './static/backgrounds/death_22a.png',
-  './static/backgrounds/death_22b.png',
-  './static/backgrounds/death_22c.png',
-  './static/backgrounds/death_22d.png',
-  './static/backgrounds/death_22e.png',
-  './static/backgrounds/death_22f.png',
-  './static/backgrounds/opening_01.png',
-  './static/backgrounds/opening_02.png',
-  './static/backgrounds/opening_03.png',
-  './static/backgrounds/opening_04.png',
-  './static/backgrounds/opening_05.png',
-  './static/backgrounds/death_09a.png',
-  './static/backgrounds/death_09b.png',
-  './static/backgrounds/death_11a.png',
-  './static/backgrounds/death_11b.png',
-  './static/backgrounds/death_13.png',
-  './static/backgrounds/death_14.png',
-  './static/backgrounds/death_17a.png',
-  './static/backgrounds/death_17b.png',
-  './static/backgrounds/death_17c.png',
-'./static/backgrounds/death_18a.png',
-'./static/backgrounds/death_18b.png',
-'./static/backgrounds/death_18c.png',
-'./static/backgrounds/death_18d.png',
-'./static/backgrounds/death_19a.png',
-'./static/backgrounds/death_19b.png',
-'./static/backgrounds/death_26.png',
-'./static/backgrounds/death_40.png',
-'./static/backgrounds/death_41.png',
-'./static/backgrounds/death_42.png',
-'./static/backgrounds/death_44.png',
-'./static/backgrounds/death_45.png',
-'./static/backgrounds/death_46.png',
-'./static/backgrounds/after_bomb_one_01.png',
-'./static/backgrounds/after_bomb_one_02.png',
-'./static/backgrounds/after_bomb_two_01.png',
-'./static/backgrounds/after_bomb_two_02.png',
-'./static/backgrounds/ending_01.png',
-'./static/backgrounds/ending_02.png',
-'./static/backgrounds/ending_03.png',
-'./static/backgrounds/ending_04.png',
-'./static/backgrounds/ending_05.png',
-'./static/backgrounds/ending_home_01.png',
-'./static/backgrounds/ending_home_02.png',
-'./static/backgrounds/ending_home_03.png',
+var director = new Director();
+var firstScene = new Scene(director, config.scenes.title);
 
-  //graphics
-  './static/bombs/bomb_1.png',
-  './static/bombs/bomb_2.png',
-  './static/bombs/bomb_3.png',
+var physics = firstScene.physics;
 
-  './static/bombs/wire_red.png',
-  './static/bombs/wire_red_cut.png',
-  './static/bombs/wire_green.png',
-  './static/bombs/wire_green_cut.png',
-  './static/bombs/wire_blue.png',
-  './static/bombs/wire_blue_cut.png',
-  './static/bombs/wire_yellow.png',
-  './static/bombs/wire_yellow_cut.png',
-  './static/bombs/lid_closed.png',
-  './static/bombs/lid_open.png',
-  './static/bombs/vial_1.png',
-  './static/bombs/vial_2.png',
-  './static/bombs/vial_3.png',
-  './static/bombs/vial_4.png',
-  './static/bombs/vial_2_empty.png',
-  './static/bombs/vert_wire_1.png',
-  './static/bombs/vert_wire_2.png',
-  './static/bombs/vert_wire_3.png',
-  './static/bombs/vert_wire_4.png',
-  './static/bombs/vert_wire_1_cut.png',
-  './static/bombs/vert_wire_2_cut.png',
-  './static/bombs/vert_wire_3_cut.png',
-  './static/bombs/vert_wire_4_cut.png',
-  './static/bombs/tile.png',
-  './static/bombs/trigger.png',
-  './static/bombs/trigger_dead.png',
+var actor_opts = {
+    x: 7.2,
+    y: 3,
+    height: 1,
+    width: 1,
+    physics: physics,
+    angle: 0,
+    fixedRotation: true
+};
+var ball = new Animal(actor_opts);
 
-  './static/bombs/panel_down.png',
-  './static/bombs/panel_up.png',
-  './static/bombs/screw.png',
-  './static/bombs/unscrewed.png',
-  //icons
-  './static/icons/hand.png',
-  './static/icons/snippers_open.png',
-  './static/icons/drill.png',
+var stump_opts = {
+    x: 5,
+    y: 17,
+    height: 3,
+    width: 1,
+    physics: physics,
+    type: 'static'
+};
+var stump = new Actor(stump_opts);
+actor_opts.parent = stump;
+actor_opts.height = 0.3;
+actor_opts.density = 50;
+actor_opts.angle = -45;
+actor_opts.fixedRotation = false;
+var branch = new Branch(actor_opts);
+actor_opts.parent = branch;
+actor_opts.angle = 0;
+actor_opts.density = 20;
+var branch2 = new Branch(actor_opts);
+actor_opts.parent = branch2;
+actor_opts.density = 5;
+var branch3 = new Branch(actor_opts);
+actor_opts.parent = branch3;
+actor_opts.density = 0.5;
+var branch4 = new Branch(actor_opts);
+actor_opts.parent = branch4;
+actor_opts.density = 0.25;
+var branch5 = new Branch(actor_opts);
+actor_opts.parent = branch5;
+actor_opts.density = 0.125;
+var branch6 = new Branch(actor_opts);
+actor_opts.parent = branch6;
+actor_opts.density = 0.0625;
+var branch7 = new Branch(actor_opts);
+actor_opts.parent = branch7;
+actor_opts.density = 0.03125;
+var branch8 = new Branch(actor_opts);
+actor_opts.parent = branch8;
+actor_opts.density = 0.016;
+var branch9 = new Branch(actor_opts);
+actor_opts.trunk = branch3;
+actor_opts.angle = 45;
+actor_opts.side = 'left';
+var branch10 = new Branch(actor_opts);
+actor_opts.trunk = null;
+actor_opts.parent = branch10;
+actor_opts.angle = 0;
+branch11 = new Branch(actor_opts);
+var branches = [
+    branch,branch2,branch3,branch4,branch5,branch6,branch7,branch8,branch9,branch10, branch11
+];
+firstScene.addProps(branches);
+firstScene.addActors([ball]);
 
-  //sounds
-  'static/sounds/testo.ogg',
-  'static/sounds/snip.ogg',
-  'static/sounds/error.ogg',
-  'static/sounds/explosion.ogg',
-  //death sequences
-  'static/sounds/death_02.ogg',
-  'static/sounds/death_04.ogg',
-  'static/sounds/death_05.ogg',
-  'static/sounds/death_06.ogg',
-  'static/sounds/death_07.ogg',
-  'static/sounds/death_08.ogg',
-  'static/sounds/death_10.ogg',
-  'static/sounds/death_12.ogg',
-  'static/sounds/death_24.ogg',
-  'static/sounds/death_27.ogg',
-  'static/sounds/death_28.ogg',
-  'static/sounds/death_29.ogg',
-  'static/sounds/death_30.ogg',
-  'static/sounds/death_31.ogg',
-  'static/sounds/death_33.ogg',
-  'static/sounds/death_35.ogg',
-  'static/sounds/death_36.ogg',
-  'static/sounds/death_39.ogg',
-  'static/sounds/death_09a.ogg', 
-  'static/sounds/death_09b1.ogg',
-  'static/sounds/death_09b2.ogg',
-  'static/sounds/death_11a.ogg',
-  'static/sounds/death_11b.ogg',
-'static/sounds/death_17a.ogg',
-'static/sounds/death_18c.ogg',
-'static/sounds/death_18b.ogg',
-'static/sounds/death_19b.ogg',
-'static/sounds/death_26.ogg',
-'static/sounds/death_22e.ogg',
-'static/sounds/death_40.ogg',
-'static/sounds/death_41.ogg',
-//'static/sounds/death_42.ogg',
-'static/sounds/death_44.ogg',
-//'static/sounds/death_45.ogg',
-//'static/sounds/death_46.ogg',
-'static/sounds/opening_01.ogg',
-'static/sounds/opening_03.ogg',
-'static/sounds/opening_04.ogg',
-'static/sounds/opening_05.ogg',
-'static/sounds/after_bomb_one_01.ogg',
-'static/sounds/after_bomb_one_02.ogg',
-'static/sounds/after_bomb_one_03.ogg',
-'static/sounds/after_bomb_two_01.ogg',
-'static/sounds/after_bomb_two_02.ogg',
-'static/sounds/ending_01.ogg',
-'static/sounds/ending_02.ogg',
-'static/sounds/victory_01.ogg',
-]);
-
-
+console.log(firstScene.props);
 
 function main() {
-
-    var director = new Director();
-    var firstScene = new scenes.Cutscene(director, 4);
     director.start(firstScene);
     return;
-
 }
 
 gamejs.ready(main);

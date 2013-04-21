@@ -4,11 +4,10 @@
     <style type='text/css'>
     canvas {
         border:2px solid black;
-        width:640px;
     }
 
     </style>
-    <title>Bomb Squad: Bomb Virus 2012</title>
+    <title>Golden Tree</title>
 <!-- Styling -->
     <style type=text/css>
         body{
@@ -20,12 +19,12 @@
         #gjs-loader {
             width: 50%;
             height: 50%;
-            background: url('./public/ajax-loader.gif');
         }
+        canvas { background-color:black; }
     </style>
 <!-- Start javascript/main.js -->
-    <script src="./public/yabble.js"></script>
-    <script src="./public/gamejs.min.js"></script>
+    <script src="./javascript/public/yabble.js"></script>
+    <script src="./javascript/public/gamejs.min.js"></script>
     <script>
         require.setModuleRoot('./javascript/');
         require.run('main')
@@ -34,11 +33,7 @@
 <!-- Html -->
 <body>
     <div>
-        <div id="gjs-loader">
-         Loading...
-        </div>
         <canvas id="gjs-canvas"></canvas>
-
     </div>
 </body>
 </html>
