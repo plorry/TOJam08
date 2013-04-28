@@ -21,7 +21,7 @@ Actor.prototype.init = function(options) {
 	this.y = options.y;
 	this.height = options.height;
 	this.width = options.width;
-	this.angle = options.angle || 0;
+	this.angle = options.angle * (Math.PI / 180) || 0;
 	this.density = options.density || 2;
 
 	this.rect = new gamejs.Rect(
@@ -40,7 +40,7 @@ Actor.prototype.init = function(options) {
 			y: this.y,
 			height: this.height,
 			width: this.width,
-			angle: this.angle * (180 / Math.PI),
+			angle: this.angle,
 			density: this.density,
 			fixedRotation: options.fixedRotation || false
 		});
@@ -64,6 +64,10 @@ Actor.prototype.update = function(msDuration) {
 	}
 
 	//this.body.body.
+	return;
+};
+
+Actor.prototype.handleEvent = function(event) {
 	return;
 };
 

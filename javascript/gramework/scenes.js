@@ -34,9 +34,6 @@ Scene.prototype.initScene = function(sceneConfig) {
 	this.physics = new Physics(document.getElementById("gjs-canvas"));
 	this.physics.debug();
 
-	new Body(this.physics, { type: "static", x: 0, y: 0, height: 25,  width: 0.5 });
-    new Body(this.physics, { type: "static", x:51, y: 0, height: 25,  width: 0.5});
-    new Body(this.physics, { type: "static", x: 0, y: 0, height: 0.5, width: 60 });
     new Body(this.physics, { type: "static", x: 0, y:25, height: 0.5, width: 60 });
 
 	this.triggers = [];
@@ -70,17 +67,17 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-	this.view.fill("#F0A30F");
-	this.props.draw(this.view);
-	this.actors.draw(this.view);
+	//this.view.fill("#F0A30F");
+	//this.props.draw(this.view);
+	//this.actors.draw(this.view);
 
-	var screen = this.camera.draw();
+	//var screen = this.camera.draw();
 	
-	var size = screen.getSize();
+	//var size = screen.getSize();
 	
-	var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
+	//var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
 	
-	display.blit(scaledScreen);
+	//display.blit(scaledScreen);
 	
 	return;
 };

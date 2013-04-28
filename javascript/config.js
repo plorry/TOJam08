@@ -13,6 +13,7 @@ exports.SCALE = 1;
 exports.scenes = {
 	'title': {
         'width': WIDTH,
-        'height': HEIGHT
+        'height': HEIGHT,
+        'scale': 2
 	}
 };
