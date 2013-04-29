@@ -13,7 +13,6 @@ var Scene = exports.Scene = function(director, sceneConfig) {
 	this.director = director;
 	this.display = this.director.display;
 
-	this.camera = new Camera(this, true);
 	this._frozen = false;
 	this.scroll = true;
 
@@ -31,14 +30,19 @@ Scene.prototype.initScene = function(sceneConfig) {
 	this.width = sceneConfig.width || 1024;
 	this.height = sceneConfig.height || 500;
 	this.scale = sceneConfig.scale || 1;
-	this.physics = new Physics(document.getElementById("gjs-canvas"));
-	this.physics.debug();
 
-    new Body(this.physics, { type: "static", x: 0, y:25, height: 0.5, width: 60 });
+	this.camera = new Camera(this, {
+		width: this.width,
+		height: this.height
+	});
+
+	if (sceneConfig.physics) {
+		this.physics = new Physics(document.getElementById("gjs-canvas"));
+	}
 
 	this.triggers = [];
 	
-    this.view = new gamejs.Surface([this.height, this.width]);		
+    this.view = new gamejs.Surface([this.width, this.height]);		
 	return;
 };
 
@@ -67,17 +71,17 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-	//this.view.fill("#F0A30F");
-	//this.props.draw(this.view);
-	//this.actors.draw(this.view);
+	this.view.fill("#F0A30F");
+	this.props.draw(this.view);
+	this.actors.draw(this.view);
 
-	//var screen = this.camera.draw();
+	var screen = this.camera.draw();
 	
-	//var size = screen.getSize();
+	var size = screen.getSize();
 	
-	//var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
+	var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
 	
-	//display.blit(scaledScreen);
+	display.blit(scaledScreen);
 	
 	return;
 };
@@ -108,7 +112,9 @@ var order = function(a,b) {
 Scene.prototype.update = function(msDuration) {	
 	if (!this.isFrozen()){
 		//step the physics
-		this.physics.step(msDuration / 1000);
+		if (this.physics) {
+			this.physics.step(msDuration / 1000);
+		}
 		//update actors	
 		this.actors.forEach(function(actor){
 			actor.update(msDuration);

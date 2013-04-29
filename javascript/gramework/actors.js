@@ -9,6 +9,13 @@ var config = require('../config');
 var Body = require('./physics').Body;
 
 var Actor = exports.Actor = function(options) {
+	/*
+	Actor options
+	x: the x position of the actor's centre - required
+	y: the y position of the actor's centre - required
+	width: half the width of the actor's rectangle (from centre to right or left edge) - required
+	height: half the height of the actor's rectangle (from centre to top or bottom edge) - required
+	*/
 	Actor.superConstructor.apply(this, arguments);
 	this.init(options);
     return this;
@@ -16,13 +23,11 @@ var Actor = exports.Actor = function(options) {
 objects.extend(Actor, Sprite);
 
 Actor.prototype.init = function(options) {
-	this.scale = options.scale || 10;
+	this.scale = options.scale || 1;
 	this.x = options.x;
 	this.y = options.y;
 	this.height = options.height;
 	this.width = options.width;
-	this.angle = options.angle * (Math.PI / 180) || 0;
-	this.density = options.density || 2;
 
 	this.rect = new gamejs.Rect(
 		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
@@ -34,6 +39,8 @@ Actor.prototype.init = function(options) {
 	this.physics = options.physics || null;
 
 	if (this.physics) {
+		this.angle = options.angle * (Math.PI / 180) || 0;
+		this.density = options.density || 2;
 		this.body = new Body(this.physics, {
 			type: options.type || 'dynamic',
 			x: this.x,

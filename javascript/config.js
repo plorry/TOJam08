@@ -1,19 +1,19 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 1024;
-var HEIGHT = exports.HEIGHT = 500;
+var WIDTH = exports.WIDTH = 320;
+var HEIGHT = exports.HEIGHT = 240;
 
 exports.DEBUG = true;
 exports.PHYSICS_DEBUG = true;
 
 exports.STATIC_PATH = '../static/';
 
-exports.SCALE = 1;
+var SCALE = exports.SCALE = 2;
 
 exports.scenes = {
 	'title': {
         'width': WIDTH,
         'height': HEIGHT,
-        'scale': 2
+        'scale': SCALE
 	}
 };
