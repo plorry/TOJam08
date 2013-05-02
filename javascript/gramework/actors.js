@@ -3,10 +3,17 @@ var Sprite = require('gamejs/sprite').Sprite;
 var draw = require('gamejs/draw');
 var objects = require('gamejs/utils/objects');
 var config = require('../config');
-//var SpriteSheet = require('./animate').SpriteSheet;
-//var Animation = require('./animate').Animation;
+var SpriteSheet = require('./animate').SpriteSheet;
+var Animation = require('./animate').Animation;
 
 var Body = require('./physics').Body;
+
+var DEFAULT_CONTROL_MAPPING = {
+	up: gamejs.event.K_UP,
+	down: gamejs.event.K_DOWN,
+	left: gamejs.event.K_LEFT,
+	right: gamejs.event.K_RIGHT
+};
 
 var Actor = exports.Actor = function(options) {
 	/*
@@ -33,9 +40,11 @@ Actor.prototype.init = function(options) {
 		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
 		[this.width * 2 * this.scale, this.height * 2 * this.scale]);
 	this.realRect = new gamejs.Rect(this.rect);
-	//this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
+	this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
 
-	//this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
+	if (options.spriteSheet) {
+		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
+	}
 	this.physics = options.physics || null;
 
 	if (this.physics) {
@@ -95,6 +104,152 @@ Actor.prototype.draw = function(display) {
 			var color = "#555000";
 		}
 		draw.rect(display, color, this.rect, 1);
+	}
+	return;
+};
+
+var FourDirection = exports.FourDirection = function(options) {
+	FourDirection.superConstructor.apply(this, arguments);
+};
+objects.extend(FourDirection, Actor);
+
+FourDirection.prototype.init = function(options) {
+	Actor.prototype.init.apply(this, arguments);
+
+	this.xSpeed = 0;
+	this.ySpeed = 0;
+
+	this.xMaxSpeed = options.xMaxSpeed || 2;
+	this.yMaxSpeed = options.yMaxSpeed || 2;
+
+	this.accel = options.accel || 0.1;
+	this.decel = options.decel || 0.2;
+
+	this.movingDown = false;
+	this.movingUp = false;
+	this.movingRight = false;
+	this.movingLeft = false;
+
+	//Define rectangles to detect collisions on each side
+	this.collisionTop = new gamejs.Rect(
+		[this.rect.left + 2, this.rect.top - 4],
+		[this.rect.width - 4, 4]);
+	this.collisionLeft = new gamejs.Rect(
+		[this.rect.left - 4, this.rect.top + 2],
+		[4, this.rect.height - 4]);
+	this.collisionRight = new gamejs.Rect(
+		[this.rect.right, this.rect.top + 2],
+		[4, this.rect.height - 4]);
+	this.collisionBottom = new gamejs.Rect(
+		[this.rect.left + 2, this.rect.bottom],
+		[this.rect.width - 4, 4]);
+
+	this.collisionRects = [
+		this.collisionBottom,
+		this.collisionRight,
+		this.collisionLeft,
+		this.collisionTop
+	];
+
+	this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
+	return;
+};
+
+FourDirection.prototype.update = function(msDuration) {
+	if (this.movingDown) {
+		this.ySpeed += this.accel;
+	} else if (this.ySpeed > 0) {
+		this.ySpeed -= this.decel;
+	}
+	if (this.movingUp) {
+		this.ySpeed -= this.accel;
+	} else if (this.ySpeed < 0) {
+		this.ySpeed += this.decel;
+	}
+	if (this.movingLeft) {
+		this.xSpeed -= this.accel;
+	} else if (this.xSpeed < 0) {
+		this.xSpeed += this.decel;
+	}
+	if (this.movingRight) {
+		this.xSpeed += this.accel;
+	} else if (this.xSpeed > 0) {
+		this.xSpeed -= this.decel;
+	}
+
+	if (!this.movingRight && !this.movingLeft && Math.abs(this.xSpeed) < this.decel) {
+		this.xSpeed = 0;
+	}
+	if (!this.movingUp && !this.movingDown && Math.abs(this.ySpeed) < this.decel) {
+		this.ySpeed = 0;
+	}
+	//make sure you're not moving faster than you can
+	if (this.xSpeed > this.xMaxSpeed) {
+		this.xSpeed = this.xMaxSpeed;
+	} else if (this.xSpeed < -this.xMaxSpeed) {
+		this.xSpeed = -this.xMaxSpeed;
+	}
+
+	if (this.ySpeed > this.yMaxSpeed) {
+		this.ySpeed = this.yMaxSpeed;
+	} else if (this.ySpeed < -this.yMaxSpeed) {
+		this.ySpeed = -this.yMaxSpeed;
+	}
+
+	this.realRect.left += this.xSpeed;
+	this.realRect.top += this.ySpeed;
+
+	for (var i=0; i<this.collisionRects.length; i++) {
+		this.collisionRects[i].top += this.ySpeed;
+		this.collisionRects[i].left += this.xSpeed;
+	}
+
+	Actor.prototype.update.apply(this, arguments);
+	return;
+};
+
+FourDirection.prototype.draw = function(display) {
+	Actor.prototype.draw.apply(this, arguments);
+	if (config.DEBUG) {
+		draw.rect(display, "#000", this.collisionTop, 1);
+		draw.rect(display, "#000", this.collisionLeft, 1);
+		draw.rect(display, "#000", this.collisionRight, 1);
+		draw.rect(display, "#000", this.collisionBottom, 1);
+		//draw.rect(display, "#000", this.collisionRect, 1);
+
+		console.log(this.collisionBottom.topleft);
+	}
+	return;
+};
+
+FourDirection.prototype.handleEvent = function(event) {
+	if (event.type === gamejs.event.KEY_DOWN) {
+		if (event.key === this.controlMapping['down']) {
+			this.movingDown = true;
+		}
+		if (event.key === this.controlMapping['up']) {
+			this.movingUp = true;
+		}
+		if (event.key === this.controlMapping['left']) {
+			this.movingLeft = true;
+		}
+		if (event.key === this.controlMapping['right']) {
+			this.movingRight = true;
+		}
+	}
+	if (event.type === gamejs.event.KEY_UP) {
+		if (event.key === this.controlMapping['down']) {
+			this.movingDown = false;
+		}
+		if (event.key === this.controlMapping['up']) {
+			this.movingUp = false;
+		}
+		if (event.key === this.controlMapping['left']) {
+			this.movingLeft = false;
+		}
+		if (event.key === this.controlMapping['right']) {
+			this.movingRight = false;
+		}
 	}
 	return;
 };

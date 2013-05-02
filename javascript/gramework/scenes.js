@@ -40,9 +40,15 @@ Scene.prototype.initScene = function(sceneConfig) {
 		this.physics = new Physics(document.getElementById("gjs-canvas"));
 	}
 
+	if (sceneConfig.image) {
+		this.image = gamejs.image.load(sceneConfig.image);
+		this.image_size = this.image.getSize();
+	}
+
 	this.triggers = [];
 	
-    this.view = new gamejs.Surface([this.width, this.height]);		
+	this.view_size = [this.width, this.height];	
+    this.view = new gamejs.Surface(this.view_size);
 	return;
 };
 
@@ -72,6 +78,10 @@ Scene.prototype.unFreeze = function() {
 
 Scene.prototype.draw = function(display) {
 	this.view.fill("#F0A30F");
+	if (this.image) {
+		//this.view.blit(this.image, new gamejs.Rect([0,0], this.image_size), new gamejs.Rect([0,0], this.view_size));
+		this.view.blit(this.image);
+	}
 	this.props.draw(this.view);
 	this.actors.draw(this.view);
 
