@@ -6,6 +6,7 @@ var Body = require('./physics').Body;
 var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor;
+var Map = require('./maps').Map;
 
 //Scene Class
 
@@ -45,6 +46,10 @@ Scene.prototype.initScene = function(sceneConfig) {
 		this.image_size = this.image.getSize();
 	}
 
+	if (sceneConfig.map) {
+		this.map = new Map(sceneConfig.map);
+	}
+
 	this.triggers = [];
 	
 	this.view_size = [this.width, this.height];	
@@ -82,6 +87,9 @@ Scene.prototype.draw = function(display) {
 		//this.view.blit(this.image, new gamejs.Rect([0,0], this.image_size), new gamejs.Rect([0,0], this.view_size));
 		this.view.blit(this.image);
 	}
+	if (this.map) {
+		this.map.draw(this.view);
+	}
 	this.props.draw(this.view);
 	this.actors.draw(this.view);
 
@@ -104,7 +112,7 @@ Scene.prototype.handleEvent = function(event) {
 
 	if (event.type === gamejs.event.KEY_DOWN) {
 		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(2);
+			this.camera.zoomTo(0.5);
 		}
 	}
 	if (event.type === gamejs.event.KEY_UP) {

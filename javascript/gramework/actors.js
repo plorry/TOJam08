@@ -196,6 +196,10 @@ FourDirection.prototype.update = function(msDuration) {
 		this.ySpeed = -this.yMaxSpeed;
 	}
 
+	//Detect wall collisions
+	
+
+
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
 
@@ -216,8 +220,6 @@ FourDirection.prototype.draw = function(display) {
 		draw.rect(display, "#000", this.collisionRight, 1);
 		draw.rect(display, "#000", this.collisionBottom, 1);
 		//draw.rect(display, "#000", this.collisionRect, 1);
-
-		console.log(this.collisionBottom.topleft);
 	}
 	return;
 };

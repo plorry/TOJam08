@@ -1,8 +1,6 @@
 var gamejs = require('gamejs');
 var config = require('./config');
 
-gamejs.preload(config.RESOURCES);
-
 var Scene = require('./gramework/scenes').Scene;
 var FourDirection = require('./gramework/actors').FourDirection;
 var Director = require('./gramework/game').Director;
@@ -13,8 +11,8 @@ function main() {
     var firstScene = new Scene(director, config.scenes.title);
 
     var player_1_opts = {
-        x: 16,
-        y: 16,
+        x: 48,
+        y: 48,
         width: 12,
         height: 12
     };
@@ -24,5 +22,8 @@ function main() {
     director.start(firstScene);
     return;
 }
+
+gamejs.preload(config.RESOURCES.concat(['./static/backgrounds/test_tiles.png']));
+console.log(config.RESOURCES);
 
 gamejs.ready(main);
