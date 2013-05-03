@@ -7,6 +7,7 @@ var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor;
 var Map = require('./maps').Map;
+var TileMap = require('./maps').TileMap;
 
 //Scene Class
 
@@ -128,23 +129,28 @@ var order = function(a,b) {
 };
 
 Scene.prototype.update = function(msDuration) {	
-	if (!this.isFrozen()){
-		//step the physics
-		if (this.physics) {
-			this.physics.step(msDuration / 1000);
-		}
-		//update actors	
-		this.actors.forEach(function(actor){
-			actor.update(msDuration);
-		});
-		//update props
-		this.props.forEach(function(prop){
-			prop.update(msDuration);
-		});
-	}
-	this.camera.update(msDuration);
-	this.elapsed += msDuration;
-	return;
+    if (!this.isFrozen()){
+        //step the physics
+        if (this.physics) {
+            this.physics.step(msDuration / 1000);
+        }
+        // update actors	
+        this.actors.forEach(function(actor){
+            actor.update(msDuration);
+            var collision = TileMap.isCollidingWithActor(actor);
+            if (collision) {
+                actor.collision(collision);
+            }
+        });
+        //update props
+        this.props.forEach(function(prop){
+            prop.update(msDuration);
+        });
+    }
+
+    this.camera.update(msDuration);
+    this.elapsed += msDuration;
+    return;
 };
 
 var Trigger = exports.Trigger = function(options) {

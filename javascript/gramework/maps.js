@@ -57,10 +57,33 @@ TileMapModel.prototype.createMatrix = function(opts) {
     }
 };
 
-// Add tiles that can block the player into the blockable tiles group.
+// Every tile we have is added to a TileMap, for easy reference.
 TileMapModel.prototype.push = function(tile, tilePos, i, j) {
+    var that = this;
 
-    if (tile.properties) {
+    if (!tile.properties) {
+        return;
+    }
+
+    _.each(tile.properties, function(value, key) {
+      switch(key) {
+        case "obstacle":
+          that.tiles.add(tile);
+          // Add tile to the matrix. For simplicity sake at this point,
+          // simply add it as a BLOCK.always tile if there is a 
+          // blocking property on it.
+          // TODO: Do we need this matrix? Why cant it just be a property on the
+          // tile like so:
+          tile._block = BLOCK.always;
+          that.matrix[i][j] = BLOCK.always;
+          break;
+        default:
+          break;
+      }
+    });
+      
+      /*
+       * TODO
       if (tile.properties.start) {
         this.startingPosition = tilePos;
       } else if (tile.properties.active) {
@@ -68,20 +91,26 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
       } else if (tile.properties.block) {
         this.tiles.add(tile)
 
-        // Add tile to the matrix. For simplicity sake at this point, simply add it
-        // as a BLOCK.always tile if there is a blocking property on it.
         this.matrix[i][j] = BLOCK.always;
       }
       if (tile.properties.pain) {
         this.deadlyTiles.add(tile);
       }
+      */
+};
+
+TileMapModel.prototype.isCollidingWithActor = function(actor) {
+    var collisions = gamejs.sprite.spriteCollide(actor, this.tiles);
+    if (collisions.length > 0) {
+        return collisions;
     }
+    return null;
 };
 
 // Check if the passed sprite is colliding with any of our blocking tiles.
 // Return an object telling us where the collision is happening, so we can
 // propel the sprite in the right direction.
-TileMapModel.prototype.collisionTest = function(sprite) {
+TileMapModel.prototype.collisionTestOld = function(sprite) {
     // How about testing for collisions with deadly tiles?
     // TODO: For now, we assume each tile is "always" blocking. So, it blocks from
     // all directions. 

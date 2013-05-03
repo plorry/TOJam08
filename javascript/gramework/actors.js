@@ -125,6 +125,7 @@ FourDirection.prototype.init = function(options) {
 	this.accel = options.accel || 0.1;
 	this.decel = options.decel || 0.2;
 
+    this.colliding = null;
 	this.movingDown = false;
 	this.movingUp = false;
 	this.movingRight = false;
@@ -196,9 +197,19 @@ FourDirection.prototype.update = function(msDuration) {
 		this.ySpeed = -this.yMaxSpeed;
 	}
 
-	//Detect wall collisions
-	
-
+    // Are we colliding? Since its just 4 directional, this is simple!
+    if (this.colliding) {
+        gamejs.log("Silly wall!");
+        if (this.movingDown) {
+            this.ySpeed = -(this.accel * this.ySpeed) - 1;
+        } else if (this.movingUp) {
+            this.ySpeed = (this.accel * this.ySpeed) + 1;
+        } else if (this.movingLeft) {
+            this.xSpeed = (this.accel * this.ySpeed) + 1;
+        } else if (this.movingRight) {
+            this.xSpeed = -(this.accel * this.ySpeed) - 1;
+        }
+    }
 
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
@@ -208,8 +219,18 @@ FourDirection.prototype.update = function(msDuration) {
 		this.collisionRects[i].left += this.xSpeed;
 	}
 
+    this.colliding = null;
+
 	Actor.prototype.update.apply(this, arguments);
 	return;
+};
+
+// Call when the actor has collided with something. The `collision`
+// object is a hash representing the direction(s) the collision has occured,
+// allowing us to push back the actor respectively.
+FourDirection.prototype.collision = function(collision) {
+    this.colliding = collision;
+    return;
 };
 
 FourDirection.prototype.draw = function(display) {
