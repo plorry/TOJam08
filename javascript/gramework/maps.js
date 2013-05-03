@@ -99,11 +99,19 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
       */
 };
 
-TileMapModel.prototype.isCollidingWithActor = function(actor) {
+TileMapModel.prototype.actorCollisionTest = function(actor) {
     var collisions = gamejs.sprite.spriteCollide(actor, this.tiles);
-    if (collisions.length > 0) {
-        return collisions;
-    }
+    return _.reduce(collisions, function(result, tile) {
+        // An actor has collision rects. For each rect, we want to check if a
+        // tile is colliding with it.
+        for (var i = 0; i < actor.collisionRects.length; i ++) {
+            var obj = actor.collisionRects[i];
+            if (tile.rect.collideRect(obj.rect)) {
+                result[obj.key] = true;
+            }
+        }
+        return result;
+    }, {});
     return null;
 };
 

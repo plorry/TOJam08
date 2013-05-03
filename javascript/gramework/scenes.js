@@ -147,9 +147,9 @@ Scene.prototype.update = function(msDuration) {
         // update actors	
         this.actors.forEach(function(actor){
             actor.update(msDuration);
-            var collision = TileMap.isCollidingWithActor(actor);
-            if (collision) {
-                actor.collision(collision);
+            var collisions = TileMap.actorCollisionTest(actor);
+            if (Object.keys(collisions).length > 0) {
+                actor.updateCollisions(collisions)
             }
         });
         //update props
