@@ -17,8 +17,12 @@ var Scene = exports.Scene = function(director, sceneConfig) {
 	this._frozen = false;
 	this.scroll = true;
 
+	//All the player-controlled elements
 	this.actors = new gamejs.sprite.Group();
+	//NPC sprites
 	this.props = new gamejs.sprite.Group();
+	//All UI elements to be rendered
+	this.ui = new gamejs.sprite.Group();
 
 	var sceneId = sceneId || 0;
 	this.elapsed = 0;
@@ -64,6 +68,11 @@ Scene.prototype.addActors = function(actors) {
 
 Scene.prototype.addProps = function(props) {
 	this.props.add(props);
+	return;
+};
+
+Scene.prototype.addUI = function(ui) {
+	this.ui.add(ui);
 	return;
 };
 
@@ -141,6 +150,25 @@ Scene.prototype.update = function(msDuration) {
 		this.props.forEach(function(prop){
 			prop.update(msDuration);
 		});
+
+		this.ui.forEach(function(element){
+			element.update(msDuration);
+		});
+
+		for (var i=0; i < this.triggers.length; i++){
+			var trigger = this.triggers[i];
+			if (trigger.condition(this)) {
+				trigger.activate();
+			}
+			if (trigger.isActive()){
+				trigger.update(msDuration, this);
+			}
+			if (trigger.killCondition(this) && trigger.isActive()) {
+				trigger.killEvent(this);
+				trigger.deactivate();
+				this.triggers.splice(i,1);
+			}
+		}
 	}
 	this.camera.update(msDuration);
 	this.elapsed += msDuration;
