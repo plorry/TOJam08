@@ -153,12 +153,12 @@ FourDirection.prototype.init = function(options) {
 		[this.rect.left + 2, this.rect.bottom],
 		[this.rect.width - 4, 4]);
 
-	this.collisionRects = [
-		this.collisionBottom,
-		this.collisionRight,
-		this.collisionLeft,
-		this.collisionTop
-	];
+    this.collisionRects = [
+        {key: 'bottom', rect: this.collisionBottom},
+        {key: 'right', rect: this.collisionRight},
+        {key: 'left', rect: this.collisionLeft},
+        {key: 'top', rect: this.collisionTop}
+    ];
 
 	this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
 	return;
@@ -207,24 +207,26 @@ FourDirection.prototype.update = function(msDuration) {
 
     // Are we colliding? Since its just 4 directional, this is simple!
     if (this.colliding) {
-        gamejs.log("Silly wall!");
-        if (this.movingDown) {
-            this.ySpeed = -(this.accel * this.ySpeed) - 1;
-        } else if (this.movingUp) {
-            this.ySpeed = (this.accel * this.ySpeed) + 1;
-        } else if (this.movingLeft) {
-            this.xSpeed = (this.accel * this.ySpeed) + 1;
-        } else if (this.movingRight) {
-            this.xSpeed = -(this.accel * this.ySpeed) - 1;
-        }
+        var that = this;
+        _.each(this.colliding, function(value, key) {
+            if (key === 'bottom') {
+                that.ySpeed = -(that.accel * that.ySpeed) - 1;
+            } else if (key === 'top') {
+                that.ySpeed = (that.accel * that.ySpeed) + 1;
+            } else if (key === 'left') {
+                that.xSpeed = (that.accel * that.ySpeed) + 1;
+            } else if (key === 'right') {
+                that.xSpeed = -(that.accel * that.ySpeed) - 1;
+            }
+        });
     }
 
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
 
 	for (var i=0; i<this.collisionRects.length; i++) {
-		this.collisionRects[i].top += this.ySpeed;
-		this.collisionRects[i].left += this.xSpeed;
+		this.collisionRects[i].rect.top += this.ySpeed;
+		this.collisionRects[i].rect.left += this.xSpeed;
 	}
 
     this.colliding = null;
@@ -236,8 +238,10 @@ FourDirection.prototype.update = function(msDuration) {
 // Call when the actor has collided with something. The `collision`
 // object is a hash representing the direction(s) the collision has occured,
 // allowing us to push back the actor respectively.
-FourDirection.prototype.collision = function(collision) {
-    this.colliding = collision;
+FourDirection.prototype.updateCollisions = function(collisions) {
+    if (collisions) {
+        this.colliding = collisions;
+    }
     return;
 };
 
