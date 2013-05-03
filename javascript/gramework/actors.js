@@ -15,6 +15,10 @@ var DEFAULT_CONTROL_MAPPING = {
 	right: gamejs.event.K_RIGHT
 };
 
+var DEFAULT_ANIMATIONS = {
+	'static': [0]
+}
+
 var Actor = exports.Actor = function(options) {
 	/*
 	Actor options
@@ -43,7 +47,11 @@ Actor.prototype.init = function(options) {
 	this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
 
 	if (options.spriteSheet) {
+		console.log(options.spriteSheet);
 		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
+		var animations = options.animations || DEFAULT_ANIMATIONS;
+		this.animation = new Animation(this.spriteSheet, animations);
+		this.animation.start('static');
 	}
 	this.physics = options.physics || null;
 
@@ -197,7 +205,7 @@ FourDirection.prototype.update = function(msDuration) {
 	}
 
 	//Detect wall collisions
-	
+
 
 
 	this.realRect.left += this.xSpeed;

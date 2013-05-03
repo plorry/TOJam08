@@ -14,7 +14,8 @@ function main() {
         x: 48,
         y: 48,
         width: 12,
-        height: 12
+        height: 12,
+        spriteSheet: [config.test_sprite, {width:24, height:24}]
     };
 
     var player_1 = new FourDirection(player_1_opts);
