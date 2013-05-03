@@ -103,6 +103,7 @@ Scene.prototype.draw = function(display) {
 	this.actors.draw(this.view);
 
 	var screen = this.camera.draw();
+	this.ui.draw(screen);
 	
 	var size = screen.getSize();
 	
