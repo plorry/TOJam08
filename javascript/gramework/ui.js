@@ -1,7 +1,7 @@
 var gamejs = require('gamejs');
 var objects = require('gamejs/utils/objects');
-var config = require('./project/config');
-var Animation = require('/animate').Animation;
+var config = require('../config');
+var Animation = require('./animate').Animation;
 
 var Element = exports.Element = function(options) {
 	Element.superConstructor.apply(this, arguments);
@@ -68,12 +68,12 @@ Element.prototype.hide = function() {
 	this.active = false;
 };
 
-var font = new gamejs.font.Font('8px Ebit');
+var font = new gamejs.font.Font('9px Ebit');
 
 var TextArea = exports.TextArea = function(options) {
 	TextArea.superConstructor.apply(this, arguments);
 	
-	this.background = options.background || '#000000';
+	//this.background = options.background || '#000000';
 	this.color = options.color || '#FFFFFF';
 	this.text = options.text || null;
 	this.scrolling = options.scrolling || false;
@@ -104,12 +104,13 @@ TextArea.prototype.update = function(msDuration) {
 };
 
 TextArea.prototype.draw = function(display) {
-	this.textSurface.fill(this.background);
-	this.textSurface.setAlpha(0.35);
-	this.textSurface._context.webkitImageSmoothingEnabled = false;
-	display.blit(this.textSurface, this.pos);
+	//this.textSurface.fill(this.background);
+	//this.textSurface.setAlpha(0.35);
+	//this.textSurface._context.webkitImageSmoothingEnabled = false;
+	//display.blit(this.textSurface, this.pos);
 	this.fontSurface = font.render(this.currentText, this.color);
-	this.fontSurface._context.webkitImageSmoothingEnabled = false;
+	this.fontShadow = font.render(this.currentText, "#000");
+	display.blit(this.fontShadow, [this.pos[0]+1, this.pos[1]+1]);
 	display.blit(this.fontSurface, this.pos);
 	return;
 };
@@ -118,3 +119,9 @@ TextArea.prototype.start = function(text) {
 	this.currentText = " ";
 	this.text = text;
 };
+
+var Score = exports.Score = function(options) {	
+	Score.superConstructor.apply(this, arguments);
+	return this;
+};
+objects.extend(Score, TextArea);
