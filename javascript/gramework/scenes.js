@@ -7,6 +7,7 @@ var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor;
 var Map = require('./maps').Map;
+var TileMap = require('./maps').TileMap;
 
 //Scene Class
 
@@ -137,42 +138,47 @@ var order = function(a,b) {
 };
 
 Scene.prototype.update = function(msDuration) {	
-	if (!this.isFrozen()){
-		//step the physics
-		if (this.physics) {
-			this.physics.step(msDuration / 1000);
-		}
-		//update actors	
-		this.actors.forEach(function(actor){
-			actor.update(msDuration);
-		});
-		//update props
-		this.props.forEach(function(prop){
-			prop.update(msDuration);
-		});
+    if (!this.isFrozen()){
+        //step the physics
+        if (this.physics) {
+            this.physics.step(msDuration / 1000);
+        }
+        // update actors	
+        this.actors.forEach(function(actor){
+            actor.update(msDuration);
+            var collision = TileMap.isCollidingWithActor(actor);
+            if (collision) {
+                actor.collision(collision);
+            }
+        });
+        //update props
+        this.props.forEach(function(prop){
+            prop.update(msDuration);
+        });
 
-		this.ui.forEach(function(element){
-			element.update(msDuration);
-		});
+        this.ui.forEach(function(element){
+            element.update(msDuration);
+        });
 
-		for (var i=0; i < this.triggers.length; i++){
-			var trigger = this.triggers[i];
-			if (trigger.condition(this)) {
-				trigger.activate();
-			}
-			if (trigger.isActive()){
-				trigger.update(msDuration, this);
-			}
-			if (trigger.killCondition(this) && trigger.isActive()) {
-				trigger.killEvent(this);
-				trigger.deactivate();
-				this.triggers.splice(i,1);
-			}
-		}
-	}
-	this.camera.update(msDuration);
-	this.elapsed += msDuration;
-	return;
+        for (var i=0; i < this.triggers.length; i++){
+            var trigger = this.triggers[i];
+            if (trigger.condition(this)) {
+                trigger.activate();
+            }
+            if (trigger.isActive()){
+                trigger.update(msDuration, this);
+            }
+            if (trigger.killCondition(this) && trigger.isActive()) {
+                trigger.killEvent(this);
+                trigger.deactivate();
+                this.triggers.splice(i,1);
+            }
+        }
+    }
+
+    this.camera.update(msDuration);
+    this.elapsed += msDuration;
+    return;
 };
 
 var Trigger = exports.Trigger = function(options) {

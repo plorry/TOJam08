@@ -23,11 +23,11 @@ exports.RESOURCES = [
 ];
 
 exports.scenes = {
-	'title': {
+    'title': {
         'width': 640,
         'height': 480,
         'scale': SCALE,
         'image': BG_TEST,
         'map': STATIC_PATH + 'maps/test_map.tmx'
-	}
+    }
 };
