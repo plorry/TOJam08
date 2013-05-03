@@ -15,7 +15,7 @@ exports.Director = function() {
             msDuration = 1000/15;
         }
 		currentScene.update(msDuration);
-        //this.display.fill("#000");
+        this.display.fill("#000");
 		currentScene.draw(display);		
 		return;
 	};
