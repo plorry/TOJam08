@@ -35,6 +35,5 @@ function main() {
 }
 
 gamejs.preload(config.RESOURCES);
-console.log(config.RESOURCES);
 
 gamejs.ready(main);

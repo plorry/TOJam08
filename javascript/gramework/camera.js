@@ -73,8 +73,11 @@ Camera.prototype.update = function(msDuration) {
 	if (this.rect.left < 0) {this.rect.left = 0;}
 	if (this.rect.bottom > scene_size[1]) {this.rect.bottom = scene_size[1];}
 	if (this.rect.right > scene_size[0]) {this.rect.right = scene_size[0];}
-	
+	this.view.fill("#F41D80");
 	this.view.blit(this.scene.view, [0,0], this.rect);
+
+	this.scene.props.draw(this.view);
+	this.scene.actors.draw(this.view);
 	
     this.display = this.view;
     /*

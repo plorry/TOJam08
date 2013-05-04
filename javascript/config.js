@@ -14,12 +14,14 @@ var SCALE = exports.SCALE = 2;
 var BG_TEST = STATIC_PATH + 'backgrounds/test.jpg';
 var MAP_TILES = STATIC_PATH + 'backgrounds/test_tiles.png';
 var test_sprite = exports.test_sprite = STATIC_PATH + 'sprites/bike.png';
+var test_button = exports.test_button = STATIC_PATH + 'sprites/test.png'
 
 //Add every resource variable to this array, please
 exports.RESOURCES = [
     BG_TEST,
     MAP_TILES,
-    test_sprite
+    test_sprite,
+    test_button
 ];
 
 exports.scenes = {
