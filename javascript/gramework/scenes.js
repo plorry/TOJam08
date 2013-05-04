@@ -42,6 +42,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 	this.scale = sceneConfig.scale || 1;
 	this.buttons = new gamejs.sprite.Group();
 	this.gates = new gamejs.sprite.Group();
+	this.enemies = new gamejs.sprite.Group();
 	this.wallState = 0;
 
 	this.camera = new Camera(this, {
