@@ -13,6 +13,7 @@ var Camera = exports.Camera = function(scene, options) {
 	this.zoom_multiplier = 1;
 	this.targetZoom = null;
 	this.sharp = options.sharp || true;
+	this.view = new gamejs.Surface([this.width, this.height]);
 	return this;
 };
 
@@ -51,7 +52,7 @@ Camera.prototype.update = function(msDuration) {
 	}
 	
 	var scene_size = this.scene.view.getSize();
-	
+
 	if (this.rect.width <= scene_size[0] && this.rect.height <= scene_size[1]) {
 		this.zoom = this.zoom * this.zoom_multiplier;
 	}
@@ -72,8 +73,6 @@ Camera.prototype.update = function(msDuration) {
 	if (this.rect.left < 0) {this.rect.left = 0;}
 	if (this.rect.bottom > scene_size[1]) {this.rect.bottom = scene_size[1];}
 	if (this.rect.right > scene_size[0]) {this.rect.right = scene_size[0];}
-	
-	this.view = new gamejs.Surface(scene_size);
 	
 	this.view.blit(this.scene.view, [0,0], this.rect);
 	
