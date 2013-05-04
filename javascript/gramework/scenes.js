@@ -83,14 +83,15 @@ Scene.prototype.mapActors = function(map) {
     for (var i = 0; i < map.getTiles().sprites().length; i++) {
         var tile = map.getTiles().sprites()[i];
         var tile_opts = {
-            x: tile.rect.center[0] + map.controller.offset[0],
-            y: tile.rect.center[1] + map.controller.offset[1],
+            x: tile.rect.center[0] + map.controller.offset[0] - 1,
+            y: tile.rect.center[1] + map.controller.offset[1] - 1,
             width: tile.rect.width / 2,
             height: tile.rect.height / 2
         }
         if (tile.properties.button) {
             tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
-            tile_opts['animations'] = {'static':[0], 'active':[1]};
+            tile_opts['animations'] = {'open':[0], 'closed':[1]};
+            tile_opts['startingAnimation'] = 'open';
             var button = new Button(tile_opts);
             this.addProps([button]);
             this.buttons.add(button);
@@ -209,6 +210,7 @@ Scene.prototype.update = function(msDuration) {
 
         var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
         var gates = this.gates;
+        var buttons = this.buttons;
         buttonCollisions.forEach(function(collision) {
         	var actor = collision.a;
         	var button = collision.b;
@@ -221,6 +223,9 @@ Scene.prototype.update = function(msDuration) {
         		}
         		gates.forEach(function(gate) {
         			gate.setState(this.wallState);
+        		});
+        		buttons.forEach(function(button) {
+        			button.setState(this.wallState);
         		});
         	}
         });
