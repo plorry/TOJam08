@@ -322,9 +322,22 @@ var Button = exports.Button = function(options) {
 };
 objects.extend(Button, Actor);
 
+Button.prototype.setState = function(wallState) {
+	if (wallState == 0){
+		this.state = 0;
+	} else {
+		this.state = 1;
+	}
+	return;
+};
+
 Button.prototype.update = function(msDuration) {
 	Actor.prototype.update.apply(this, arguments);
-
+	if (this.state == 1 && this.animation.currentAnimation == 'open') {
+		this.animation.start('closed');
+	} else if (this.state == 0 && this.animation.currentAnimation == 'closed') {
+		this.animation.start('open');
+	}
 	return;
 };
 
