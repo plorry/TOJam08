@@ -257,13 +257,13 @@ FourDirection.prototype.doCollisions = function(collisions) {
 // Collision callback functions. The `tile` that this occured 
 // against is passed.
 FourDirection.prototype._hitWall = function(tile, direction) {
-    if (direction === 'bottom' && this.movingDown) {
+    if (direction === 'bottom' && this.ySpeed > 0) {
         this.ySpeed = 0;
-    } else if (direction === 'top' && this.movingUp) {
+    } else if (direction === 'top' && this.ySpeed < 0) {
         this.ySpeed = 0;
-    } else if (direction === 'left' && this.movingLeft) {
+    } else if (direction === 'left' && this.xSpeed < 0) {
         this.xSpeed = 0;
-    } else if (direction === 'right' && this.movingRight) {
+    } else if (direction === 'right' && this.xSpeed > 0) {
         this.xSpeed = 0;
     }
     return;

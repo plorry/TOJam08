@@ -62,8 +62,8 @@ Scene.prototype.initScene = function(sceneConfig) {
 		for(var i=0;i < TileMap.tiles.sprites().length;i++) {
 			var tile = TileMap.tiles.sprites()[i];
 			var tile_opts = {
-				x: tile.rect.center[0],
-				y: tile.rect.center[1],
+				x: tile.rect.center[0] - 1,
+				y: tile.rect.center[1] - 1,
 				width: tile.rect.width / 2,
 				height: tile.rect.height / 2
 			}
