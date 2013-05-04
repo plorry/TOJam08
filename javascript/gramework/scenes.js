@@ -7,7 +7,8 @@ var Body = require('./physics').Body;
 var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor,
-	Button = require('./actors').Button;
+	Button = require('./actors').Button,
+	Gate = require('./actors').Gate;
 var Map = require('./maps').Map;
 var TileMap = require('./maps').TileMap;
 
@@ -39,6 +40,8 @@ Scene.prototype.initScene = function(sceneConfig) {
 	this.height = sceneConfig.height || 500;
 	this.scale = sceneConfig.scale || 1;
 	this.buttons = new gamejs.sprite.Group();
+	this.gates = new gamejs.sprite.Group();
+	this.wallState = 0;
 
 	this.camera = new Camera(this, {
 		width: this.width,
@@ -58,19 +61,27 @@ Scene.prototype.initScene = function(sceneConfig) {
 		this.map = new Map(sceneConfig.map);
 		for(var i=0;i < TileMap.tiles.sprites().length;i++) {
 			var tile = TileMap.tiles.sprites()[i];
-			if (tile.properties.switch) {
-				var button_opts = {
-					x: tile.rect.center[0],
-					y: tile.rect.center[1],
-					width: tile.rect.width / 2,
-					height: tile.rect.height / 2,
-					spriteSheet: [config.test_button, {height:24, width:24}],
-					animations: {'static':[0], 'active':[1]}
-				};
-				var button = new Button(button_opts)
+			var tile_opts = {
+				x: tile.rect.center[0],
+				y: tile.rect.center[1],
+				width: tile.rect.width / 2,
+				height: tile.rect.height / 2
+			}
+			if (tile.properties.button) {
+				tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
+				tile_opts['animations'] = {'static':[0], 'active':[1]};
+				var button = new Button(tile_opts);
 				this.addProps([button]);
 				this.buttons.add(button);
-				console.log(button);
+			}
+			if (tile.properties.class == 'gate') {
+				tile_opts['spriteSheet'] = [config.gate_img, {height:32, width:32}];
+				tile_opts['animations'] = {'open': [0], 'closed': [1]};
+				tile_opts['type'] = tile.properties.type;
+				tile_opts['startingAnimation'] = 'open';
+				var gate = new Gate(tile_opts);
+				this.addProps([gate]);
+				this.gates.add(gate);
 			}
 		}
 	}
@@ -164,9 +175,16 @@ Scene.prototype.update = function(msDuration) {
             this.physics.step(msDuration / 1000);
         }
 
-        // update actors	
+        // update actors
+        var props = this.props;
         this.actors.forEach(function(actor){
-            actor.update(msDuration);
+            actor.update(msDuration, function() {
+            	actor.updateCollisions(TileMap.tiles);
+            	actor.updateCollisions(props);
+            });
+            // Are we colliding? Since its just 4 directional, this is simple!
+            //actor.updateCollisions(TileMap.tiles);
+            //actor.updateCollisions(this.props);
         });
         //update props
         this.props.forEach(function(prop){
@@ -178,17 +196,20 @@ Scene.prototype.update = function(msDuration) {
         });
 
         var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
+        var gates = this.gates;
         buttonCollisions.forEach(function(collision) {
         	var actor = collision.a;
         	var button = collision.b;
         	if (button.canToggle) {
-        		console.log(buttonCollisions);
         		button.canToggle = false;
-        		if (button.state == 0) {
-        			button.state = 1;
+        		if (this.wallState == 0) {
+        			this.wallState = 1;
         		} else {
-        			button.state = 0;
+        			this.wallState = 0;
         		}
+        		gates.forEach(function(gate) {
+        			gate.setState(this.wallState);
+        		});
         	}
         });
   		var actors = this.actors;

@@ -13,15 +13,17 @@ var SCALE = exports.SCALE = 2;
 // BG Images
 var BG_TEST = STATIC_PATH + 'backgrounds/test.jpg';
 var MAP_TILES = STATIC_PATH + 'backgrounds/test_tiles.png';
-var test_sprite = exports.test_sprite = STATIC_PATH + 'sprites/bike.png';
-var test_button = exports.test_button = STATIC_PATH + 'sprites/test.png'
+var player_img = exports.player_img = STATIC_PATH + 'sprites/bike.png';
+var button_img = exports.button_img = STATIC_PATH + 'sprites/test.png';
+var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 
 //Add every resource variable to this array, please
 exports.RESOURCES = [
     BG_TEST,
     MAP_TILES,
-    test_sprite,
-    test_button
+    player_img,
+    button_img,
+    gate_img
 ];
 
 exports.scenes = {
