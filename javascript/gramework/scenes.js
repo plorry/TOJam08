@@ -83,8 +83,8 @@ Scene.prototype.mapActors = function(map) {
     for (var i = 0; i < map.getTiles().sprites().length; i++) {
         var tile = map.getTiles().sprites()[i];
         var tile_opts = {
-            x: tile.rect.center[0],
-            y: tile.rect.center[1],
+            x: tile.rect.center[0] - 1,
+            y: tile.rect.center[1] - 1,
             width: tile.rect.width / 2,
             height: tile.rect.height / 2
         };
