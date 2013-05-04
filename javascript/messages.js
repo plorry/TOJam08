@@ -7,6 +7,7 @@ var Player1Lose = {
     margin: 4,
     pos: 'top left',
     background: "#000",
+    active: false,
     text: [
         'Got you! Tell me where your',
         'friend is for lenience!',
@@ -33,6 +34,7 @@ var Player2Lose = {
 
 var initialize = exports.initialize = function() {
     return [
-        new TextArea(Player1Lose)
+        new TextArea(Player1Lose),
+        new TextArea(Player2Lose)
     ];
 };

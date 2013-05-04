@@ -41,14 +41,14 @@ var Box2D = require('./Box2dWeb-2.1.a.3');
     this.dtRemaining += dt;
     while(this.dtRemaining > this.stepAmount) {
       this.dtRemaining -= this.stepAmount;
-      this.world.Step(this.stepAmount, 
+      this.world.Step(this.stepAmount,
                       10, // velocity iterations
                       10);// position iterations
     }
     if(this.debugDraw) {
       this.world.DrawDebugData();
     }
-  }
+  };
 
 
   var Body = exports.Body = function(physics,details) {
@@ -111,7 +111,7 @@ var Box2D = require('./Box2dWeb-2.1.a.3');
     this.body.CreateFixture(this.fixtureDef);
   };
 
-  Body.prototype.update = function(dt) {    
+  Body.prototype.update = function(dt) {
 
   };
 

@@ -5,8 +5,8 @@ var objects = require('gamejs/utils/objects');
 var config = require('../config');
 var SpriteSheet = require('./animate').SpriteSheet;
 var Animation = require('./animate').Animation;
-
 var Body = require('./physics').Body;
+var MapManager = require('./maps').MapManager;
 
 var DEFAULT_CONTROL_MAPPING = {
 	up: gamejs.event.K_UP,
@@ -41,6 +41,20 @@ Actor.prototype.init = function(options) {
 	this.width = options.width;
 	this.startingAnimation = options.startingAnimation || 'static';
 
+    // Starting positions can be customized.
+    var start = options.start;
+    if (start) {
+        this.currentMap = MapManager.getById(start.map);
+
+        if (this.currentMap.spawnPlayers.length > 0) {
+            var initialSpawn = this.currentMap.getTileCenter(
+                this.currentMap.spawnPlayers[0]
+            );
+            this.x = initialSpawn[0];
+            this.y = initialSpawn[1];
+        }
+    }
+
 	this.rect = new gamejs.Rect(
 		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
 		[this.width * 2 * this.scale, this.height * 2 * this.scale]);
@@ -48,7 +62,6 @@ Actor.prototype.init = function(options) {
 	this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
 
 	if (options.spriteSheet) {
-		console.log(options.spriteSheet);
 		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
 		var animations = options.animations || DEFAULT_ANIMATIONS;
 		this.animation = new Animation(this.spriteSheet, animations);
@@ -75,20 +88,18 @@ Actor.prototype.init = function(options) {
 };
 
 Actor.prototype.update = function(msDuration) {
-	
+
 	if (this.physics) {
 		this.realRect.center = [this.body.body.GetPosition().x * this.scale, this.body.body.GetPosition().y * this.scale];
 	}
 
 	this.rect.top = Math.round(this.realRect.top) + 0.5;
 	this.rect.left = Math.round(this.realRect.left) + 0.5;
-	
+
 	if (this.animation) {
 		this.animation.update(msDuration);
 		this.image = this.animation.image;
 	}
-
-	//this.body.body.
 	return;
 };
 
@@ -98,15 +109,15 @@ Actor.prototype.handleEvent = function(event) {
 
 Actor.prototype.draw = function(display) {
 	//cq(this.image._canvas).matchPalette(palettes.simple);
-	
+
 	if (this.spriteSheet) {
 		if (this.image) {
 			gamejs.sprite.Sprite.prototype.draw.apply(this, arguments);
-		};
+		}
 	} else {
 		//draw.rect(display, "#000FFF", new gamejs.Rect(this.pos, [5,5]));
 	}
-	
+
 	if (config.DEBUG) {
 		var color = "#000FFF";
 		if (!this._inControl) {
@@ -160,8 +171,8 @@ FourDirection.prototype.init = function(options) {
         {key: 'top', rect: this.collisionTop}
     ];
 
-	this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
-	return;
+    this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
+    return;
 };
 
 FourDirection.prototype.update = function(msDuration, collisionCallback) {
@@ -254,7 +265,7 @@ FourDirection.prototype.doCollisions = function(collisions) {
     return;
 };
 
-// Collision callback functions. The `tile` that this occured 
+// Collision callback functions. The `tile` that this occured
 // against is passed.
 FourDirection.prototype._hitWall = function(tile, direction) {
     if (direction === 'bottom' && this.ySpeed > 0) {
@@ -323,7 +334,7 @@ var Button = exports.Button = function(options) {
 objects.extend(Button, Actor);
 
 Button.prototype.setState = function(wallState) {
-	if (wallState == 0){
+	if (wallState === 0){
 		this.state = 0;
 	} else {
 		this.state = 1;
@@ -335,7 +346,7 @@ Button.prototype.update = function(msDuration) {
 	Actor.prototype.update.apply(this, arguments);
 	if (this.state == 1 && this.animation.currentAnimation == 'open') {
 		this.animation.start('closed');
-	} else if (this.state == 0 && this.animation.currentAnimation == 'closed') {
+	} else if (this.state === 0 && this.animation.currentAnimation === 'closed') {
 		this.animation.start('open');
 	}
 	return;
@@ -350,9 +361,9 @@ var Gate = exports.Gate = function(options) {
 objects.extend(Gate, Actor);
 
 Gate.prototype.setState = function(wallState) {
-	if ((this.type == 0 && wallState == 0) || (this.type == 1 && wallState == 1) ) {
+	if ((this.type === 0 && wallState === 0) || (this.type === 1 && wallState === 1) ) {
 		this.block = true;
-	} else if ((this.type == 0 && wallState == 1) || (this.type == 1 && wallState == 0)) {
+	} else if ((this.type === 0 && wallState === 1) || (this.type === 1 && wallState === 0)) {
 		this.block = false;
 	}
 	return;

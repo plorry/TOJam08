@@ -104,17 +104,19 @@ TextArea.prototype.update = function(msDuration) {
 };
 
 TextArea.prototype.draw = function(display) {
-    if (this.background) {
-        this.textSurface.fill(this.background);
-        this.textSurface.setAlpha(0.25);
-        display.blit(this.textSurface, this.pos);
-    }
-    for (var i=0;i < this.text.length;i++) {
-        var line = this.text[i];
-        this.fontSurface = font.render(line, this.color);
-        this.fontShadow = font.render(line, "#000");
-        display.blit(this.fontShadow, [this.pos[0]+1+this.padding, this.pos[1]+1 + (i * this.lineHeight)+this.padding]);
-        display.blit(this.fontSurface, [this.pos[0] + this.padding, this.pos[1] + (i * this.lineHeight) + this.padding]);
+    if (this.active) {
+        if (this.background) {
+            this.textSurface.fill(this.background);
+            this.textSurface.setAlpha(0.25);
+            display.blit(this.textSurface, this.pos);
+        }
+        for (var i=0;i < this.text.length;i++) {
+            var line = this.text[i];
+            this.fontSurface = font.render(line, this.color);
+            this.fontShadow = font.render(line, "#000");
+            display.blit(this.fontShadow, [this.pos[0]+1+this.padding, this.pos[1]+1 + (i * this.lineHeight)+this.padding]);
+            display.blit(this.fontSurface, [this.pos[0] + this.padding, this.pos[1] + (i * this.lineHeight) + this.padding]);
+        }
     }
     return;
 };
