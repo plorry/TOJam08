@@ -8,8 +8,8 @@ var Director = require('./gramework/game').Director;
 var Score = require('./gramework/ui').Score;
 
 var players = require('./players');
-
 function main() {
+
 
     var director = new Director();
     var firstScene = new Scene(director, config.scenes.title);
@@ -36,5 +36,4 @@ function main() {
 }
 
 gamejs.preload(config.RESOURCES);
-
 gamejs.ready(main);

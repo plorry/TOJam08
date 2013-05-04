@@ -16,7 +16,7 @@ var objects = require('gamejs/utils/objects');
 * an upper left corner should be "west,north". Restrictions are
 * cumulative, so, for example, "west,always" would be the same as
 * "always" and "east,none,north" would be the same as "east,north".
-*
+* 
 * Note that "never" and "always" override any blocking information associated
 * to a tile. This property cannot be changed in runtime.
 */
@@ -29,13 +29,9 @@ var BLOCK = {
     always: parseInt('1111', 2)
 };
 
-// Store tiles that can be collided with
+// Store tiles that can be collided with 
 var TileMapModel = function() {
     this.tiles = new gamejs.sprite.Group();
-    this.deadlyTiles = new gamejs.sprite.Group();
-
-    // Tiles with active actions on them (lasers, doors, etc.)
-    this.activeTiles = new gamejs.sprite.Group();
 
     // We need to know where to start for this map. The tile should be defined
     // by a `start:true` property.
@@ -43,7 +39,7 @@ var TileMapModel = function() {
 };
 
 TileMapModel.prototype.getTiles = function() {
-    return this.tiles.sprites();
+    return this.tiles;
 };
 
 TileMapModel.prototype.createMatrix = function(opts) {
@@ -66,14 +62,13 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
     if (!tile.properties) {
         return;
     }
-
     this.tiles.add(tile);
 
     _.each(tile.properties, function(value, key) {
       switch(key) {
         case "obstacle":
           // Add tile to the matrix. For simplicity sake at this point,
-          // simply add it as a BLOCK.always tile if there is a
+          // simply add it as a BLOCK.always tile if there is a 
           // blocking property on it.
           // TODO: Do we need this matrix? Why cant it just be a property on the
           // tile like so:
@@ -81,7 +76,7 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
           tile.block = true;
           break;
         case "switch":
-            tile.button = true;
+            tile.switch = true;
         default:
           break;
       }
@@ -94,43 +89,71 @@ var Tile = function(rect, properties) {
 
     this.rect = rect;
     this.properties = properties;
-    this.baseProperties = _.cloneDeep(properties);
-
-    //gamejs.log("Tile", properties);
 
     return this;
 };
 objects.extend(Tile, gamejs.sprite.Sprite);
 
-var TileMap = exports.TileMap = new TileMapModel();
+// Accepts an array of `map` hashes, where-in each hash looks
+// something like so:
+// {
+//    url: "./path/to/map.tmx",
+//    offset: [0, 0]
+// }
+//
+// offset defines where the map should be drawn within the game scene. The scene
+// will decide when the maps are drawn.
+var MapManager = exports.MapManager = function(maps) {
+    // Load up each map.
+    this.maps = maps.map(function(map) { return new Map(map); });
+    return this;
+};
 
-var Map = exports.Map = function(url) {
+// Return a map by its unique id. Useful when multiple actors are working with
+// different maps in a single scene.
+MapManager.prototype.getById = function(index) {
+    return this.maps[index];
+};
+
+// Takes a hash containing:
+//  `url`, ./path/to/map.tmx,
+//  `offset`, an [x, y] array of where to draw the map initially.
+var Map = exports.Map = function(options) {
+    options = (options || {});
+
+    var url = options.url;
+    var offset = options.offset;
+
+    this.tileset = new TileMapModel();
+
     // Draw each layer
     this.draw = function(display) {
+        var that = this;
         layerViews.forEach(function(layerView) {
-            layerView.draw(display, mapController.offset);
+            layerView.draw(display, that.controller.offset);
         }, this);
     };
 
     // Input events.
     this.handle = function(event) {
-        mapController.handle(event);
+        this.controller.handle(event);
     };
-
+    
     // Called on each tick.
     this.update = function(msDuration) {
-        mapController.update(msDuration);
+        this.controller.update(msDuration);
     };
 
     // Initialize.
     var self = this;
     var map = new tmx.Map(url);
-    var mapController = new MapController();
+    this.controller = new MapController(offset);
 
-    TileMap.createMatrix({
-        width: map.tileWidth,
-        height: map.tileHeight
-    });
+    this.getTiles = function() {
+        if (this.tileset) {
+            return this.tileset.getTiles();
+        }
+    };
 
     // Given the TMX Map we've loaded, go through each layer (via map.layers,
     // provided by gamejs), and return a LayerView that we can deal with.
@@ -159,7 +182,7 @@ var LayerView = function(map, layer, opts) {
     );
     this.surface.setAlpha(layer.opacity);
 
-    // Note how below we look up the "gid" of the tile images in the TileSet
+    // Note how below we look up the "gid" of the tile images in the TileSet 
     // from the Map ('opt.tiles') to get the actual Surfaces.
     layer.gids.forEach(function(row, i) {
         row.forEach(function(gid, j) {
@@ -176,11 +199,14 @@ var LayerView = function(map, layer, opts) {
                   tilePos,
                   [opts.tileWidth, opts.tileHeight]
                 );
-                this.surface.blit(tileSurface, tileRect);
+                if (tileProperties.draw) {
+                  this.surface.blit(tileSurface, tileRect);
+                }
                 var tile = new Tile(tileRect, tileProperties);
 
-                // Push or ignore the tile. Only kept if its relevant.
-                TileMap.push(tile, tilePos, i, j);
+                // Push each tile into our custom TileMap model, which adds some
+                // convenience over what gamejs provides.
+                map.tileset.push(tile, tilePos, i, j);
             } else {
                 gamejs.log('No GID ', gid, i, j, 'layer', i);
             }
@@ -190,8 +216,8 @@ var LayerView = function(map, layer, opts) {
 };
 
 // Input Controller
-var MapController = function() {
-    this.offset = [0, 0];
+var MapController = function(offset) {
+    this.offset = offset || [0, 0];
 
     this.handle = function(event) {
         if (event.type === gamejs.event.KEY_DOWN) {
