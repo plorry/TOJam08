@@ -1,0 +1,5 @@
+var gamejs = require('gamejs'),
+        Button = require('./gramework/actors').Button,
+        Gate = require('./gramework/actors').Gate,
+        objects = require('gamejs/utils/objects'),
+        config = require('./config');

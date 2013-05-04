@@ -40,6 +40,7 @@ Actor.prototype.init = function(options) {
 	this.y = options.y;
 	this.height = options.height;
 	this.width = options.width;
+	this.startingAnimation = options.startingAnimation || 'static';
 
 	this.rect = new gamejs.Rect(
 		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
@@ -52,7 +53,7 @@ Actor.prototype.init = function(options) {
 		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
 		var animations = options.animations || DEFAULT_ANIMATIONS;
 		this.animation = new Animation(this.spriteSheet, animations);
-		this.animation.start('static');
+		this.animation.start(this.startingAnimation);
 	}
 	this.physics = options.physics || null;
 
@@ -164,7 +165,7 @@ FourDirection.prototype.init = function(options) {
 	return;
 };
 
-FourDirection.prototype.update = function(msDuration) {
+FourDirection.prototype.update = function(msDuration, collisionCallback) {
 	if (this.movingDown) {
 		this.ySpeed += this.accel;
 	} else if (this.ySpeed > 0) {
@@ -205,8 +206,7 @@ FourDirection.prototype.update = function(msDuration) {
 		this.ySpeed = -this.yMaxSpeed;
 	}
 
-    // Are we colliding? Since its just 4 directional, this is simple!
-    this._updateCollisions();
+	collisionCallback(this);
 
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
@@ -226,9 +226,9 @@ FourDirection.prototype.update = function(msDuration) {
 
 // Called on each tick. Check against the TileMap and see if we are colliding
 // with any tiles that can affect us (block movement, trigger things, etc.)
-FourDirection.prototype._updateCollisions = function() {
+FourDirection.prototype.updateCollisions = function(spriteGroup) {
     var actor = this;
-    var tiles = gamejs.sprite.spriteCollide(actor, TileMap.tiles);
+    var tiles = gamejs.sprite.spriteCollide(actor, spriteGroup);
 
     var collisions = _.reduce(tiles, function(result, tile) {
         // An actor has collision rects. For each rect, we want to check if a
@@ -327,11 +327,19 @@ Button.prototype.update = function(msDuration) {
 
 	return;
 };
-/*
-Button.prototype.collisionCheck = function(spriteGroup) {
-	spriteGroup.forEach(function(sprite){
-		if this.collideSprite
-	});
-	return;
-};*/
 
+var Gate = exports.Gate = function(options) {
+	Gate.superConstructor.apply(this, arguments);
+	this.type = options.type || 0;
+	this.block = true;
+	return this;
+};
+objects.extend(Gate, Actor);
+
+Gate.prototype.setState = function(wallState) {
+	if ((this.type == 0 && wallState == 0) || (this.type == 1 && wallState == 1) ) {
+		this.block = true;
+	} else if ((this.type == 0 && wallState == 1) || (this.type == 1 && wallState == 0)) {
+		this.block = false;
+	}
+};

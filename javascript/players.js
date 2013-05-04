@@ -23,8 +23,9 @@ var Player1 = {
     width: 12,
     height: 12,
     spriteSheet: [
-        config.test_sprite, {width:24, height:24}
-    ]
+        config.player_img, {width:24, height:24}
+    ],
+    animations: {'static':[0,1]}
 };
 
 var Player2 = {
@@ -33,14 +34,15 @@ var Player2 = {
     width: 12,
     height: 12,
     spriteSheet: [
-        config.test_sprite, {width:24, height:24}
+        config.player_img, {width:24, height:24}
     ],
     controlMapping: {
         down: gamejs.event.K_k,
         left: gamejs.event.K_j,
         right: gamejs.event.K_l,
         up: gamejs.event.K_i
-    }
+    },
+    animations: {'static':[0,1]}
 };
 
 var initialize = function() {
