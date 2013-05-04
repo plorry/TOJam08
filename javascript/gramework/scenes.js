@@ -67,8 +67,8 @@ Scene.prototype.initScene = function(sceneConfig) {
 				width: tile.rect.width / 2,
 				height: tile.rect.height / 2
 			}
-			if (tile.properties.switch) {
-				tile_opts['spriteSheet'] = [config.button_img, {height:24, width:24}];
+			if (tile.properties.button) {
+				tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
 				tile_opts['animations'] = {'static':[0], 'active':[1]};
 				var button = new Button(tile_opts);
 				this.addProps([button]);

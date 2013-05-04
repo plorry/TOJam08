@@ -342,4 +342,15 @@ Gate.prototype.setState = function(wallState) {
 	} else if ((this.type == 0 && wallState == 1) || (this.type == 1 && wallState == 0)) {
 		this.block = false;
 	}
+	return;
+};
+
+Gate.prototype.update = function(msDuration) {
+	Actor.prototype.update.apply(this, arguments);
+	if (this.block && this.animation.currentAnimation == 'open') {
+		this.animation.start('closed');
+	} else if (!this.block && this.animation.currentAnimation == 'closed') {
+		this.animation.start('open');
+	}
+	return;
 };
