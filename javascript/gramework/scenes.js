@@ -93,7 +93,6 @@ Scene.prototype.unFreeze = function() {
 Scene.prototype.draw = function(display) {
 	this.view.fill("#F0A30F");
 	if (this.image) {
-		//this.view.blit(this.image, new gamejs.Rect([0,0], this.image_size), new gamejs.Rect([0,0], this.view_size));
 		this.view.blit(this.image);
 	}
 	if (this.map) {

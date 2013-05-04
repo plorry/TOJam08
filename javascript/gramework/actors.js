@@ -211,10 +211,14 @@ FourDirection.prototype.update = function(msDuration) {
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
 
-	for (var i=0; i<this.collisionRects.length; i++) {
-		this.collisionRects[i].rect.top += this.ySpeed;
-		this.collisionRects[i].rect.left += this.xSpeed;
-	}
+	this.collisionTop.top = this.rect.top - 4;
+	this.collisionTop.left = this.rect.left + 2;
+	this.collisionLeft.left = this.rect.left - 4;
+	this.collisionLeft.top = this.rect.top + 2;
+	this.collisionRight.left = this.rect.right;
+	this.collisionRight.top = this.rect.top + 2;
+	this.collisionBottom.left = this.rect.left + 2;
+	this.collisionBottom.top = this.rect.bottom;
 
 	Actor.prototype.update.apply(this, arguments);
 	return;
@@ -250,14 +254,14 @@ FourDirection.prototype.updateCollisions = function() {
 // Collision callback functions. The `tile` that this occured 
 // against is passed.
 FourDirection.prototype._hitWall = function(tile, direction) {
-    if (direction === 'bottom') {
-        this.ySpeed = -(this.accel * this.ySpeed) - 1;
-    } else if (direction === 'top') {
-        this.ySpeed = (this.accel * this.ySpeed) + 1;
-    } else if (direction === 'left') {
-        this.xSpeed = (this.accel * this.ySpeed) + 1;
-    } else if (direction === 'right') {
-        this.xSpeed = -(this.accel * this.ySpeed) - 1;
+    if (direction === 'bottom' && this.movingDown) {
+        this.ySpeed = 0;
+    } else if (direction === 'top' && this.movingUp) {
+        this.ySpeed = 0;
+    } else if (direction === 'left' && this.movingLeft) {
+        this.xSpeed = 0;
+    } else if (direction === 'right' && this.movingRight) {
+        this.xSpeed = 0;
     }
     return;
 };

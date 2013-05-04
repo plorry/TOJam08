@@ -20,8 +20,8 @@ function main() {
     };
 
     var player_2_opts = {
-        x: 98,
-        y: 98,
+        x: 112,
+        y: 80,
         width: 12,
         height: 12,
         spriteSheet: [config.test_sprite, {width:24, height:24}],
