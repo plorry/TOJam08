@@ -29,7 +29,7 @@ var Player1 = {
 };
 
 var Player2 = {
-    x: 112,
+    x: 430,
     y: 80,
     width: 12,
     height: 12,
