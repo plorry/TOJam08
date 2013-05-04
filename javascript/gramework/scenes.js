@@ -143,6 +143,7 @@ Scene.prototype.update = function(msDuration) {
         if (this.physics) {
             this.physics.step(msDuration / 1000);
         }
+
         // update actors	
         this.actors.forEach(function(actor){
             actor.update(msDuration);

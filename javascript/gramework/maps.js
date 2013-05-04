@@ -42,6 +42,10 @@ var TileMapModel = function() {
     this.startingPosition = [0, 0];
 };
 
+TileMapModel.prototype.getTiles = function() {
+    return this.tiles.sprites();
+};
+
 TileMapModel.prototype.createMatrix = function(opts) {
     this.matrix = [];
     this.tileWidth = opts.width;
@@ -59,62 +63,29 @@ TileMapModel.prototype.createMatrix = function(opts) {
 
 // Every tile we have is added to a TileMap, for easy reference.
 TileMapModel.prototype.push = function(tile, tilePos, i, j) {
-    var that = this;
-
     if (!tile.properties) {
         return;
     }
 
+    this.tiles.add(tile);
+
     _.each(tile.properties, function(value, key) {
       switch(key) {
         case "obstacle":
-          that.tiles.add(tile);
           // Add tile to the matrix. For simplicity sake at this point,
           // simply add it as a BLOCK.always tile if there is a 
           // blocking property on it.
           // TODO: Do we need this matrix? Why cant it just be a property on the
           // tile like so:
-          tile._block = BLOCK.always;
-          that.matrix[i][j] = BLOCK.always;
+          // that.matrix[i][j] = BLOCK.always;
+          tile.block = true;
           break;
         case "switch":
-            that.tiles.add(tile);
+            tile.switch = true;
         default:
           break;
       }
     });
-      
-      /*
-       * TODO
-      if (tile.properties.start) {
-        this.startingPosition = tilePos;
-      } else if (tile.properties.active) {
-        this.activeTiles.add(tile);
-      } else if (tile.properties.block) {
-        this.tiles.add(tile)
-
-        this.matrix[i][j] = BLOCK.always;
-      }
-      if (tile.properties.pain) {
-        this.deadlyTiles.add(tile);
-      }
-      */
-};
-
-TileMapModel.prototype.actorCollisionTest = function(actor) {
-    var collisions = gamejs.sprite.spriteCollide(actor, this.tiles);
-    return _.reduce(collisions, function(result, tile) {
-        // An actor has collision rects. For each rect, we want to check if a
-        // tile is colliding with it.
-        for (var i = 0; i < actor.collisionRects.length; i ++) {
-            var obj = actor.collisionRects[i];
-            if (tile.rect.collideRect(obj.rect)) {
-                result[obj.key] = true;
-            }
-        }
-        return result;
-    }, {});
-    return null;
 };
 
 // Loads the Map at `url` and holds all layers.
@@ -123,6 +94,7 @@ var Tile = function(rect, properties) {
 
     this.rect = rect;
     this.properties = properties;
+    this.baseProperties = _.cloneDeep(properties);
 
     gamejs.log("Tile", properties);
 
@@ -235,8 +207,7 @@ var MapController = function() {
         }
     };
 
-    this.update = function(msDuration) {
-        // tick
-    };
+    // tick
+    this.update = function(msDuration) {};
     return this;
 };

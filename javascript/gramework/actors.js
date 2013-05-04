@@ -232,24 +232,33 @@ FourDirection.prototype.updateCollisions = function() {
         for (var i = 0; i < actor.collisionRects.length; i ++) {
             var obj = actor.collisionRects[i];
             if (tile.rect.collideRect(obj.rect)) {
-                result[obj.key] = true;
+                result[obj.key] = tile;
             }
         }
         return result;
     }, {});
 
-    _.each(collisions, function(value, key) {
-        if (key === 'bottom') {
-            actor.ySpeed = -(actor.accel * actor.ySpeed) - 1;
-        } else if (key === 'top') {
-            actor.ySpeed = (actor.accel * actor.ySpeed) + 1;
-        } else if (key === 'left') {
-            actor.xSpeed = (actor.accel * actor.ySpeed) + 1;
-        } else if (key === 'right') {
-            actor.xSpeed = -(actor.accel * actor.ySpeed) - 1;
+    _.each(collisions, function(tile, key) {
+        if (tile.block === true) {
+            actor._hitWall(tile, key);
         }
     });
 
+    return;
+};
+
+// Collision callback functions. The `tile` that this occured 
+// against is passed.
+FourDirection.prototype._hitWall = function(tile, direction) {
+    if (direction === 'bottom') {
+        this.ySpeed = -(this.accel * this.ySpeed) - 1;
+    } else if (direction === 'top') {
+        this.ySpeed = (this.accel * this.ySpeed) + 1;
+    } else if (direction === 'left') {
+        this.xSpeed = (this.accel * this.ySpeed) + 1;
+    } else if (direction === 'right') {
+        this.xSpeed = -(this.accel * this.ySpeed) - 1;
+    }
     return;
 };
 
