@@ -176,7 +176,9 @@ var LayerView = function(map, layer, opts) {
                   tilePos,
                   [opts.tileWidth, opts.tileHeight]
                 );
-                this.surface.blit(tileSurface, tileRect);
+                if (tileProperties.draw) {
+                  this.surface.blit(tileSurface, tileRect);
+                }
                 var tile = new Tile(tileRect, tileProperties);
 
                 // Push or ignore the tile. Only kept if its relevant.
