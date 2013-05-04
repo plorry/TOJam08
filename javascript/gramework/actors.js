@@ -17,7 +17,7 @@ var DEFAULT_CONTROL_MAPPING = {
 };
 
 var DEFAULT_ANIMATIONS = {
-	'static': [0,1]
+	'static': [0]
 };
 
 var Actor = exports.Actor = function(options) {
@@ -309,3 +309,15 @@ FourDirection.prototype.handleEvent = function(event) {
 	}
 	return;
 };
+
+var Button = exports.Button = function(options) {
+	Button.superConstructor.apply(this, arguments);
+	return this;
+};
+objects.extend(Button, Actor);
+
+Button.prototype.update = function(msDuration) {
+	Actor.prototype.update.apply(this, arguments);
+	
+	return;
+}

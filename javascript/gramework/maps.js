@@ -96,7 +96,7 @@ var Tile = function(rect, properties) {
     this.properties = properties;
     this.baseProperties = _.cloneDeep(properties);
 
-    gamejs.log("Tile", properties);
+    //gamejs.log("Tile", properties);
 
     return this;
 };

@@ -20,7 +20,7 @@ function main() {
     };
 
     var player_2_opts = {
-        x: 112,
+        x: 576,
         y: 80,
         width: 12,
         height: 12,
@@ -57,6 +57,5 @@ function main() {
 }
 
 gamejs.preload(config.RESOURCES);
-console.log(config.RESOURCES);
 
 gamejs.ready(main);

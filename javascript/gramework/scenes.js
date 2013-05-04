@@ -1,12 +1,15 @@
 var gamejs = require('gamejs');
+var config = require('../config');
 var Camera = require('./camera').Camera;
 
 var Physics  = require('./physics').Physics;
 var Body = require('./physics').Body;
 var Joint = require('./physics').Joint;
 
-var Actor = require('./actors').Actor;
+var Actor = require('./actors').Actor,
+	Button = require('./actors').Button;
 var Map = require('./maps').Map;
+var TileMap = require('./maps').TileMap;
 
 //Scene Class
 
@@ -52,12 +55,34 @@ Scene.prototype.initScene = function(sceneConfig) {
 
 	if (sceneConfig.map) {
 		this.map = new Map(sceneConfig.map);
+		for(var i=0;i < TileMap.tiles.sprites().length;i++) {
+			var tile = TileMap.tiles.sprites()[i];
+			if (tile.properties.switch) {
+				var button_opts = {
+					x: tile.rect.center[0],
+					y: tile.rect.center[1],
+					width: tile.rect.width / 2,
+					height: tile.rect.height / 2,
+					spriteSheet: [config.test_button, {height:24, width:24}],
+					animations: {'static':[0], 'active':[1]}
+				};
+				var button = new Button(button_opts)
+				this.addProps([button]);
+				console.log(button);
+			}
+		}
 	}
 
 	this.triggers = [];
 	
 	this.view_size = [this.width, this.height];	
     this.view = new gamejs.Surface(this.view_size);
+    if (this.image) {
+		this.view.blit(this.image);
+	}
+	if (this.map) {
+		this.map.draw(this.view);
+	}
 	return;
 };
 
@@ -91,15 +116,9 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-	this.view.fill("#F0A30F");
-	if (this.image) {
-		this.view.blit(this.image);
-	}
-	if (this.map) {
-		this.map.draw(this.view);
-	}
-	this.props.draw(this.view);
-	this.actors.draw(this.view);
+	//this.view.clear();
+	//this.props.draw(this.view);
+	//this.actors.draw(this.view);
 
 	var screen = this.camera.draw();
 	this.ui.draw(screen);
