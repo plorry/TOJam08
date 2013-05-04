@@ -77,6 +77,8 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
           tile._block = BLOCK.always;
           that.matrix[i][j] = BLOCK.always;
           break;
+        case "switch":
+            that.tiles.add(tile);
         default:
           break;
       }

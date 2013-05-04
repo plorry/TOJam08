@@ -5,6 +5,7 @@ var objects = require('gamejs/utils/objects');
 var config = require('../config');
 var SpriteSheet = require('./animate').SpriteSheet;
 var Animation = require('./animate').Animation;
+var TileMap = require('./maps').TileMap;
 
 var Body = require('./physics').Body;
 
@@ -133,7 +134,6 @@ FourDirection.prototype.init = function(options) {
 	this.accel = options.accel || 0.1;
 	this.decel = options.decel || 0.2;
 
-    this.colliding = null;
 	this.movingDown = false;
 	this.movingUp = false;
 	this.movingRight = false;
@@ -206,20 +206,7 @@ FourDirection.prototype.update = function(msDuration) {
 	}
 
     // Are we colliding? Since its just 4 directional, this is simple!
-    if (this.colliding) {
-        var that = this;
-        _.each(this.colliding, function(value, key) {
-            if (key === 'bottom') {
-                that.ySpeed = -(that.accel * that.ySpeed) - 1;
-            } else if (key === 'top') {
-                that.ySpeed = (that.accel * that.ySpeed) + 1;
-            } else if (key === 'left') {
-                that.xSpeed = (that.accel * that.ySpeed) + 1;
-            } else if (key === 'right') {
-                that.xSpeed = -(that.accel * that.ySpeed) - 1;
-            }
-        });
-    }
+    this.updateCollisions();
 
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
@@ -229,19 +216,40 @@ FourDirection.prototype.update = function(msDuration) {
 		this.collisionRects[i].rect.left += this.xSpeed;
 	}
 
-    this.colliding = null;
-
 	Actor.prototype.update.apply(this, arguments);
 	return;
 };
 
-// Call when the actor has collided with something. The `collision`
-// object is a hash representing the direction(s) the collision has occured,
-// allowing us to push back the actor respectively.
-FourDirection.prototype.updateCollisions = function(collisions) {
-    if (collisions) {
-        this.colliding = collisions;
-    }
+// Called on each tick. Check against the TileMap and see if we are colliding
+// with any tiles that can affect us (block movement, trigger things, etc.)
+FourDirection.prototype.updateCollisions = function() {
+    var actor = this;
+    var tiles = gamejs.sprite.spriteCollide(actor, TileMap.tiles);
+
+    var collisions = _.reduce(tiles, function(result, tile) {
+        // An actor has collision rects. For each rect, we want to check if a
+        // tile is colliding with it.
+        for (var i = 0; i < actor.collisionRects.length; i ++) {
+            var obj = actor.collisionRects[i];
+            if (tile.rect.collideRect(obj.rect)) {
+                result[obj.key] = true;
+            }
+        }
+        return result;
+    }, {});
+
+    _.each(collisions, function(value, key) {
+        if (key === 'bottom') {
+            actor.ySpeed = -(actor.accel * actor.ySpeed) - 1;
+        } else if (key === 'top') {
+            actor.ySpeed = (actor.accel * actor.ySpeed) + 1;
+        } else if (key === 'left') {
+            actor.xSpeed = (actor.accel * actor.ySpeed) + 1;
+        } else if (key === 'right') {
+            actor.xSpeed = -(actor.accel * actor.ySpeed) - 1;
+        }
+    });
+
     return;
 };
 

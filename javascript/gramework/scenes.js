@@ -7,7 +7,6 @@ var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor;
 var Map = require('./maps').Map;
-var TileMap = require('./maps').TileMap;
 
 //Scene Class
 
@@ -108,9 +107,9 @@ Scene.prototype.draw = function(display) {
 	
 	var size = screen.getSize();
 	
-	var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
+	//var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
 	
-	display.blit(scaledScreen);
+	display.blit(screen);
 	
 	return;
 };
@@ -147,10 +146,6 @@ Scene.prototype.update = function(msDuration) {
         // update actors	
         this.actors.forEach(function(actor){
             actor.update(msDuration);
-            var collisions = TileMap.actorCollisionTest(actor);
-            if (Object.keys(collisions).length > 0) {
-                actor.updateCollisions(collisions)
-            }
         });
         //update props
         this.props.forEach(function(prop){

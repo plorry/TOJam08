@@ -76,9 +76,12 @@ Camera.prototype.update = function(msDuration) {
 	
 	this.view.blit(this.scene.view, [0,0], this.rect);
 	
+    this.display = this.view;
+    /*
 	this.display = gamejs.transform.scale(this.view, [
 		this.rect.width * this.zoom,
 		this.rect.height * this.zoom]);
+    */
 	return;
 }
 
