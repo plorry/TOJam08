@@ -19,6 +19,20 @@ function main() {
         spriteSheet: [config.test_sprite, {width:24, height:24}]
     };
 
+    var player_2_opts = {
+        x: 98,
+        y: 98,
+        width: 12,
+        height: 12,
+        spriteSheet: [config.test_sprite, {width:24, height:24}],
+        controlMapping: {
+            down: gamejs.event.K_k,
+            left: gamejs.event.K_j,
+            right: gamejs.event.K_l,
+            up: gamejs.event.K_i
+        }
+    };
+
     var score_opts = {
         pos: 'top left',
         margin: 2,
@@ -35,7 +49,8 @@ function main() {
     var player_2_score = new Score(score_opts_2);
 
     var player_1 = new FourDirection(player_1_opts);
-    firstScene.addActors([player_1]);
+    var player_2 = new FourDirection(player_2_opts);
+    firstScene.addActors([player_1, player_2]);
     firstScene.addUI([player_1_score, player_2_score]);
     director.start(firstScene);
     return;
