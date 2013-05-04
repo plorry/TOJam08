@@ -6,7 +6,7 @@ var HEIGHT = exports.HEIGHT = 240;
 exports.DEBUG = true;
 exports.PHYSICS_DEBUG = true;
 
-var STATIC_PATH = exports.STATIC_PATH = '../static/';
+var STATIC_PATH = exports.STATIC_PATH = './static/';
 
 var SCALE = exports.SCALE = 2;
 
