@@ -10,6 +10,7 @@ var Score = require('./gramework/ui').Score;
 var players = require('./players');
 function main() {
 
+
     var director = new Director();
     var firstScene = new Scene(director, config.scenes.title);
 

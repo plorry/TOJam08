@@ -9,8 +9,7 @@ var Joint = require('./physics').Joint;
 var Actor = require('./actors').Actor,
 	Button = require('./actors').Button,
 	Gate = require('./actors').Gate;
-var Map = require('./maps').Map;
-var TileMap = require('./maps').TileMap;
+var MapManager = require('./maps').MapManager;
 
 //Scene Class
 
@@ -36,6 +35,8 @@ var Scene = exports.Scene = function(director, sceneConfig) {
 };
 
 Scene.prototype.initScene = function(sceneConfig) {
+    var that = this;
+
 	this.width = sceneConfig.width || 1024;
 	this.height = sceneConfig.height || 500;
 	this.scale = sceneConfig.scale || 1;
@@ -57,34 +58,8 @@ Scene.prototype.initScene = function(sceneConfig) {
 		this.image_size = this.image.getSize();
 	}
 
-	if (sceneConfig.map) {
-		this.map = new Map(sceneConfig.map);
-		for(var i=0;i < TileMap.tiles.sprites().length;i++) {
-			var tile = TileMap.tiles.sprites()[i];
-			var tile_opts = {
-				x: tile.rect.center[0] - 1,
-				y: tile.rect.center[1] - 1,
-				width: tile.rect.width / 2,
-				height: tile.rect.height / 2
-			}
-			if (tile.properties.button) {
-				tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
-				tile_opts['animations'] = {'open':[0], 'closed':[1]};
-				tile_opts['startingAnimation'] = 'open';
-				var button = new Button(tile_opts);
-				this.addProps([button]);
-				this.buttons.add(button);
-			}
-			if (tile.properties.class == 'gate') {
-				tile_opts['spriteSheet'] = [config.gate_img, {height:32, width:32}];
-				tile_opts['animations'] = {'open': [0], 'closed': [1]};
-				tile_opts['type'] = tile.properties.type;
-				tile_opts['startingAnimation'] = 'open';
-				var gate = new Gate(tile_opts);
-				this.addProps([gate]);
-				this.gates.add(gate);
-			}
-		}
+	if (sceneConfig.maps) {
+        this.maps = new MapManager(sceneConfig.maps).maps;
 	}
 
 	this.triggers = [];
@@ -94,10 +69,42 @@ Scene.prototype.initScene = function(sceneConfig) {
     if (this.image) {
 		this.view.blit(this.image);
 	}
-	if (this.map) {
-		this.map.draw(this.view);
-	}
+
+    this.maps.forEach(function(map) {
+        map.draw(that.view);
+        that.mapActors(map);
+    });
 	return;
+};
+
+// TODO: This may be better suited inside the map module, and it'll be part of
+// its draw command.
+Scene.prototype.mapActors = function(map) {
+    for (var i = 0; i < map.getTiles().sprites().length; i++) {
+        var tile = map.getTiles().sprites()[i];
+        var tile_opts = {
+            x: tile.rect.center[0] + map.controller.offset[0],
+            y: tile.rect.center[1] + map.controller.offset[1],
+            width: tile.rect.width / 2,
+            height: tile.rect.height / 2
+        }
+        if (tile.properties.button) {
+            tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
+            tile_opts['animations'] = {'static':[0], 'active':[1]};
+            var button = new Button(tile_opts);
+            this.addProps([button]);
+            this.buttons.add(button);
+        }
+        if (tile.properties.class == 'gate') {
+            tile_opts['spriteSheet'] = [config.gate_img, {height:32, width:32}];
+            tile_opts['animations'] = {'open': [0], 'closed': [1]};
+            tile_opts['type'] = tile.properties.type;
+            tile_opts['startingAnimation'] = 'open';
+            var gate = new Gate(tile_opts);
+            this.addProps([gate]);
+            this.gates.add(gate);
+        }
+    }
 };
 
 Scene.prototype.addActors = function(actors) {
@@ -170,6 +177,8 @@ var order = function(a,b) {
 };
 
 Scene.prototype.update = function(msDuration) {	
+    var that = this;
+
     if (!this.isFrozen()){
         //step the physics
         if (this.physics) {
@@ -180,12 +189,14 @@ Scene.prototype.update = function(msDuration) {
         var props = this.props;
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
-            	actor.updateCollisions(TileMap.tiles);
-            	actor.updateCollisions(props);
+                // Eventually, we'll only need to update collisions for the
+                // actors current map?
+                that.maps.forEach(function(map, index) {
+                    actor.updateCollisions(map.getTiles());
+                });
+                //actor.updateCollisions(TileMap.tiles);
+                actor.updateCollisions(props);
             });
-            // Are we colliding? Since its just 4 directional, this is simple!
-            //actor.updateCollisions(TileMap.tiles);
-            //actor.updateCollisions(this.props);
         });
         //update props
         this.props.forEach(function(prop){
@@ -198,7 +209,6 @@ Scene.prototype.update = function(msDuration) {
 
         var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
         var gates = this.gates;
-        var buttons = this.buttons;
         buttonCollisions.forEach(function(collision) {
         	var actor = collision.a;
         	var button = collision.b;
@@ -212,9 +222,6 @@ Scene.prototype.update = function(msDuration) {
         		gates.forEach(function(gate) {
         			gate.setState(this.wallState);
         		});
-        		buttons.forEach(function(button) {
-        			button.setState(this.wallState);
-        		});
         	}
         });
   		var actors = this.actors;
@@ -223,7 +230,6 @@ Scene.prototype.update = function(msDuration) {
         		button.canToggle = true;
         	}
         });
-    
 
         for (var i=0; i < this.triggers.length; i++){
             var trigger = this.triggers[i];
