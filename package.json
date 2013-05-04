@@ -1,0 +1,15 @@
+{
+  "name": "express",
+  "description": "Sinatra inspired web development framework",
+  "version": "3.2.2",
+  "author": {
+    "name": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca"
+  },
+  "dependencies": {
+    "mu2": "0.5.17",
+    "express": "3.2.2"
+  }
+  "scripts": {
+  "preinstall": "npm i -g supervisor@0.5.2"
+}
