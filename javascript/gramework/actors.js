@@ -211,10 +211,14 @@ FourDirection.prototype.update = function(msDuration) {
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
 
-	for (var i=0; i<this.collisionRects.length; i++) {
-		this.collisionRects[i].rect.top += this.ySpeed;
-		this.collisionRects[i].rect.left += this.xSpeed;
-	}
+	this.collisionTop.top = this.rect.top - 4;
+	this.collisionTop.left = this.rect.left + 2;
+	this.collisionLeft.left = this.rect.left - 4;
+	this.collisionLeft.top = this.rect.top + 2;
+	this.collisionRight.left = this.rect.right;
+	this.collisionRight.top = this.rect.top + 2;
+	this.collisionBottom.left = this.rect.left + 2;
+	this.collisionBottom.top = this.rect.bottom;
 
 	Actor.prototype.update.apply(this, arguments);
 	return;
@@ -239,14 +243,14 @@ FourDirection.prototype.updateCollisions = function() {
     }, {});
 
     _.each(collisions, function(value, key) {
-        if (key === 'bottom') {
-            actor.ySpeed = -(actor.accel * actor.ySpeed) - 1;
-        } else if (key === 'top') {
-            actor.ySpeed = (actor.accel * actor.ySpeed) + 1;
-        } else if (key === 'left') {
-            actor.xSpeed = (actor.accel * actor.ySpeed) + 1;
-        } else if (key === 'right') {
-            actor.xSpeed = -(actor.accel * actor.ySpeed) - 1;
+        if (key === 'bottom' && actor.movingDown) {
+            actor.ySpeed = 0;
+        } else if (key === 'top' && actor.movingUp) {
+            actor.ySpeed = 0;
+        } else if (key === 'left' && actor.movingLeft) {
+            actor.xSpeed = 0;
+        } else if (key === 'right' && actor.movingRight) {
+            actor.xSpeed = 0;
         }
     });
 
