@@ -259,6 +259,7 @@ FourDirection.prototype.draw = function(display) {
 
 FourDirection.prototype.handleEvent = function(event) {
 	if (event.type === gamejs.event.KEY_DOWN) {
+        gamejs.log(event.key);
 		if (event.key === this.controlMapping['down']) {
 			this.movingDown = true;
 		}
