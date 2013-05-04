@@ -5,7 +5,6 @@ var objects = require('gamejs/utils/objects');
 var config = require('../config');
 var SpriteSheet = require('./animate').SpriteSheet;
 var Animation = require('./animate').Animation;
-var TileMap = require('./maps').TileMap;
 
 var Body = require('./physics').Body;
 
@@ -224,8 +223,9 @@ FourDirection.prototype.update = function(msDuration, collisionCallback) {
 	return;
 };
 
-// Called on each tick. Check against the TileMap and see if we are colliding
-// with any tiles that can affect us (block movement, trigger things, etc.)
+// Called on each tick. Check against another spritEGroup to see if this
+// actor is colliding with anything within that one. Custom functionality
+// to test against the actors 4 collision rects.
 FourDirection.prototype.updateCollisions = function(spriteGroup) {
     var actor = this;
     var tiles = gamejs.sprite.spriteCollide(actor, spriteGroup);

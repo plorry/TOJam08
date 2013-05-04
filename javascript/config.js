@@ -32,6 +32,15 @@ exports.scenes = {
         'height': 480,
         'scale': SCALE,
         'image': BG_TEST,
-        'map': STATIC_PATH + 'maps/test_map.tmx'
+        'maps': [
+            {
+                url: STATIC_PATH + 'maps/test_map.tmx',
+                offset: [0, 0]
+            },
+            {
+                url: STATIC_PATH + 'maps/test_map_2.tmx',
+                offset: [000, 280]
+            }
+        ]
     }
 };
