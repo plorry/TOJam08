@@ -154,12 +154,12 @@ Scene.prototype.handleEvent = function(event) {
 
 	if (event.type === gamejs.event.KEY_DOWN) {
 		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(0.5);
+			this.freeze();
 		}
 	}
 	if (event.type === gamejs.event.KEY_UP) {
 		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(1);
+			this.unFreeze();
 		}
 	}
 	return;
