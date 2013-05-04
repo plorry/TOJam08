@@ -361,6 +361,13 @@ var Button = exports.Button = function(options) {
     //toggle state
     this.state = 0;
     this.canToggle = true;
+    this.centerCollisionRect = new gamejs.Rect(
+        [this.rect.left, this.rect.top],
+        [
+            this.rect.width - (this.rect.width / 2),
+            this.rect.height - (this.rect.height / 2)
+        ]
+    );
     return this;
 };
 objects.extend(Button, Actor);
