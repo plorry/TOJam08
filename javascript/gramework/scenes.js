@@ -6,10 +6,10 @@ var Physics  = require('./physics').Physics;
 var Body = require('./physics').Body;
 var Joint = require('./physics').Joint;
 
-var Actor = require('./actors').Actor,
-	Button = require('./actors').Button,
-	Gate = require('./actors').Gate;
-var Map = require('./maps').Map;
+var Actor = require('./actors').Actor;
+var	Button = require('./actors').Button;
+var	Gate = require('./actors').Gate;
+var Mmap = require('./maps').Mmap;
 var TileMap = require('./maps').TileMap;
 
 //Scene Class
@@ -31,7 +31,7 @@ var Scene = exports.Scene = function(director, sceneConfig) {
 	var sceneId = sceneId || 0;
 	this.elapsed = 0;
 	this.initScene(sceneConfig);
-	
+
 	return this;
 };
 
@@ -66,7 +66,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 				y: tile.rect.center[1],
 				width: tile.rect.width / 2,
 				height: tile.rect.height / 2
-			}
+			};
 			if (tile.properties.switch) {
 				tile_opts['spriteSheet'] = [config.button_img, {height:24, width:24}];
 				tile_opts['animations'] = {'static':[0], 'active':[1]};
@@ -87,8 +87,8 @@ Scene.prototype.initScene = function(sceneConfig) {
 	}
 
 	this.triggers = [];
-	
-	this.view_size = [this.width, this.height];	
+
+	this.view_size = [this.width, this.height];
     this.view = new gamejs.Surface(this.view_size);
     if (this.image) {
 		this.view.blit(this.image);
@@ -135,18 +135,18 @@ Scene.prototype.draw = function(display) {
 
 	var screen = this.camera.draw();
 	this.ui.draw(screen);
-	
+
 	var size = screen.getSize();
-	
+
 	//var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
-	
+
 	display.blit(screen);
-	
+
 	return;
 };
 
 Scene.prototype.handleEvent = function(event) {
-	
+
 	this.actors.forEach(function(actor) {
 		actor.handleEvent(event);
 	});
@@ -168,7 +168,7 @@ var order = function(a,b) {
 	return a.rect.top-b.rect.top;
 };
 
-Scene.prototype.update = function(msDuration) {	
+Scene.prototype.update = function(msDuration) {
     if (!this.isFrozen()){
         //step the physics
         if (this.physics) {
@@ -218,7 +218,7 @@ Scene.prototype.update = function(msDuration) {
         		button.canToggle = true;
         	}
         });
-    
+
 
         for (var i=0; i < this.triggers.length; i++){
             var trigger = this.triggers[i];
