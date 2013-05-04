@@ -206,7 +206,7 @@ FourDirection.prototype.update = function(msDuration) {
 	}
 
     // Are we colliding? Since its just 4 directional, this is simple!
-    this.updateCollisions();
+    this._updateCollisions();
 
 	this.realRect.left += this.xSpeed;
 	this.realRect.top += this.ySpeed;
@@ -226,7 +226,7 @@ FourDirection.prototype.update = function(msDuration) {
 
 // Called on each tick. Check against the TileMap and see if we are colliding
 // with any tiles that can affect us (block movement, trigger things, etc.)
-FourDirection.prototype.updateCollisions = function() {
+FourDirection.prototype._updateCollisions = function() {
     var actor = this;
     var tiles = gamejs.sprite.spriteCollide(actor, TileMap.tiles);
 
@@ -242,12 +242,15 @@ FourDirection.prototype.updateCollisions = function() {
         return result;
     }, {});
 
-    _.each(collisions, function(tile, key) {
-        if (tile.block === true) {
-            actor._hitWall(tile, key);
-        }
-    });
+    if (Object.keys(collisions).length > 0) {
+        return this.doCollisions(collisions);
+    }
+    return;
+};
 
+// Hook for subclasses to use. Given an object containing the sprites that this
+// actor is colliding with.
+FourDirection.prototype.doCollisions = function(collisions) {
     return;
 };
 
