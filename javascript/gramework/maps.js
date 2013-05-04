@@ -165,7 +165,6 @@ var Map = exports.Map = function(options) {
 
     // Given a specific tile, get the center of it. Useful for outside classes.
     this.getTileCenter = function(tile) {
-        gamejs.log(tile.rect.top, tile.rect.left);
         return [
             (tile.rect.left + (tile.rect.width / 2)),
             (tile.rect.top + (tile.rect.height / 2))

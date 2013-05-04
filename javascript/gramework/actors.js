@@ -48,14 +48,11 @@ Actor.prototype.init = function(options) {
         this.currentMap = MapManager.getById(start.map);
 
         if (this.currentMap.spawnPlayers.length > 0) {
-            gamejs.log(this.currentMap.spawnPlayers[0]);
             var initialSpawn = this.currentMap.getTileCenter(
                 this.currentMap.spawnPlayers[0]
             );
-            gamejs.log("Initial spawn", initialSpawn);
             this.x = initialSpawn[0];
             this.y = initialSpawn[1];
-            gamejs.log(this.x, this.y);
         }
     }
 
