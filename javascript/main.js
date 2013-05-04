@@ -56,7 +56,7 @@ function main() {
     return;
 }
 
-gamejs.preload(config.RESOURCES.concat(['./static/backgrounds/test_tiles.png']));
+gamejs.preload(config.RESOURCES);
 console.log(config.RESOURCES);
 
 gamejs.ready(main);
