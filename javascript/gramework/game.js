@@ -8,7 +8,7 @@ exports.Director = function() {
 	function tick(msDuration) {
         if (!onAir) return;
 
-        gamejs.event.get().forEach(function(event){
+        gamejs.onEvent(function(event) {
             currentScene.handleEvent(event);
         });
 
@@ -42,6 +42,6 @@ exports.Director = function() {
         console.log(display.getSize());
 	}
 	
-    gamejs.time.fpsCallback(tick, this, 60);
+    gamejs.onTick(tick);
     return this;
 };
