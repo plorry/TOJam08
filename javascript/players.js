@@ -14,7 +14,12 @@ Player.prototype.doCollisions = function(collisions) {
         if (tile.block === true) {
             actor._hitWall(tile, key);
         }
+
+        if (tile.properties && tile.properties.teleportPlayer) {
+            actor.doTeleport(tile);
+        }
     });
+
 };
 
 var Player1 = {

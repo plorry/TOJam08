@@ -49,29 +49,32 @@ Actor.prototype.init = function(options) {
         map: 0
     });
 
+    this.currentMapIndex = start.map;
     this.currentMap = MapManager.getById(start.map);
 
+    this.rect = new gamejs.Rect(
+        [(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
+        [this.width * 2 * this.scale, this.height * 2 * this.scale]
+    );
+
+    this.realRect = new gamejs.Rect(this.rect);
+    this.collisionRect = new gamejs.Rect(
+        [this.rect.left+1, this.rect.top+1],
+        [this.rect.width-2, this.rect.height-2]
+    );
+
+    if (options.spriteSheet) {
+        this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
+        var animations = options.animations || DEFAULT_ANIMATIONS;
+        this.animation = new Animation(this.spriteSheet, animations);
+        this.animation.start(this.startingAnimation);
+    }
+	this.physics = options.physics || null;
+
     if (this.currentMap.spawnPlayers.length > 0) {
-        var initialSpawn = this.currentMap.getTileCenter(
-            this.currentMap.spawnPlayers[0]
-        );
-        this.x = initialSpawn[0];
-        this.y = initialSpawn[1];
+        this.spawnAtMapOrigin();
     }
 
-	this.rect = new gamejs.Rect(
-		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
-		[this.width * 2 * this.scale, this.height * 2 * this.scale]);
-	this.realRect = new gamejs.Rect(this.rect);
-	this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
-
-	if (options.spriteSheet) {
-		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
-		var animations = options.animations || DEFAULT_ANIMATIONS;
-		this.animation = new Animation(this.spriteSheet, animations);
-		this.animation.start(this.startingAnimation);
-	}
-	this.physics = options.physics || null;
 
 	if (this.physics) {
 		this.angle = options.angle * (Math.PI / 180) || 0;
@@ -89,6 +92,21 @@ Actor.prototype.init = function(options) {
 	}
 
 	return;
+};
+
+// Set the players position and all related rects to a specified point.
+Actor.prototype.setPlayerPosition = function(x, y) {
+    gamejs.log(x, y);
+    this.realRect.left = x;
+    this.realRect.top = y;
+}
+
+// Spawn at the current maps origin.
+Actor.prototype.spawnAtMapOrigin = function() {
+    var initialSpawn = this.currentMap.getTileCenter(
+        this.currentMap.spawnPlayers[0]
+    );
+    this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
 };
 
 Actor.prototype.update = function(msDuration) {
@@ -267,6 +285,17 @@ FourDirection.prototype.updateCollisions = function(spriteGroup) {
 // actor is colliding with.
 FourDirection.prototype.doCollisions = function(collisions) {
     return;
+};
+
+// Teleport actor from one location to another! Requires `tile`, the
+// tile causing the teleport.
+FourDirection.prototype.doTeleport = function(tile) {
+    if (tile.properties.teleportPlayer === 'next') {
+        // Update players current map index.
+        this.currentMapIndex += 1;
+        this.currentMap = MapManager.getById(this.currentMapIndex);
+        this.spawnAtMapOrigin();
+    }
 };
 
 // Collision callback functions. The `tile` that this occured 

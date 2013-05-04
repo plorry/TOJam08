@@ -134,6 +134,11 @@ var Map = exports.Map = function(options) {
     // may just want to 0-index this, but we want the notion of "checkpoints"
     this.spawnPlayers = [];
 
+    // These tiles have properties which teleport a player in some way. They
+    // could have values like 'next', or 'ref:anotherTitle', allowing us to
+    // build simple teleport mechanisms, or move onto the next level.
+    this.teleportPlayers = [];
+
     this.tileset = new TileMapModel();
 
     // Draw each layer
@@ -225,6 +230,10 @@ var LayerView = function(map, layer, opts) {
 
                 if (tileProperties.spawnPlayer) {
                     map.spawnPlayers.push(tile);
+                }
+
+                if (tileProperties.teleportPlayer) {
+                    map.teleportPlayers.push(tile);
                 }
 
                 // Push each tile into our custom TileMap model, which adds some
