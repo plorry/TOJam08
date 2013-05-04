@@ -6,20 +6,18 @@ exports.Director = function() {
 	var currentScene = null;
 
 	function tick(msDuration) {
-        if (!onAir) return;
+		if (!onAir) return;
 
-        gamejs.onEvent(function(event) {
-            currentScene.handleEvent(event);
-        });
-
+		gamejs.event.get().forEach(function(event){
+			currentScene.handleEvent(event);
+		});
         if (msDuration > 1000/15) {
             msDuration = 1000/15;
         }
-
-        currentScene.update(msDuration);
-        //this.display.fill("#000");
-        currentScene.draw(display);		
-        return;
+		currentScene.update(msDuration);
+        this.display.fill("#000");
+		currentScene.draw(display);		
+		return;
 	};
 
 	this.start = function(scene) {
@@ -42,6 +40,6 @@ exports.Director = function() {
         console.log(display.getSize());
 	}
 	
-    gamejs.onTick(tick);
+    gamejs.time.fpsCallback(tick, this, 60);
     return this;
 };

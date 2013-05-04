@@ -16,7 +16,7 @@ var DEFAULT_CONTROL_MAPPING = {
 };
 
 var DEFAULT_ANIMATIONS = {
-	'static': [0]
+	'static': [0,1]
 };
 
 var Actor = exports.Actor = function(options) {
@@ -259,6 +259,7 @@ FourDirection.prototype.draw = function(display) {
 
 FourDirection.prototype.handleEvent = function(event) {
 	if (event.type === gamejs.event.KEY_DOWN) {
+        gamejs.log(event.key);
 		if (event.key === this.controlMapping['down']) {
 			this.movingDown = true;
 		}
