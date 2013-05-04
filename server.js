@@ -1,5 +1,5 @@
-var express = require('express')
-    , mu = require('mu2');
+var express = require('express');
+var mu = require('mu2');
 
 mu.root = __dirname;
 
@@ -22,3 +22,4 @@ app.use('/static', express.static(__dirname + '/static'));
 
 app.listen(4000);
 console.log("Listening on port 4000");
+

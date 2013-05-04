@@ -24,10 +24,10 @@ Camera.prototype.update = function(msDuration) {
 		if (this.rect.center[0] > this.dest[0]) {this.rect.moveIp(this.xSpeed,0);}
 		if (this.rect.center[1] < this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
 		if (this.rect.center[1] > this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
-		
+
 		this.xSpeed = (this.dest[0] - this.rect.center[0]) / 10;
 		this.ySpeed = (this.dest[1] - this.rect.center[1]) / 10;
-				
+
 		if (this.dest == this.rect.center) {
 			this.dest = null;
 			this.xSpeed = 0;
@@ -37,20 +37,20 @@ Camera.prototype.update = function(msDuration) {
 	if (this.center !==null) {
 		this.dest = this.center;
 	}
-	
+
 	if (this.targetZoom !== null) {
 		if (this.targetZoom > this.zoom) {
-			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1); 
+			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
 		}
 		if (this.targetZoom < this.zoom) {
-			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1); 
+			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
 		}
 		if (this.targetZoom == this.zoom) {
 			this.targetZoom = null;
 			this.zoom_multiplier = 1;
 		}
 	}
-	
+
 	var scene_size = this.scene.view.getSize();
 
 	if (this.rect.width <= scene_size[0] && this.rect.height <= scene_size[1]) {
@@ -58,16 +58,16 @@ Camera.prototype.update = function(msDuration) {
 	}
 	this.rect.width = this.width / this.zoom;
 	this.rect.height = this.height / this.zoom;
-	
+
 	if (this.sharp) {
 		this.rect.left = Math.round(this.rect.left);
 		this.rect.top = Math.round(this.rect.top);
 	}
-	
+
 	//The camera's extent cannot be bigger than the current scene's size
 	if (this.rect.width > scene_size[0]) {this.rect.width = scene_size[0];}
 	if (this.rect.height > scene_size[1]) {this.rect.height = scene_size[1];}
-	
+
 	//The camera cannot pan beyond the extents of the scene
 	if (this.rect.top < 0) {this.rect.top = 0;}
 	if (this.rect.left < 0) {this.rect.left = 0;}
@@ -78,7 +78,7 @@ Camera.prototype.update = function(msDuration) {
 
 	this.scene.props.draw(this.view);
 	this.scene.actors.draw(this.view);
-	
+
     this.display = this.view;
     /*
 	this.display = gamejs.transform.scale(this.view, [
@@ -86,7 +86,7 @@ Camera.prototype.update = function(msDuration) {
 		this.rect.height * this.zoom]);
     */
 	return;
-}
+};
 
 Camera.prototype.draw = function() {
 	return this.display;

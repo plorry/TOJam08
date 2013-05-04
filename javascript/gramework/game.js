@@ -19,9 +19,9 @@ exports.Director = function() {
         }
 		currentScene.update(msDuration);
         this.display.fill("#000");
-		currentScene.draw(display);		
+		currentScene.draw(display);
 		return;
-	};
+	}
 
 	this.start = function(scene) {
 		onAir = true;
@@ -41,7 +41,7 @@ exports.Director = function() {
 	if (config.DEBUG) {
         console.log(display.getSize());
 	}
-	
+
     gamejs.onTick(tick, this);
     return this;
 };

@@ -7,74 +7,74 @@ var Body = require('./physics').Body;
 var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor,
-	Button = require('./actors').Button,
-	Gate = require('./actors').Gate;
+    Button = require('./actors').Button,
+    Gate = require('./actors').Gate;
 var MapManager = require('./maps').MapManager;
 
 //Scene Class
 
 var Scene = exports.Scene = function(director, sceneConfig) {
-	this.director = director;
-	this.display = this.director.display;
+    this.director = director;
+    this.display = this.director.display;
 
-	this._frozen = false;
-	this.scroll = true;
+    this._frozen = false;
+    this.scroll = true;
 
-	//All the player-controlled elements
-	this.actors = new gamejs.sprite.Group();
-	//NPC sprites
-	this.props = new gamejs.sprite.Group();
-	//All UI elements to be rendered
-	this.ui = new gamejs.sprite.Group();
+    //All the player-controlled elements
+    this.actors = new gamejs.sprite.Group();
+    //NPC sprites
+    this.props = new gamejs.sprite.Group();
+    //All UI elements to be rendered
+    this.ui = new gamejs.sprite.Group();
 
-	var sceneId = sceneId || 0;
-	this.elapsed = 0;
-	this.initScene(sceneConfig);
-	
-	return this;
+    var sceneId = sceneId || 0;
+    this.elapsed = 0;
+    this.initScene(sceneConfig);
+    
+    return this;
 };
 
 Scene.prototype.initScene = function(sceneConfig) {
     var that = this;
 
-	this.width = sceneConfig.width || 1024;
-	this.height = sceneConfig.height || 500;
-	this.scale = sceneConfig.scale || 1;
-	this.buttons = new gamejs.sprite.Group();
-	this.gates = new gamejs.sprite.Group();
-	this.wallState = 0;
+    this.width = sceneConfig.width || 1024;
+    this.height = sceneConfig.height || 500;
+    this.scale = sceneConfig.scale || 1;
+    this.buttons = new gamejs.sprite.Group();
+    this.gates = new gamejs.sprite.Group();
+    this.wallState = 0;
 
-	this.camera = new Camera(this, {
-		width: this.width,
-		height: this.height
-	});
+    this.camera = new Camera(this, {
+        width: this.width,
+        height: this.height
+    });
 
-	if (sceneConfig.physics) {
-		this.physics = new Physics(document.getElementById("gjs-canvas"));
-	}
+    if (sceneConfig.physics) {
+        this.physics = new Physics(document.getElementById("gjs-canvas"));
+    }
 
-	if (sceneConfig.image) {
-		this.image = gamejs.image.load(sceneConfig.image);
-		this.image_size = this.image.getSize();
-	}
+    if (sceneConfig.image) {
+        this.image = gamejs.image.load(sceneConfig.image);
+        this.image_size = this.image.getSize();
+    }
 
-	if (sceneConfig.maps) {
+    if (sceneConfig.maps) {
         this.maps = MapManager.addMaps(sceneConfig.maps).maps;
-	}
+    }
 
-	this.triggers = [];
-	
-	this.view_size = [this.width, this.height];	
+    this.triggers = [];
+    
+    this.view_size = [this.width, this.height]; 
     this.view = new gamejs.Surface(this.view_size);
     if (this.image) {
-		this.view.blit(this.image);
-	}
+        this.view.blit(this.image);
+    }
 
     this.maps.forEach(function(map) {
         map.draw(that.view);
         that.mapActors(map);
     });
-	return;
+    return;
 };
 
 // TODO: This may be better suited inside the map module, and it'll be part of
@@ -87,7 +87,7 @@ Scene.prototype.mapActors = function(map) {
             y: tile.rect.center[1],
             width: tile.rect.width / 2,
             height: tile.rect.height / 2
-        }
+        };
         if (tile.properties.button) {
             tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
             tile_opts['animations'] = {'static':[0], 'active':[1]};
@@ -108,49 +108,49 @@ Scene.prototype.mapActors = function(map) {
 };
 
 Scene.prototype.addActors = function(actors) {
-	this.actors.add(actors);
-	return;
+    this.actors.add(actors);
+    return;
 };
 
 Scene.prototype.addProps = function(props) {
-	this.props.add(props);
-	return;
+    this.props.add(props);
+    return;
 };
 
 Scene.prototype.addUI = function(ui) {
-	this.ui.add(ui);
-	return;
+    this.ui.add(ui);
+    return;
 };
 
 Scene.prototype.isFrozen = function() {
-	return this._frozen;
+    return this._frozen;
 };
 
 Scene.prototype.freeze = function() {
-	this._frozen = true;
-	return;
+    this._frozen = true;
+    return;
 };
 
 Scene.prototype.unFreeze = function() {
-	this._frozen = false;
-	return;
+    this._frozen = false;
+    return;
 };
 
 Scene.prototype.draw = function(display) {
-	//this.view.clear();
-	//this.props.draw(this.view);
-	//this.actors.draw(this.view);
+    //this.view.clear();
+    //this.props.draw(this.view);
+    //this.actors.draw(this.view);
 
-	var screen = this.camera.draw();
-	this.ui.draw(screen);
-	
-	var size = screen.getSize();
-	
-	//var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
-	
-	display.blit(screen);
-	
-	return;
+    var screen = this.camera.draw();
+    this.ui.draw(screen);
+    
+    var size = screen.getSize();
+    
+    //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
+    
+    display.blit(screen);
+    
+    return;
 };
 
 Scene.prototype.handleEvent = function(event) {
@@ -173,10 +173,10 @@ Scene.prototype.handleEvent = function(event) {
 };
 
 var order = function(a,b) {
-	return a.rect.top-b.rect.top;
+    return a.rect.top-b.rect.top;
 };
 
-Scene.prototype.update = function(msDuration) {	
+Scene.prototype.update = function(msDuration) { 
     var that = this;
 
     if (!this.isFrozen()){
@@ -219,11 +219,11 @@ Scene.prototype.update = function(msDuration) {
         		});
         	}
         });
-  		var actors = this.actors;
+        var actors = this.actors;
         this.buttons.forEach(function(button) {
-        	if (gamejs.sprite.spriteCollide(button, actors).length == 0){
-        		button.canToggle = true;
-        	}
+            if (gamejs.sprite.spriteCollide(button, actors).length === 0){
+                button.canToggle = true;
+            }
         });
 
         for (var i=0; i < this.triggers.length; i++){
@@ -248,24 +248,24 @@ Scene.prototype.update = function(msDuration) {
 };
 
 var Trigger = exports.Trigger = function(options) {
-	this._active = false;
-	this.condition = options.condition;
-	this.update = options.update || function() {return;};
-	this.killCondition = options.killCondition || function() {return false;};
-	this.killEvent = options.killEvent || function() {return;};
-	return this;
+    this._active = false;
+    this.condition = options.condition;
+    this.update = options.update || function() {return;};
+    this.killCondition = options.killCondition || function() {return false;};
+    this.killEvent = options.killEvent || function() {return;};
+    return this;
 };
 
 Trigger.prototype.activate = function() {
-	this._active = true;
-	return;
+    this._active = true;
+    return;
 };
 
 Trigger.prototype.isActive = function() {
-	return this._active;
+    return this._active;
 };
 
 Trigger.prototype.deactivate = function() {
-	this._active = false;
-	return;
+    this._active = false;
+    return;
 };
