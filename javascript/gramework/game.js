@@ -6,18 +6,20 @@ exports.Director = function() {
 	var currentScene = null;
 
 	function tick(msDuration) {
-		if (!onAir) return;
+        if (!onAir) return;
 
-		gamejs.event.get().forEach(function(event){
-			currentScene.handleEvent(event);
-		});
+        gamejs.event.get().forEach(function(event){
+            currentScene.handleEvent(event);
+        });
+
         if (msDuration > 1000/15) {
             msDuration = 1000/15;
         }
-		currentScene.update(msDuration);
+
+        currentScene.update(msDuration);
         //this.display.fill("#000");
-		currentScene.draw(display);		
-		return;
+        currentScene.draw(display);		
+        return;
 	};
 
 	this.start = function(scene) {
