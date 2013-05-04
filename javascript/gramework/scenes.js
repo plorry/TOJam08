@@ -59,7 +59,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 	}
 
 	if (sceneConfig.maps) {
-        this.maps = new MapManager(sceneConfig.maps).maps;
+        this.maps = MapManager.addMaps(sceneConfig.maps).maps;
 	}
 
 	this.triggers = [];
@@ -83,8 +83,8 @@ Scene.prototype.mapActors = function(map) {
     for (var i = 0; i < map.getTiles().sprites().length; i++) {
         var tile = map.getTiles().sprites()[i];
         var tile_opts = {
-            x: tile.rect.center[0] + map.controller.offset[0],
-            y: tile.rect.center[1] + map.controller.offset[1],
+            x: tile.rect.center[0],
+            y: tile.rect.center[1],
             width: tile.rect.width / 2,
             height: tile.rect.height / 2
         }
@@ -189,12 +189,7 @@ Scene.prototype.update = function(msDuration) {
         var props = this.props;
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
-                // Eventually, we'll only need to update collisions for the
-                // actors current map?
-                that.maps.forEach(function(map, index) {
-                    actor.updateCollisions(map.getTiles());
-                });
-                //actor.updateCollisions(TileMap.tiles);
+                actor.updateCollisions(actor.currentMap.getTiles());
                 actor.updateCollisions(props);
             });
         });

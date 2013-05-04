@@ -25,7 +25,13 @@ var Player1 = {
     spriteSheet: [
         config.player_img, {width:24, height:24}
     ],
-    animations: {'static':[0,1]}
+    animations: {'static':[0,1]},
+    // Have a default start point if the map provides nothing.
+    start: {
+        x: 48,
+        y: 48,
+        map: 0
+    }
 };
 
 var Player2 = {
@@ -42,7 +48,13 @@ var Player2 = {
         right: gamejs.event.K_l,
         up: gamejs.event.K_i
     },
-    animations: {'static':[0,1]}
+    animations: {'static':[0,1]},
+    // Have a default start point if the map provides nothing.
+    start: {
+        x: 430,
+        y: 80,
+        map: 1
+    }
 };
 
 var initialize = function() {

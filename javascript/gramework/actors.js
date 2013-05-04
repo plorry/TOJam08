@@ -7,6 +7,7 @@ var SpriteSheet = require('./animate').SpriteSheet;
 var Animation = require('./animate').Animation;
 
 var Body = require('./physics').Body;
+var MapManager = require('./maps').MapManager;
 
 var DEFAULT_CONTROL_MAPPING = {
 	up: gamejs.event.K_UP,
@@ -41,6 +42,23 @@ Actor.prototype.init = function(options) {
 	this.width = options.width;
 	this.startingAnimation = options.startingAnimation || 'static';
 
+    // Starting positions can be customized.
+    var start = options.start;
+    if (start) {
+        this.currentMap = MapManager.getById(start.map);
+
+        if (this.currentMap.spawnPlayers.length > 0) {
+            gamejs.log(this.currentMap.spawnPlayers[0]);
+            var initialSpawn = this.currentMap.getTileCenter(
+                this.currentMap.spawnPlayers[0]
+            );
+            gamejs.log("Initial spawn", initialSpawn);
+            this.x = initialSpawn[0];
+            this.y = initialSpawn[1];
+            gamejs.log(this.x, this.y);
+        }
+    }
+
 	this.rect = new gamejs.Rect(
 		[(this.x - this.width) * this.scale, (this.y - this.height) * this.scale],
 		[this.width * 2 * this.scale, this.height * 2 * this.scale]);
@@ -48,7 +66,6 @@ Actor.prototype.init = function(options) {
 	this.collisionRect = new gamejs.Rect([this.rect.left+1, this.rect.top+1],[this.rect.width-2, this.rect.height-2]);
 
 	if (options.spriteSheet) {
-		console.log(options.spriteSheet);
 		this.spriteSheet = new SpriteSheet(options.spriteSheet[0], options.spriteSheet[1]) || null;
 		var animations = options.animations || DEFAULT_ANIMATIONS;
 		this.animation = new Animation(this.spriteSheet, animations);
@@ -87,8 +104,6 @@ Actor.prototype.update = function(msDuration) {
 		this.animation.update(msDuration);
 		this.image = this.animation.image;
 	}
-
-	//this.body.body.
 	return;
 };
 
@@ -160,8 +175,8 @@ FourDirection.prototype.init = function(options) {
         {key: 'top', rect: this.collisionTop}
     ];
 
-	this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
-	return;
+    this.controlMapping = options.controlMapping || DEFAULT_CONTROL_MAPPING;
+    return;
 };
 
 FourDirection.prototype.update = function(msDuration, collisionCallback) {

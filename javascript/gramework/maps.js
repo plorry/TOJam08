@@ -32,10 +32,6 @@ var BLOCK = {
 // Store tiles that can be collided with 
 var TileMapModel = function() {
     this.tiles = new gamejs.sprite.Group();
-
-    // We need to know where to start for this map. The tile should be defined
-    // by a `start:true` property.
-    this.startingPosition = [0, 0];
 };
 
 TileMapModel.prototype.getTiles = function() {
@@ -103,17 +99,27 @@ objects.extend(Tile, gamejs.sprite.Sprite);
 //
 // offset defines where the map should be drawn within the game scene. The scene
 // will decide when the maps are drawn.
-var MapManager = exports.MapManager = function(maps) {
+var MapManagerModel = function() {
+    this.maps = [];
+    return this;
+};
+
+// Add an array of maps to the manager.
+MapManagerModel.prototype.addMaps = function(maps) {
     // Load up each map.
-    this.maps = maps.map(function(map) { return new Map(map); });
+    this.maps.push.apply(this.maps, maps.map(function(map) {
+        return new Map(map);
+    }));
     return this;
 };
 
 // Return a map by its unique id. Useful when multiple actors are working with
 // different maps in a single scene.
-MapManager.prototype.getById = function(index) {
+MapManagerModel.prototype.getById = function(index) {
     return this.maps[index];
 };
+
+var MapManager = exports.MapManager = new MapManagerModel();
 
 // Takes a hash containing:
 //  `url`, ./path/to/map.tmx,
@@ -124,13 +130,17 @@ var Map = exports.Map = function(options) {
     var url = options.url;
     var offset = options.offset;
 
+    // An array of spawn points players can come from. In many cases, we
+    // may just want to 0-index this, but we want the notion of "checkpoints"
+    this.spawnPlayers = [];
+
     this.tileset = new TileMapModel();
 
     // Draw each layer
     this.draw = function(display) {
         var that = this;
         layerViews.forEach(function(layerView) {
-            layerView.draw(display, that.controller.offset);
+            layerView.draw(display);
         }, this);
     };
 
@@ -150,9 +160,16 @@ var Map = exports.Map = function(options) {
     this.controller = new MapController(offset);
 
     this.getTiles = function() {
-        if (this.tileset) {
-            return this.tileset.getTiles();
-        }
+        return this.tileset.getTiles();
+    };
+
+    // Given a specific tile, get the center of it. Useful for outside classes.
+    this.getTileCenter = function(tile) {
+        gamejs.log(tile.rect.top, tile.rect.left);
+        return [
+            (tile.rect.left + (tile.rect.width / 2)),
+            (tile.rect.top + (tile.rect.height / 2))
+        ];
     };
 
     // Given the TMX Map we've loaded, go through each layer (via map.layers,
@@ -170,9 +187,8 @@ var Map = exports.Map = function(options) {
 };
 
 var LayerView = function(map, layer, opts) {
-    this.draw = function(display, offset) {
-        // `blit` basically means draw.
-        display.blit(this.surface, offset);
+    this.draw = function(display) {
+        display.blit(this.surface);
     };
 
     // Initialize.
@@ -194,15 +210,23 @@ var LayerView = function(map, layer, opts) {
             var tileSurface = opts.tiles.getSurface(gid);
 
             if (tileSurface) {
-                var tilePos = [j * opts.tileWidth, i * opts.tileHeight];
+                var tilePos = [
+                    (j * opts.tileWidth) + map.controller.offset[0],
+                    (i * opts.tileHeight) + map.controller.offset[1]
+                ];
                 var tileRect = new gamejs.Rect(
                   tilePos,
                   [opts.tileWidth, opts.tileHeight]
                 );
+                var tile = new Tile(tileRect, tileProperties);
+
                 if (tileProperties.draw) {
                   this.surface.blit(tileSurface, tileRect);
                 }
-                var tile = new Tile(tileRect, tileProperties);
+
+                if (tileProperties.spawnPlayer) {
+                    map.spawnPlayers.push(tile);
+                }
 
                 // Push each tile into our custom TileMap model, which adds some
                 // convenience over what gamejs provides.
