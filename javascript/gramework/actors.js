@@ -75,7 +75,6 @@ Actor.prototype.init = function(options) {
         this.spawnAtMapOrigin();
     }
 
-
     if (this.physics) {
         this.angle = options.angle * (Math.PI / 180) || 0;
         this.density = options.density || 2;
@@ -96,7 +95,7 @@ Actor.prototype.init = function(options) {
 
 // Set the players position and all related rects to a specified point.
 Actor.prototype.setPlayerPosition = function(x, y) {
-    gamejs.log(x, y);
+    gamejs.log("setPlayerPosition", x, y);
     this.realRect.left = x;
     this.realRect.top = y;
 }
