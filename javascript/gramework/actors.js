@@ -43,17 +43,20 @@ Actor.prototype.init = function(options) {
 	this.startingAnimation = options.startingAnimation || 'static';
 
     // Starting positions can be customized.
-    var start = options.start;
-    if (start) {
-        this.currentMap = MapManager.getById(start.map);
+    // No start provided? Set defaults for currentMap. We assume there is only a
+    // single map in this case.
+    var start = (options.start || {
+        map: 0
+    });
 
-        if (this.currentMap.spawnPlayers.length > 0) {
-            var initialSpawn = this.currentMap.getTileCenter(
-                this.currentMap.spawnPlayers[0]
-            );
-            this.x = initialSpawn[0];
-            this.y = initialSpawn[1];
-        }
+    this.currentMap = MapManager.getById(start.map);
+
+    if (this.currentMap.spawnPlayers.length > 0) {
+        var initialSpawn = this.currentMap.getTileCenter(
+            this.currentMap.spawnPlayers[0]
+        );
+        this.x = initialSpawn[0];
+        this.y = initialSpawn[1];
     }
 
 	this.rect = new gamejs.Rect(
