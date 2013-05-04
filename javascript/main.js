@@ -2,6 +2,7 @@ var gamejs = require('gamejs');
 var config = require('./config');
 
 var Scene = require('./gramework/scenes').Scene;
+var Trigger = require('./gramework/scenes').Trigger;
 var FourDirection = require('./gramework/actors').FourDirection;
 var Director = require('./gramework/game').Director;
 var Score = require('./gramework/ui').Score;
@@ -16,7 +17,8 @@ function main() {
         y: 48,
         width: 12,
         height: 12,
-        spriteSheet: [config.test_sprite, {width:24, height:24}]
+        spriteSheet: [config.test_sprite, {width:24, height:24}],
+        animations: {'static':[0,1]}
     };
 
     var player_2_opts = {
@@ -30,7 +32,8 @@ function main() {
             left: gamejs.event.K_j,
             right: gamejs.event.K_l,
             up: gamejs.event.K_i
-        }
+        },
+        animations: {'static':[0,1]}
     };
 
     var score_opts = {

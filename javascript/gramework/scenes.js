@@ -38,6 +38,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 	this.width = sceneConfig.width || 1024;
 	this.height = sceneConfig.height || 500;
 	this.scale = sceneConfig.scale || 1;
+	this.buttons = new gamejs.sprite.Group();
 
 	this.camera = new Camera(this, {
 		width: this.width,
@@ -68,6 +69,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 				};
 				var button = new Button(button_opts)
 				this.addProps([button]);
+				this.buttons.add(button);
 				console.log(button);
 			}
 		}
@@ -174,6 +176,28 @@ Scene.prototype.update = function(msDuration) {
         this.ui.forEach(function(element){
             element.update(msDuration);
         });
+
+        var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
+        buttonCollisions.forEach(function(collision) {
+        	var actor = collision.a;
+        	var button = collision.b;
+        	if (button.canToggle) {
+        		console.log(buttonCollisions);
+        		button.canToggle = false;
+        		if (button.state == 0) {
+        			button.state = 1;
+        		} else {
+        			button.state = 0;
+        		}
+        	}
+        });
+  		var actors = this.actors;
+        this.buttons.forEach(function(button) {
+        	if (gamejs.sprite.spriteCollide(button, actors).length == 0){
+        		button.canToggle = true;
+        	}
+        });
+    
 
         for (var i=0; i < this.triggers.length; i++){
             var trigger = this.triggers[i];

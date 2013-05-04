@@ -312,12 +312,22 @@ FourDirection.prototype.handleEvent = function(event) {
 
 var Button = exports.Button = function(options) {
 	Button.superConstructor.apply(this, arguments);
+	//toggle state
+	this.state = 0;
+	this.canToggle = true;
 	return this;
 };
 objects.extend(Button, Actor);
 
 Button.prototype.update = function(msDuration) {
 	Actor.prototype.update.apply(this, arguments);
-	
+
 	return;
-}
+};
+/*
+Button.prototype.collisionCheck = function(spriteGroup) {
+	spriteGroup.forEach(function(sprite){
+		if this.collideSprite
+	});
+	return;
+};*/
