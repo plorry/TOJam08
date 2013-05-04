@@ -5,12 +5,15 @@ exports.Director = function() {
 	var onAir = false;
 	var currentScene = null;
 
+    var display = this.display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE], gamejs.display.DISABLE_SMOOTHING);
+
 	function tick(msDuration) {
 		if (!onAir) return;
 
-		gamejs.event.get().forEach(function(event){
+        gamejs.onEvent(function(event) {
 			currentScene.handleEvent(event);
 		});
+
         if (msDuration > 1000/15) {
             msDuration = 1000/15;
         }
@@ -34,12 +37,11 @@ exports.Director = function() {
         return currentScene;
     };
 
-    var display = this.display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE], gamejs.display.DISABLE_SMOOTHING);
     //var display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE]);
 	if (config.DEBUG) {
         console.log(display.getSize());
 	}
 	
-    gamejs.time.fpsCallback(tick, this, 60);
+    gamejs.onTick(tick, this);
     return this;
 };
