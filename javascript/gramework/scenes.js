@@ -59,7 +59,7 @@ Scene.prototype.initScene = function(sceneConfig) {
     }
 
     if (sceneConfig.maps) {
-        this.maps = new MapManager(sceneConfig.maps).maps;
+        this.maps = MapManager.addMaps(sceneConfig.maps).maps;
     }
 
     this.triggers = [];
@@ -83,15 +83,14 @@ Scene.prototype.mapActors = function(map) {
     for (var i = 0; i < map.getTiles().sprites().length; i++) {
         var tile = map.getTiles().sprites()[i];
         var tile_opts = {
-            x: tile.rect.center[0] + map.controller.offset[0] - 1,
-            y: tile.rect.center[1] + map.controller.offset[1] - 1,
+            x: tile.rect.center[0],
+            y: tile.rect.center[1],
             width: tile.rect.width / 2,
             height: tile.rect.height / 2
         };
         if (tile.properties.button) {
             tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
-            tile_opts['animations'] = {'open':[0], 'closed':[1]};
-            tile_opts['startingAnimation'] = 'open';
+            tile_opts['animations'] = {'static':[0], 'active':[1]};
             var button = new Button(tile_opts);
             this.addProps([button]);
             this.buttons.add(button);
@@ -155,22 +154,22 @@ Scene.prototype.draw = function(display) {
 };
 
 Scene.prototype.handleEvent = function(event) {
-    
-    this.actors.forEach(function(actor) {
-        actor.handleEvent(event);
-    });
+	
+	this.actors.forEach(function(actor) {
+		actor.handleEvent(event);
+	});
 
-    if (event.type === gamejs.event.KEY_DOWN) {
-        if (event.key === gamejs.event.K_SPACE) {
-            this.freeze();
-        }
-    }
-    if (event.type === gamejs.event.KEY_UP) {
-        if (event.key === gamejs.event.K_SPACE) {
-            this.unFreeze();
-        }
-    }
-    return;
+	if (event.type === gamejs.event.KEY_DOWN) {
+		if (event.key === gamejs.event.K_SPACE) {
+			this.camera.zoomTo(0.5);
+		}
+	}
+	if (event.type === gamejs.event.KEY_UP) {
+		if (event.key === gamejs.event.K_SPACE) {
+			this.camera.zoomTo(1);
+		}
+	}
+	return;
 };
 
 var order = function(a,b) {
@@ -190,12 +189,7 @@ Scene.prototype.update = function(msDuration) {
         var props = this.props;
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
-                // Eventually, we'll only need to update collisions for the
-                // actors current map?
-                that.maps.forEach(function(map, index) {
-                    actor.updateCollisions(map.getTiles());
-                });
-                //actor.updateCollisions(TileMap.tiles);
+                actor.updateCollisions(actor.currentMap.getTiles());
                 actor.updateCollisions(props);
             });
         });
@@ -210,24 +204,20 @@ Scene.prototype.update = function(msDuration) {
 
         var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
         var gates = this.gates;
-        var buttons = this.buttons;
         buttonCollisions.forEach(function(collision) {
-            var actor = collision.a;
-            var button = collision.b;
-            if (button.canToggle) {
-                button.canToggle = false;
-                if (this.wallState === 0) {
-                    this.wallState = 1;
-                } else {
-                    this.wallState = 0;
-                }
-                gates.forEach(function(gate) {
-                    gate.setState(this.wallState);
-                });
-                buttons.forEach(function(button) {
-                    button.setState(this.wallState);
-                });
-            }
+        	var actor = collision.a;
+        	var button = collision.b;
+        	if (button.canToggle) {
+        		button.canToggle = false;
+        		if (this.wallState == 0) {
+        			this.wallState = 1;
+        		} else {
+        			this.wallState = 0;
+        		}
+        		gates.forEach(function(gate) {
+        			gate.setState(this.wallState);
+        		});
+        	}
         });
         var actors = this.actors;
         this.buttons.forEach(function(button) {
