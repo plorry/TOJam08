@@ -5,7 +5,7 @@ var gamejs = require('gamejs'),
 
 var Player = function(options) {
     Player.superConstructor.apply(this, arguments);
-}
+};
 objects.extend(Player, FourDirection);
 
 Player.prototype.doCollisions = function(collisions) {

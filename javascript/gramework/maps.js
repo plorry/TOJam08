@@ -16,7 +16,7 @@ var objects = require('gamejs/utils/objects');
 * an upper left corner should be "west,north". Restrictions are
 * cumulative, so, for example, "west,always" would be the same as
 * "always" and "east,none,north" would be the same as "east,north".
-* 
+*
 * Note that "never" and "always" override any blocking information associated
 * to a tile. This property cannot be changed in runtime.
 */
@@ -29,7 +29,7 @@ var BLOCK = {
     always: parseInt('1111', 2)
 };
 
-// Store tiles that can be collided with 
+// Store tiles that can be collided with
 var TileMapModel = function() {
     this.tiles = new gamejs.sprite.Group();
     this.deadlyTiles = new gamejs.sprite.Group();
@@ -73,7 +73,7 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
       switch(key) {
         case "obstacle":
           // Add tile to the matrix. For simplicity sake at this point,
-          // simply add it as a BLOCK.always tile if there is a 
+          // simply add it as a BLOCK.always tile if there is a
           // blocking property on it.
           // TODO: Do we need this matrix? Why cant it just be a property on the
           // tile like so:
@@ -81,7 +81,7 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
           tile.block = true;
           break;
         case "switch":
-            tile.switch = true;
+            tile.button = true;
         default:
           break;
       }
@@ -116,7 +116,7 @@ var Map = exports.Map = function(url) {
     this.handle = function(event) {
         mapController.handle(event);
     };
-    
+
     // Called on each tick.
     this.update = function(msDuration) {
         mapController.update(msDuration);
@@ -128,7 +128,7 @@ var Map = exports.Map = function(url) {
     var mapController = new MapController();
 
     TileMap.createMatrix({
-        width: map.tileWidth, 
+        width: map.tileWidth,
         height: map.tileHeight
     });
 
@@ -159,7 +159,7 @@ var LayerView = function(map, layer, opts) {
     );
     this.surface.setAlpha(layer.opacity);
 
-    // Note how below we look up the "gid" of the tile images in the TileSet 
+    // Note how below we look up the "gid" of the tile images in the TileSet
     // from the Map ('opt.tiles') to get the actual Surfaces.
     layer.gids.forEach(function(row, i) {
         row.forEach(function(gid, j) {
