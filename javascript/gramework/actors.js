@@ -17,7 +17,7 @@ var DEFAULT_CONTROL_MAPPING = {
 
 var DEFAULT_ANIMATIONS = {
 	'static': [0,1]
-}
+};
 
 var Actor = exports.Actor = function(options) {
 	/*
