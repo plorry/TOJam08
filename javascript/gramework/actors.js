@@ -366,7 +366,9 @@ objects.extend(Collectible, Actor);
 
 var Button = exports.Button = function(options) {
     Button.superConstructor.apply(this, arguments);
-    //toggle state
+    this.isButton = true;
+
+    // Toggle state
     this.state = 0;
     this.canToggle = true;
 

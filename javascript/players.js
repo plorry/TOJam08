@@ -31,15 +31,34 @@ Player.prototype.doCollisions = function(collisions) {
             if (obj.collectible) {
                 actor.collectItem(obj);
             }
+
             if (obj.green === false) {
                 actor.targetCounter = 1000;
             }
             if (obj.block === true) {
                 actor._hitWall(obj, key);
             }
+
+            if (obj.isButton) {
+                actor.triggerButton(obj);
+            }
         }
     });
 
+};
+
+// How can a button, when modified, trigger gates? TODO
+Player.prototype.triggerButton = function(button) {
+    // For each button we're colliding with, make sure we're colliding with its
+    // centerCollisionRect before we trigger anything. We don't want players
+    // trigger switches when they just touch the edge.
+    if (this.realRect.collideRect(button.centerCollisionRect)) {
+        if (button.canToggle) {
+            gamejs.log("On", button);
+            button.canToggle = false;
+        }
+
+    }
 };
 
 Player.prototype.updateScore = function(number) {
