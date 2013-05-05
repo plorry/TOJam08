@@ -16,6 +16,7 @@ var MAP_TILES = STATIC_PATH + 'backgrounds/test_tiles.png';
 var player_img = exports.player_img = STATIC_PATH + 'sprites/bike.png';
 var button_img = exports.button_img = STATIC_PATH + 'sprites/test.png';
 var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
+var ford_img = exports.ford_img = STATIC_PATH + 'sprites/suv.png';
 
 //Add every resource variable to this array, please
 exports.RESOURCES = [
@@ -23,7 +24,8 @@ exports.RESOURCES = [
     MAP_TILES,
     player_img,
     button_img,
-    gate_img
+    gate_img,
+    ford_img
 ];
 
 exports.scenes = {

@@ -8,6 +8,8 @@ var Score = require('./gramework/ui').Score;
 
 var players = require('./players');
 var messages = require('./messages');
+var enemy = require('./enemy');
+
 function main() {
 
     var director = new Director();
@@ -29,6 +31,7 @@ function main() {
     var player_2_score = new Score(score_opts_2);
 
     firstScene.addActors(players.initialize());
+    firstScene.addActors(enemy.initialize());
     firstScene.addUI([player_1_score, player_2_score]);
     firstScene.addUI(messages.initialize());
     director.start(firstScene);
