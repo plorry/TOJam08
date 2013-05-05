@@ -150,10 +150,10 @@ Scene.prototype.addPlayers = function(players) {
 
 Scene.prototype.addProps = function(props) {
     this.props.add(props);
-    if (props.setTarget) {
-        console.log("Geting here...");
-        props.setTarget(this.actors._sprites[0]);
-     }
+    // if (props.setTarget) {
+    //     console.log("Geting here...");
+    //     props.setTarget(this.actors._sprites[0]);
+    //  }
     return;
 };
 
@@ -248,6 +248,18 @@ Scene.prototype.update = function(msDuration) {
 
         // Update props
         this.props.forEach(function(prop){
+            if (prop.setTarget) {
+                var highestTime = 0;
+                var targetPlayer;
+                that.players.forEach(function(player){
+                    if (player.targetSetTime > highestTime) {
+                        highestTime = player.targetSetTime;
+                        targetPlayer = player;
+                    }
+                });
+                //console.log(targetPlayer);
+                if (targetPlayer) prop.setTarget(targetPlayer);
+            }
             prop.update(msDuration);
         });
 
@@ -327,34 +339,7 @@ Scene.prototype.update = function(msDuration) {
                 trigger.deactivate();
                 this.triggers.splice(i,1);
             }
-        }
-
-    //     //light collisions...
-    //     var lightCollisions = _.reduce(lightCollisions, function(result, collision) {
-    //         var actor = collision.a;
-    //         var light = collision.b;
-
-    //         var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
-    //         if (centerCollision) {
-    //             result.push(collision);
-    //         }
-    //         return result;
-    //     }, []);
-
-    //     lightCollisions.forEach(function(collision) {
-    //         var actor = collision.a;
-    //         var light = collision.b;
-    //         console.log("Hit a light!");
-    //         //if the actor is a player
-    //         if (actor instanceof FourDirection) {
-    //             console.log("List of Props: "+props);
-    //             this.props.forEach(function(prop){
-    //             if (prop.setTarget) {
-    //                     console.log("Setting target of "+actor);
-    //                     prop.setTarget(actor);
-    //             }               
-    //         }
-    //     });       
+        }     
     }
 
     this.camera.update(msDuration);

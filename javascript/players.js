@@ -9,6 +9,7 @@ var Player = function(options) {
     this.isTarget = false;
     this.targetCounter = 0;
     this.playerScore = 0;
+    this.targetSetTime = 0;
 };
 objects.extend(Player, FourDirection);
 
@@ -32,8 +33,8 @@ Player.prototype.doCollisions = function(collisions) {
                 actor.collectItem(obj);
             }
 
-            if (obj.green === false) {
-                actor.targetCounter = 1000;
+            if (obj.green === true) {
+                actor.triggerRedLight(obj);
             }
             if (obj.block === true) {
                 actor._hitWall(obj, key);
@@ -41,7 +42,7 @@ Player.prototype.doCollisions = function(collisions) {
 
             if (obj.isButton) {
                 actor.triggerButton(obj);
-            }
+            } 
         }
     });
 
@@ -57,6 +58,18 @@ Player.prototype.triggerButton = function(button) {
             gamejs.log("On", button);
             button.canToggle = false;
         }
+
+    }
+};
+
+Player.prototype.triggerRedLight = function(light) {
+
+    if (this.realRect.collideRect(light.centerCollisionRect)) {
+        //console.log("Hit Light: "+light);
+        this.targetCounter = 1000;
+        this.targetSetTime = new Date().getTime();
+        //console.log(this.targetSetTime);
+
 
     }
 };

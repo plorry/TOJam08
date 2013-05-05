@@ -20,8 +20,8 @@ Enemy.prototype.doCollisions = function(collisions) {
 };
 
 var robFord = {
-    x: 800,
-    y: 500,
+    x: 320,
+    y: 24,
     width: 24,
     height: 24,
     spriteSheet: [
@@ -36,8 +36,8 @@ var robFord = {
     },
     // Have a default start point if the map provides nothing.
     start: {
-        x: 500,
-        y: 500,
+        x: 300,
+        y: 24,
         map: 0
     }
 };
@@ -67,8 +67,8 @@ var smokeCloud = {
 Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
-    targetX = targetX - (this.width*2);
-    targetY = targetY - (this.height*2);
+    targetX = targetX - (this.width);
+    targetY = targetY - (this.height);
 
     if ((Math.abs(this.realRect.left - targetX) > 1) && (Math.abs(this.realRect.top - targetX) > 1)) {
 

@@ -446,6 +446,15 @@ var Light = exports.Light = function(options) {
     Light.superConstructor.apply(this, arguments);
     this.type = options.type || 0;
     this.green = true;
+
+    this.centerCollisionRect = new gamejs.Rect(
+        [this.rect.left, this.rect.top],
+        [
+            this.rect.width - (this.rect.width / 2),
+            this.rect.height - (this.rect.height / 2)
+        ]
+    );
+
     return;
 };
 objects.extend(Light, Actor);
