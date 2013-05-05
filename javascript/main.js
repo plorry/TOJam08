@@ -14,20 +14,29 @@ function main() {
     var director = new Director();
 
     var titleScene = new scenes.CutScene(director, config.scenes.title);
-    var gameOverScene = new scenes.CutScene(director, config.scenes.game_over);
-    director.addScene(titleScene);
-
-    var gameScene = new scenes.Scene(director, config.scenes.game);
-    director.addScene(gameScene, function() {
-        // Called on initialization of this scene.
-        gameScene.addPlayers(players.initialize());
-        gameScene.addProps(enemy.initialize());
-        gameScene.addScores(messages.initializeScores());
-        gameScene.addUI(messages.initialize());
+    director.addScene({
+        scene: titleScene
     });
-    //director.addScene(gameOverScene);
 
-    director.start(gameScene); // titleScene);
+    var gameSceneObject = {
+        scene: new scenes.Scene(director, config.scenes.game),
+        callback: function(scene) {
+            // Called on initialization of this scene.
+            scene.addPlayers(players.initialize());
+            scene.addProps(enemy.initialize());
+            scene.addScores(messages.initializeScores());
+            scene.addUI(messages.initialize());
+        }
+    };
+
+    director.addScene(gameSceneObject);
+
+    var gameOverScene = new scenes.CutScene(director, config.scenes.game_over);
+    director.addScene({
+        scene: gameOverScene
+    });
+
+    director.start(gameSceneObject);
     return;
 }
 
