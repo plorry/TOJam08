@@ -1,20 +1,26 @@
-TOJam08
-=======
+# TOJam08
 
-Toronto Game Jam the Eighth
 
-Install
-======
+Toronto Game Jam the Eighth. May 3rd-5th 2013
 
-    npm install -g supervisor
+By: [Andrew](http://github.com/plorry), [Bartek](https://github.com/bartek), [Jamie](http://gk-workbench.com), Devin, and [Andrew](http://github.com/andxyz)
 
-Run
-===
+## Install
+
+```bash
+npm install -g supervisor
+```
+## Run
+
 
 For development:
 
-    supervisor server.js
+```bash
+supervisor server.js
+```
 
 Otherwise:
 
-    node server.js
+```bash
+node server.js
+```
