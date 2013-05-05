@@ -74,8 +74,8 @@ Player.prototype.collectItem = function(item) {
 // Set the players position and all related rects to a specified point.
 Player.prototype.setPlayerPosition = function(x, y) {
     gamejs.log("setPlayerPosition", x, y);
-    this.realRect.left = x;
-    this.realRect.top = y;
+    this.realRect.left = x - this.width;
+    this.realRect.top = y - this.height;
 };
 
 Player.prototype.spawnAtMapOrigin = function() {
