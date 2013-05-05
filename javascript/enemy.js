@@ -63,6 +63,7 @@ Enemy.prototype.doMove = function(targetX, targetY) {
         // this.body.body.GetPosition().y = this.realRect.top;
 
         //Actor.prototype.setPlayerPosition(this.realRect.left, this.realRect.top);
+        return;
         console.log('Unit Vectors: '+unitX+' '+unitY);
         console.log('Vector Delta' +xDelta+' '+yDelta);
         console.log('Vector Length' +vectorLength);

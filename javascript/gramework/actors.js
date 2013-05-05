@@ -282,9 +282,12 @@ FourDirection.prototype.doCollisions = function(collisions) {
 FourDirection.prototype.doTeleport = function(tile) {
     if (tile.properties.teleportPlayer === 'next') {
         // Update players current map index.
-        this.currentMapIndex += 1;
-        this.currentMap = MapManager.getById(this.currentMapIndex);
-        this.spawnAtMapOrigin();
+        var nextMap = MapManager.getById(this.currentMapIndex + 1);
+        if (nextMap) {
+            this.currentMapIndex += 1;
+            this.currentMap = nextMap;
+            this.spawnAtMapOrigin();
+        }
     }
 };
 
