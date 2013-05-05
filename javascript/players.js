@@ -27,7 +27,7 @@ Player.prototype.setPlayerPosition = function(x, y) {
     gamejs.log("setPlayerPosition", x, y);
     this.realRect.left = x;
     this.realRect.top = y;
-}
+};
 
 Player.prototype.spawnAtMapOrigin = function() {
     var initialSpawn = this.currentMap.getTileCenter(

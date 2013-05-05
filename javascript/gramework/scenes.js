@@ -128,9 +128,6 @@ Scene.prototype.addActors = function(actors) {
 
 Scene.prototype.addProps = function(props) {
     this.props.add(props);
-    console.log(props);
-    console.log(this.actors);
-    console.log(this.actors._sprites[0]);
     if (props.setTarget) {
         console.log("Geting here...");
         props.setTarget(this.actors._sprites[0]);
