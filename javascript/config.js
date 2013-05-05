@@ -39,6 +39,13 @@ exports.RESOURCES = [
     DRAW_TILES
 ];
 
+// Setup the size of the camera. Width and height will be multiplied based
+// on the scene dimensions.
+var cameraConfig = {
+    width: 0.5,
+    height: 1
+}
+
 exports.scenes = {
     'title': {
         width: 1524,
@@ -51,6 +58,9 @@ exports.scenes = {
         'height': 768,
         'scale': SCALE,
         'image': BG_TEST,
+        camera: {
+            config: cameraConfig
+        },
         'maps': [
             {
                 url: STATIC_PATH + 'maps/test_map.tmx',

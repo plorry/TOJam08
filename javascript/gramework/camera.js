@@ -18,40 +18,40 @@ var Camera = exports.Camera = function(scene, options) {
 };
 
 Camera.prototype.update = function(msDuration) {
-	//pan to dest
-	if (this.dest !== null) {
-		if (this.rect.center[0] < this.dest[0]) {this.rect.moveIp(this.xSpeed,0);}
-		if (this.rect.center[0] > this.dest[0]) {this.rect.moveIp(this.xSpeed,0);}
-		if (this.rect.center[1] < this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
-		if (this.rect.center[1] > this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
+    //pan to dest
+    if (this.dest !== null) {
+        if (this.rect.center[0] < this.dest[0]) {this.rect.moveIp(this.xSpeed,0);}
+        if (this.rect.center[0] > this.dest[0]) {this.rect.moveIp(this.xSpeed,0);}
+        if (this.rect.center[1] < this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
+        if (this.rect.center[1] > this.dest[1]) {this.rect.moveIp(0,this.ySpeed);}
 
-		this.xSpeed = (this.dest[0] - this.rect.center[0]) / 10;
-		this.ySpeed = (this.dest[1] - this.rect.center[1]) / 10;
+        this.xSpeed = (this.dest[0] - this.rect.center[0]) / 10;
+        this.ySpeed = (this.dest[1] - this.rect.center[1]) / 10;
 
-		if (this.dest == this.rect.center) {
-			this.dest = null;
-			this.xSpeed = 0;
-			this.ySpeed = 0;
-		}
-	}
-	if (this.center !==null) {
-		this.dest = this.center;
-	}
+        if (this.dest == this.rect.center) {
+            this.dest = null;
+            this.xSpeed = 0;
+            this.ySpeed = 0;
+        }
+    }
+    if (this.center !==null) {
+        this.dest = this.center;
+    }
 
-	if (this.targetZoom !== null) {
-		if (this.targetZoom > this.zoom) {
-			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
-		}
-		if (this.targetZoom < this.zoom) {
-			this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
-		}
-		if (this.targetZoom == this.zoom) {
-			this.targetZoom = null;
-			this.zoom_multiplier = 1;
-		}
-	}
+    if (this.targetZoom !== null) {
+        if (this.targetZoom > this.zoom) {
+            this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
+        }
+        if (this.targetZoom < this.zoom) {
+            this.zoom_multiplier = 1 + ((this.targetZoom - this.zoom) * 0.1);
+        }
+        if (this.targetZoom == this.zoom) {
+            this.targetZoom = null;
+            this.zoom_multiplier = 1;
+        }
+    }
 
-	var scene_size = this.scene.view.getSize();
+    var scene_size = this.scene.view.getSize();
 
 	if (this.rect.width <= scene_size[0] && this.rect.height <= scene_size[1]) {
 		this.zoom = this.zoom * this.zoom_multiplier;
@@ -73,8 +73,9 @@ Camera.prototype.update = function(msDuration) {
 	if (this.rect.left < 0) {this.rect.left = 0;}
 	if (this.rect.bottom > scene_size[1]) {this.rect.bottom = scene_size[1];}
 	if (this.rect.right > scene_size[0]) {this.rect.right = scene_size[0];}
-	this.view.fill("#F41D80");
+
 	this.view.blit(this.scene.view, [0, 0], this.rect);
+
 
     this.display = this.view;
 
@@ -85,8 +86,8 @@ Camera.prototype.draw = function() {
 	return this.display;
 };
 
-Camera.prototype.panto = function(pos) {
-	this.dest = [pos[0], pos[1]];
+Camera.prototype.panTo = function(pos) {
+	this.dest = pos;
 	return;
 };
 

@@ -50,10 +50,16 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.players = [];
     this.maps = sceneConfig.maps || [];
 
-    this.camera = new Camera(this, {
-        width: 640,
-        height: 480
-    });
+    var cameraConfig = {
+        width: this.width,
+        height: this.height
+    }
+    if (sceneConfig.camera && sceneConfig.camera.config) {
+        cameraConfig.width *= sceneConfig.camera.config.width;
+        cameraConfig.height *= sceneConfig.camera.config.height;
+    }
+    this.camera = new Camera(this, cameraConfig);
+    this.focusedPlayer = 0;
 
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
@@ -183,22 +189,20 @@ Scene.prototype.unFreeze = function() {
 
 Scene.prototype.draw = function(display) {
     this.view.blit(this.background);
+
     this.props.draw(this.view);
     this.actors.draw(this.view);
 
-    var screen = this.camera.draw();
-    this.ui.draw(screen);
+    this.ui.draw(this.view);
 
+    var view = this.view;
     this.scores.forEach(function(player) {
-        player.draw(screen);
+        player.draw(view);
     });
-    
-    var size = screen.getSize();
-    
-    //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
-    
+
+    var screen = this.camera.draw();
     display.blit(screen);
-    
+
     return;
 };
 
@@ -211,16 +215,22 @@ Scene.prototype.handleEvent = function(event) {
     // the gamepad module, so we have to be less strict with comparison here.
     // Don't use === or this will break gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
-        if (event.key === gamejs.event.K_SPACE) {
-            this.camera.panto([500,500]);
-        }
     }
     if (event.type == gamejs.event.KEY_UP) {
-        if (event.key === gamejs.event.K_SPACE) {
-            this.camera.zoomTo(1);
+        if (event.key == gamejs.event.K_SPACE) {
+            if (this.focusedPlayer === 0) {
+                this.focusedPlayer = 1;
+            } else {
+                this.focusedPlayer = 0;
+            }
         }
     }
     return;
+};
+
+Scene.prototype.followPlayer = function(index) {
+    var focused = this.players[this.focusedPlayer];
+    this.camera.follow([focused.rect.left, focused.rect.top]);
 };
 
 var order = function(a,b) {
@@ -229,6 +239,8 @@ var order = function(a,b) {
 
 Scene.prototype.update = function(msDuration) { 
     var that = this;
+
+    this.followPlayer(this.focusedPlayer);
 
     if (!this.isFrozen()){
         //step the physics
