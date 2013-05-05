@@ -15,7 +15,7 @@ function main() {
     var titleScene = {
         scene: new scenes.CutScene(director, config.scenes.title)
     };
-    director.addScene(titleScene);
+    //director.addScene(titleScene);
 
     var gameSceneObject = {
         scene: new scenes.Scene(director, config.scenes.game),
@@ -31,11 +31,13 @@ function main() {
     director.addScene(gameSceneObject);
 
     var gameOverScene = new scenes.CutScene(director, config.scenes.game_over);
+    /*
     director.addScene({
         scene: gameOverScene
     });
+    */
 
-    director.start(titleScene);
+    director.start(gameSceneObject);
     return;
 }
 

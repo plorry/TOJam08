@@ -303,9 +303,7 @@ Scene.prototype.update = function(msDuration) {
             });
         });
 
-        if (this.focusedPlayer) {
-            this.followPlayer(this.focusedPlayer);
-        }
+        this.followPlayer(this.focusedPlayer);
 
         // Update props
         this.props.forEach(function(prop){
