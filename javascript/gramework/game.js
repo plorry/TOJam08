@@ -33,16 +33,16 @@ exports.Director = function() {
                         if (gamejsKey) {
                             currentScene.handleEvent(
                                 new KeyboardEvent(gamejs.event.KEY_UP,
-                                { key: gamejsKey, char: gamejsKey, shiftKey: false }
+                                { key: mapping[gamejsKey], char: mapping[gamejsKey], shiftKey: false }
                             ));
                         }
-                        gamejsKey = mapping[buttonIndex];
+                        gamejsKey = buttonIndex;
                     }
                 }
 
                 currentScene.handleEvent(
                     new KeyboardEvent(gamejs.event.KEY_DOWN,
-                    { key: gamejsKey, char: gamejsKey, shiftKey: false }
+                    { key: mapping[gamejsKey], char: mapping[gamejsKey], shiftKey: false }
                 ));
 
             }
