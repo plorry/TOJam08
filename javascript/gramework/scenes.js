@@ -404,7 +404,7 @@ GameScene.prototype.update = function(msDuration) {
     // Cheap hack to only update elapsed during the game
     if (this.players.length > 0) {
         this.elapsed += msDuration;
-        if (this.elapsed > 2000) {
+        if (this.elapsed > 20000) {
             this.director.nextScene();
         }
     }
@@ -478,7 +478,7 @@ CutScene.prototype.update = function(msDuration) {
 };
 
 CutScene.prototype.draw = function(display) {
-    this.view.blit(this.background);
+    this.display.blit(this.background);
 };
 
 var Trigger = exports.Trigger = function(options) {
