@@ -13,20 +13,20 @@ objects.extend(LoseMessage, TextArea)
 var score_opts = {
     pos: 'top left',
     margin: 2,
-    size: [55, 10],
+    size: [160, 10],
     text: ['00000000'],
     active: true
 };
 var score_opts_2 = {
     pos: 'top right',
     margin: 2,
-    size: [55, 10],
+    size: [160, 10],
     text: ['00000000'],
     active: true
 };
 
 var Player1Lose = {
-    size: [300, 120],
+    size: [600, 240],
     margin: 4,
     pos: 'top left',
     background: "#000",
@@ -41,7 +41,7 @@ var Player1Lose = {
 };
 
 var Player2Lose = {
-    size: [300, 120],
+    size: [600, 240],
     margin: 4,
     pos: 'top right',
     background: "#000",
