@@ -75,7 +75,9 @@ Actor.prototype.init = function(options) {
     }
     this.physics = options.physics || null;
 
-    this.spawnAtMapOrigin();
+    if (this.currentMap) {
+        this.spawnAtMapOrigin();
+    }
 
     if (this.physics) {
         this.angle = options.angle * (Math.PI / 180) || 0;

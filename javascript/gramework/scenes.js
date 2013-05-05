@@ -1,6 +1,7 @@
 var gamejs = require('gamejs');
 var config = require('../config');
 var Camera = require('./camera').Camera;
+var objects = require('gamejs/utils/objects');
 
 var Physics  = require('./physics').Physics;
 var Body = require('./physics').Body;
@@ -45,8 +46,9 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.gates = new gamejs.sprite.Group();
     this.lights = new gamejs.sprite.Group();
     this.wallState = 0;
-    this.scores = null;
+    this.scores = [];
     this.players = [];
+    this.maps = sceneConfig.maps || [];
 
     this.camera = new Camera(this, {
         width: this.width,
@@ -236,7 +238,9 @@ Scene.prototype.update = function(msDuration) {
         var props = this.props;
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
-                actor.updateCollisions(actor.currentMap.getTiles());
+                if (actor.currentMap) {
+                    actor.updateCollisions(actor.currentMap.getTiles());
+                }
                 actor.updateCollisions(props);
             });
         });
@@ -331,6 +335,18 @@ Scene.prototype.update = function(msDuration) {
     this.camera.update(msDuration);
     this.elapsed += msDuration;
     return;
+};
+
+var CutScene = exports.CutScene = function(options) {
+    CutScene.superConstructor.apply(this, arguments);
+    return this;
+};
+objects.extend(CutScene, Scene);
+
+CutScene.prototype.handleEvent = function(event) {
+    if (event.type == gamejs.event.KEY_DOWN) {
+        this.director.nextScene();
+    }
 };
 
 var Trigger = exports.Trigger = function(options) {
