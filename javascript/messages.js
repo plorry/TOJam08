@@ -35,6 +35,7 @@ var Player1Lose = {
     text: [
         'Got you! Tell me where your',
         'friend is for lenience!',
+        ' ',
         ' PLAYER 1 CHOOSE!',
         '   UP: Stay Quiet',
         '   DOWN: Rat out your friend'],
@@ -51,6 +52,7 @@ var Player2Lose = {
         'Got you! Tell me where your',
         'friend is for lenience!',
         ' PLAYER 2 CHOOSE!',
+        ' ',
         '   UP: Stay Quiet',
         '   DOWN: Rat out your friend'],
     lineHeight: 17
