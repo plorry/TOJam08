@@ -320,11 +320,11 @@ Scene.prototype.update = function(msDuration) {
 
         // Update props
         this.props.forEach(function(prop){
-            if (prop.setTarget) {
+            if (prop.isRobFord) {
                 var highestTime = 0;
-                var targetPlayer;
+                var targetPlayer = null;
                 that.players.forEach(function(player){
-                    if (player.targetSetTime > highestTime) {
+                    if (player.isBeingHunted && player.targetSetTime > highestTime) {
                         highestTime = player.targetSetTime;
                         targetPlayer = player;
                     }

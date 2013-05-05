@@ -92,6 +92,9 @@ Enemy.prototype.doMove = function(targetX, targetY) {
 
 Enemy.prototype.setTarget = function(target) {
     this.targetPlayer = target;
+    if (target === null) {
+        this.doMove(this.startX, this.startY);
+    }
 };
 
 Enemy.prototype.setPosition = function(x, y) {

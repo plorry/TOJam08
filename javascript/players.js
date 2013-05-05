@@ -8,6 +8,7 @@ var gamejs = require('gamejs'),
 var Player = function(options) {
     Player.superConstructor.apply(this, arguments);
     this.isTarget = false;
+    this.isBeingHunted = false;
     this.targetCounter = 0;
     this.playerScore = 0;
     this.targetSetTime = 0;
@@ -69,6 +70,9 @@ Player.prototype.triggerButton = function(button) {
 
 Player.prototype.triggerDilemna = function(robFord) {
     var that = this;
+
+    this.isBeingHunted = false;
+
     // Time out for a bit before trigger.
     window.setTimeout(function() {
         that.isDilemna = true;
@@ -80,15 +84,14 @@ Player.prototype.triggerDilemna = function(robFord) {
 
 Player.prototype.triggerRedLight = function(light) {
 
-
     if (this.realRect.collideRect(light.centerCollisionRect)) {
+        this.isBeingHunted = true;
         if (this.targetCounter == 0) {
             sounds.playsound(config.aud_bike_lanes);
         }
         this.targetCounter = 1000;
         this.targetSetTime = new Date().getTime();
     }
-
 };
 
 Player.prototype.updateScore = function(number) {
@@ -100,7 +103,7 @@ Player.prototype.collectItem = function(item) {
         sounds.playsound(config.aud_spray);
         item.animation.start('green');
         this.updateScore(item.modifier);
-        gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
+        //gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
     }
 };
 
