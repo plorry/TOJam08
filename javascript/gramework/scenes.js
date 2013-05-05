@@ -183,8 +183,10 @@ Scene.prototype.draw = function(display) {
 
     var screen = this.camera.draw();
     this.ui.draw(screen);
-    this.scores.player1.draw(screen);
-    this.scores.player2.draw(screen);
+
+    this.scores.forEach(function(player) {
+        player.draw(screen);
+    });
     
     var size = screen.getSize();
     
@@ -247,11 +249,9 @@ Scene.prototype.update = function(msDuration) {
             element.update(msDuration);
         });
 
-        if (this.scores.player1) {
-            this.scores.player1.update(msDuration, this.players[0].playerScore);
-            this.scores.player2.update(msDuration, this.players[1].playerScore);
-        }
-
+        this.scores.forEach(function(player, index) {
+            player.update(msDuration, that.players[index].playerScore);
+        });
 
         // TODO: !!! Button collisions. We should move this into the Button module.
         var gates = this.gates;

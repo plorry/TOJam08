@@ -31,15 +31,34 @@ Player.prototype.doCollisions = function(collisions) {
             if (obj.collectible) {
                 actor.collectItem(obj);
             }
+
             if (obj.green === false) {
                 actor.targetCounter = 1000;
             }
             if (obj.block === true) {
                 actor._hitWall(obj, key);
             }
+
+            if (obj.isButton) {
+                actor.triggerButton(obj);
+            }
         }
     });
 
+};
+
+// How can a button, when modified, trigger gates? TODO
+Player.prototype.triggerButton = function(button) {
+    // For each button we're colliding with, make sure we're colliding with its
+    // centerCollisionRect before we trigger anything. We don't want players
+    // trigger switches when they just touch the edge.
+    if (this.realRect.collideRect(button.centerCollisionRect)) {
+        if (button.canToggle) {
+            gamejs.log("On", button);
+            button.canToggle = false;
+        }
+
+    }
 };
 
 Player.prototype.updateScore = function(number) {
@@ -60,9 +79,12 @@ Player.prototype.setPlayerPosition = function(x, y) {
 };
 
 Player.prototype.spawnAtMapOrigin = function() {
-    var initialSpawn = this.currentMap.getTileCenter(
-        this.currentMap.spawnPlayers[0]
-    );
+    if (this.currentMap.spawnPlayers.length === 0) {
+        return;
+    }
+
+    var spawnPoint = this.currentMap.spawnPlayers[this.playerNumber];
+    var initialSpawn = this.currentMap.getTileCenter(spawnPoint);
     this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
 };
 
@@ -90,7 +112,13 @@ var Player1 = {
         x: 48,
         y: 48,
         map: 0
-    }
+    },
+    controlMapping: {
+        down: gamejs.event.K_s,
+        left: gamejs.event.K_a,
+        right: gamejs.event.K_d,
+        up: gamejs.event.K_w
+    },
 };
 
 var Player2 = {
@@ -102,25 +130,26 @@ var Player2 = {
         config.player_img, {width:24, height:24}
     ],
     controlMapping: {
-        down: gamejs.event.K_k,
-        left: gamejs.event.K_j,
-        right: gamejs.event.K_l,
-        up: gamejs.event.K_i
+        down: gamejs.event.K_DOWN,
+        left: gamejs.event.K_LEFT,
+        right: gamejs.event.K_RIGHT,
+        up: gamejs.event.K_UP
     },
     animations: {'static':[0,1]},
     // Have a default start point if the map provides nothing.
     start: {
         x: 430,
         y: 80,
-        map: 1
+        map: 0
     }
 };
 
 var initialize = function() {
-    return [
-        new Player(Player1),
-        new Player(Player2)
-    ];
+    var players = [Player1, Player2].map(function(player, index) {
+        player.playerNumber = index;
+        return new Player(player);
+    });
+    return players;
 };
 
 exports.initialize = initialize;

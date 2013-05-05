@@ -56,8 +56,8 @@ var initialize = exports.initialize = function() {
 };
 
 var initializeScores = exports.initializeScores = function() {
-    return {
-        'player1' : new Score(score_opts),
-        'player2' : new Score(score_opts_2)
-    };
+    return [
+        new Score(score_opts),
+        new Score(score_opts_2)
+    ];
 }
