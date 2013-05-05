@@ -3,7 +3,7 @@ var gamejs = require('gamejs');
 var WIDTH = exports.WIDTH = 1524;
 var HEIGHT = exports.HEIGHT = 768;
 
-exports.DEBUG = false;
+exports.DEBUG = true; //false;
 exports.PHYSICS_DEBUG = true;
 
 var STATIC_PATH = exports.STATIC_PATH = './static/';

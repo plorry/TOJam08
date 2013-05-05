@@ -5,13 +5,14 @@ exports.Director = function() {
 	var onAir = false;
 	var currentScene = null;
     var gamejsKey = null;
+    var gamepad = false;
 
     var display = this.display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE], gamejs.display.DISABLE_SMOOTHING);
 
     var gamepadInput = function() {
         var index,
             buttonIndex,
-            gamepadStatej
+            gamepadState;
 
         // Loop through all possible gamepads.
         for (index = 0; index < 4; index++) {
@@ -49,14 +50,20 @@ exports.Director = function() {
         };
     };
 
+    if (Gamepads.hasSupport) {
+        gamepad = true;
+    };
+
 	function tick(msDuration) {
 		if (!onAir) return;
         gamejs.onEvent(function(event) {
 			currentScene.handleEvent(event);
 		});
 
-        Gamepads.update();
-        gamepadInput();
+        if (gamepad) {
+            Gamepads.update();
+            gamepadInput();
+        }
 
         if (msDuration > 1000/15) {
             msDuration = 1000/15;
