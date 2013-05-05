@@ -19,6 +19,8 @@ var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 var light_img = exports.light_img = STATIC_PATH + 'sprites/lights.png';
 var ford_img = exports.ford_img = STATIC_PATH + 'sprites/suv.png';
 
+var aud_bike_lanes = exports.aud_bike_lanes = STATIC_PATH + 'sounds/bike_lanes.ogg';
+
 //Add every resource variable to this array, please
 exports.RESOURCES = [
     BG_TEST,
@@ -27,7 +29,8 @@ exports.RESOURCES = [
     button_img,
     gate_img,
     light_img,
-    ford_img
+    ford_img,
+    aud_bike_lanes
 ];
 
 exports.scenes = {
