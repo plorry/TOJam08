@@ -1,7 +1,7 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 1524;
-var HEIGHT = exports.HEIGHT = 768;
+var WIDTH = exports.WIDTH = 640;
+var HEIGHT = exports.HEIGHT = 480;
 
 exports.DEBUG = true; //false;
 exports.PHYSICS_DEBUG = true;

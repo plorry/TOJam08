@@ -92,7 +92,8 @@ Scene.prototype.mapActors = function(map) {
             x: tile.rect.center[0] - 1,
             y: tile.rect.center[1] - 1,
             width: tile.rect.width / 2,
-            height: tile.rect.height / 2
+            height: tile.rect.height / 2,
+            scale: 1
         };
         if (tile.properties.button) {
             tile_opts['spriteSheet'] = [config.button_img, {height:32, width:32}];
@@ -252,6 +253,10 @@ Scene.prototype.update = function(msDuration) {
         this.scores.forEach(function(player, index) {
             player.update(msDuration, that.players[index].playerScore);
         });
+
+        if (this.players) {
+            this.camera.follow(this.players[0].rect.center[0], this.players[0].rect.center[1]);
+        }
 
         // TODO: !!! Button collisions. We should move this into the Button module.
         var gates = this.gates;

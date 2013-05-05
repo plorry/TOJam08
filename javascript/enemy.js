@@ -22,8 +22,8 @@ Enemy.prototype.doCollisions = function(collisions) {
 var robFord = {
     x: 800,
     y: 500,
-    width: 48,
-    height: 48,
+    width: 24,
+    height: 24,
     spriteSheet: [
         config.ford_img, {width:48, height:48}
     ],
