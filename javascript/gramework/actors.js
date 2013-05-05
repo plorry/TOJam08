@@ -49,6 +49,10 @@ Actor.prototype.init = function(options) {
         map: 0
     });
 
+    // We want to know what player this is, for things like spawn points.
+    // Generally set by some outside initialization class.
+    this.playerNumber = options.playerNumber || 0;
+
     this.currentMapIndex = start.map;
     this.currentMap = MapManager.getById(start.map);
 
@@ -71,9 +75,7 @@ Actor.prototype.init = function(options) {
     }
     this.physics = options.physics || null;
 
-    if (this.currentMap.spawnPlayers.length > 0) {
-        this.spawnAtMapOrigin();
-    }
+    this.spawnAtMapOrigin();
 
     if (this.physics) {
         this.angle = options.angle * (Math.PI / 180) || 0;

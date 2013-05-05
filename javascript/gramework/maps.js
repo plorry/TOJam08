@@ -2,6 +2,11 @@ var gamejs = require('gamejs');
 var tmx = require('gamejs/tmx');
 var objects = require('gamejs/utils/objects');
 
+// JS Helper. Sanity!
+Array.prototype.insert = function (index, item) {
+  this.splice(index, 0, item);
+};
+
 /*
 * Each tile can hold a "block" property detailing its desired
 * blocking behaviour. Possible blocking data values are:
@@ -230,7 +235,7 @@ var LayerView = function(map, layer, opts) {
                 }
 
                 if (tileProperties.spawnPlayer) {
-                    map.spawnPlayers.push(tile);
+                    map.spawnPlayers.insert(Number(tileProperties.index), tile);
                 }
 
                 if (tileProperties.teleportPlayer) {

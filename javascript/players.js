@@ -79,9 +79,12 @@ Player.prototype.setPlayerPosition = function(x, y) {
 };
 
 Player.prototype.spawnAtMapOrigin = function() {
-    var initialSpawn = this.currentMap.getTileCenter(
-        this.currentMap.spawnPlayers[0]
-    );
+    if (this.currentMap.spawnPlayers.length === 0) {
+        return;
+    }
+
+    var spawnPoint = this.currentMap.spawnPlayers[this.playerNumber];
+    var initialSpawn = this.currentMap.getTileCenter(spawnPoint);
     this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
 };
 
@@ -131,15 +134,16 @@ var Player2 = {
     start: {
         x: 430,
         y: 80,
-        map: 1
+        map: 0
     }
 };
 
 var initialize = function() {
-    return [
-        new Player(Player1),
-        new Player(Player2)
-    ];
+    var players = [Player1, Player2].map(function(player, index) {
+        player.playerNumber = index;
+        return new Player(player);
+    });
+    return players;
 };
 
 exports.initialize = initialize;
