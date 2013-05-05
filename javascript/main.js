@@ -15,7 +15,12 @@ function main() {
     var titleScene = {
         scene: new scenes.CutScene(director, config.scenes.title)
     };
+    var intoScene = {
+        scene: new scenes.CutScene(director, config.scenes.intro)
+    }
     director.addScene(titleScene);
+
+    director.addScene(intoScene);
 
     var gameSceneObject = {
         scene: new scenes.GameScene(director, config.scenes.game),

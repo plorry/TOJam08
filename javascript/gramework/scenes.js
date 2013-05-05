@@ -53,6 +53,8 @@ GameScene.prototype.initScene = function(sceneConfig) {
     gamejs.log(sceneConfig);
     BaseScene.prototype.initScene.apply(this, arguments);
 
+    sounds.playsound(config.music_main, true);
+
     var that = this;
 
     this.buttons = new gamejs.sprite.Group();
