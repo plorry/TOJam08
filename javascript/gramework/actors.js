@@ -155,11 +155,11 @@ FourDirection.prototype.init = function(options) {
     this.xSpeed = 0;
     this.ySpeed = 0;
 
-    this.xMaxSpeed = options.xMaxSpeed || 2;
-    this.yMaxSpeed = options.yMaxSpeed || 2;
+    this.xMaxSpeed = options.xMaxSpeed || 4;
+    this.yMaxSpeed = options.yMaxSpeed || 4;
 
-    this.accel = options.accel || 0.1;
-    this.decel = options.decel || 0.2;
+    this.accel = options.accel || 0.2;
+    this.decel = options.decel || 0.4;
 
     this.movingDown = false;
     this.movingUp = false;
