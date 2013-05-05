@@ -31,11 +31,12 @@
   <tile id="4">
    <properties>
     <property name="spawnPlayer" value="true"/>
+    <property name="teleportPlayer" value="prev"/>
    </properties>
   </tile>
   <tile id="5">
    <properties>
-    <property name="teleportPlayer" value="true"/>
+    <property name="teleportPlayer" value="next"/>
    </properties>
   </tile>
  </tileset>
