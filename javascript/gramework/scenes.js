@@ -221,11 +221,14 @@ Scene.prototype.handleEvent = function(event) {
             } else {
                 this.focusedPlayer = 0;
             }
-            var focused = this.players[this.focusedPlayer];
-            this.camera.follow([focused.rect.left, focused.rect.top]);
         }
     }
     return;
+};
+
+Scene.prototype.followPlayer = function(index) {
+    var focused = this.players[this.focusedPlayer];
+    this.camera.follow([focused.rect.left, focused.rect.top]);
 };
 
 var order = function(a,b) {
@@ -234,6 +237,8 @@ var order = function(a,b) {
 
 Scene.prototype.update = function(msDuration) { 
     var that = this;
+
+    this.followPlayer(this.focusedPlayer);
 
     if (!this.isFrozen()){
         //step the physics
