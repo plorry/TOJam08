@@ -131,6 +131,10 @@ Scene.prototype.mapActors = function(map) {
             tile_opts['animations'] = {'red': [0], 'green': [1]};
             tile_opts['startingAnimation'] = 'red';
             tile_opts['tile'] = tile;
+            tile_opts['width'] = 8;
+            tile_opts['height'] = 8;
+            tile_opts['x'] = tile.rect.center[0];
+            tile_opts['y'] = tile.rect.center[1];
             var collectible = new Collectible(tile_opts);
             this.addProps([collectible]);
         }
