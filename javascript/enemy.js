@@ -1,12 +1,14 @@
 var gamejs = require('gamejs'),
-        FourDirection = require('./gramework/actors').FourDirection,
+        Actor = require('./gramework/actors').Actor,
         objects = require('gamejs/utils/objects'),
         config = require('./config');
+var Body = require('./gramework/physics').Body;
+var targetPlayer = null;        
 
 var Enemy = function(options) {
     Enemy.superConstructor.apply(this, arguments);
 };
-objects.extend(Enemy, FourDirection);
+objects.extend(Enemy, Actor);
 
 Enemy.prototype.doCollisions = function(collisions) {
     var actor = this;
@@ -44,31 +46,44 @@ Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
 
-    if ((Math.abs(this.rect.left - targetX) > 1) && (Math.abs(this.rect.top - targetX) > 1)) {
+    if ((Math.abs(this.realRect.left - targetX) > 1) && (Math.abs(this.realRect.top - targetX) > 1)) {
 
-        xDelta = targetX - this.rect.left;
-        yDelta = targetY - this.rect.top;
+        xDelta = targetX - this.realRect.left;
+        yDelta = targetY - this.realRect.top;
 
         var vectorLength = Math.sqrt(Math.abs((yDelta*yDelta)+(xDelta*xDelta)));
 
         var unitX = xDelta / vectorLength;
         var unitY = yDelta / vectorLength;
 
-        this.rect.left = this.rect.left + unitX; //times speed?
-        this.rect.top = this.rect.top + unitY; //times speed?
+        this.realRect.left = this.realRect.left + unitX; //times speed?
+        this.realRect.top = this.realRect.top + unitY; //times speed?
+
+        // this.body.body.GetPosition().x = this.realRect.left;
+        // this.body.body.GetPosition().y = this.realRect.top;
+
+        //Actor.prototype.setPlayerPosition(this.realRect.left, this.realRect.top);
         console.log('Unit Vectors: '+unitX+' '+unitY);
         console.log('Vector Delta' +xDelta+' '+yDelta);
         console.log('Vector Length' +vectorLength);
-        console.log('Rectangle Location '+this.rect.left+' '+this.rect.top);
+        console.log('realRectangle Location '+this.realRect.left+' '+this.realRect.top);
 
     } else {
-        alert("Reached Destination!");
+        //alert("Reached Destination!");
     }
 }
 
+Enemy.prototype.setTarget = function(target) {
+    this.targetPlayer = target;
+}
+
 Enemy.prototype.update = function(msDuration) {
-    //FourDirection.prototype.update.apply(this, arguments);
-    window.setTimeout(this.doMove(24,24),1000);
+    Actor.prototype.update.apply(this, arguments);
+    if (this.targetPlayer) {
+        window.setTimeout(this.doMove(this.targetPlayer.rect.center[0], this.targetPlayer.rect.center[1]),1000);
+    } else {
+        console.log("Target player null..");
+    }
 }
 
 // Enemy.protoype.handleEvent = function() {

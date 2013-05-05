@@ -31,7 +31,7 @@ function main() {
     var player_2_score = new Score(score_opts_2);
 
     firstScene.addActors(players.initialize());
-    firstScene.addActors(enemy.initialize());
+    firstScene.addProps(enemy.initialize());
     firstScene.addUI([player_1_score, player_2_score]);
     firstScene.addUI(messages.initialize());
     director.start(firstScene);
