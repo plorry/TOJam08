@@ -198,15 +198,17 @@ Scene.prototype.update = function(msDuration) {
             this.physics.step(msDuration / 1000);
         }
 
-        // update actors
+        // Update actors
         var props = this.props;
+
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
                 actor.updateCollisions(actor.currentMap.getTiles());
                 actor.updateCollisions(props);
             });
         });
-        //update props
+
+        // Update props
         this.props.forEach(function(prop){
             prop.update(msDuration);
         });
@@ -215,13 +217,31 @@ Scene.prototype.update = function(msDuration) {
             element.update(msDuration);
         });
 
-        var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
+
+        // TODO: !!! Button collisions. We should move this into the Button module.
         var gates = this.gates;
         var buttons = this.buttons;
         var lights = this.lights;
+
+        var buttonCollisions = gamejs.sprite.groupCollide(this.actors, buttons);
+
+        // For each collision, reduce it down to only ones that the collision is
+        // happening with the center collision.
+        var buttonCollisions = _.reduce(buttonCollisions, function(result, collision) {
+            var actor = collision.a;
+            var button = collision.b;
+
+            var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
+            if (centerCollision) {
+                result.push(collision);
+            }
+            return result;
+        }, []);
+
         buttonCollisions.forEach(function(collision) {
             var actor = collision.a;
             var button = collision.b;
+            // For each collision, let's check that
             if (button.canToggle) {
                 button.canToggle = false;
                 if (this.wallState == 0) {
@@ -240,6 +260,8 @@ Scene.prototype.update = function(msDuration) {
                 });
             }
         });
+
+        // Reset any buttons the player is not currently colliding with.
         var actors = this.actors;
         this.buttons.forEach(function(button) {
             if (gamejs.sprite.spriteCollide(button, actors).length === 0){

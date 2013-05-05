@@ -1,6 +1,6 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 1024;
+var WIDTH = exports.WIDTH = 1524;
 var HEIGHT = exports.HEIGHT = 768;
 
 exports.DEBUG = false;
@@ -17,6 +17,7 @@ var player_img = exports.player_img = STATIC_PATH + 'sprites/bike.png';
 var button_img = exports.button_img = STATIC_PATH + 'sprites/test.png';
 var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 var light_img = exports.light_img = STATIC_PATH + 'sprites/lights.png';
+var ford_img = exports.ford_img = STATIC_PATH + 'sprites/suv.png';
 
 //Add every resource variable to this array, please
 exports.RESOURCES = [
@@ -25,12 +26,13 @@ exports.RESOURCES = [
     player_img,
     button_img,
     gate_img,
-    light_img
+    light_img,
+    ford_img
 ];
 
 exports.scenes = {
     'title': {
-        'width': 1024,
+        'width': 1524,
         'height': 768,
         'scale': SCALE,
         'image': BG_TEST,
@@ -41,12 +43,16 @@ exports.scenes = {
             },
             {
                 url: STATIC_PATH + 'maps/test_map_2.tmx',
-                offset: [0, 250]
+                offset: [650, 0]
+            },
+            {
+                url: STATIC_PATH + 'maps/test_map_3.tmx',
+                offset: [0, 270]
             },
             {
                 url: STATIC_PATH + 'maps/test_map_4.tmx',
-                offset: [0, 500]
-            }
+                offset: [650, 270]
+            },
         ]
     }
 };
