@@ -44,8 +44,12 @@ exports.scenes = {
                 offset: [650, 0]
             },
             {
-                url: STATIC_PATH + 'maps/test_map_4.tmx',
+                url: STATIC_PATH + 'maps/test_map_3.tmx',
                 offset: [0, 270]
+            },
+            {
+                url: STATIC_PATH + 'maps/test_map_4.tmx',
+                offset: [650, 270]
             },
         ]
     }

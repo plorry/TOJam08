@@ -93,19 +93,10 @@ Actor.prototype.init = function(options) {
     return;
 };
 
-// Set the players position and all related rects to a specified point.
-Actor.prototype.setPlayerPosition = function(x, y) {
-    gamejs.log("setPlayerPosition", x, y);
-    this.realRect.left = x;
-    this.realRect.top = y;
-}
 
 // Spawn at the current maps origin.
 Actor.prototype.spawnAtMapOrigin = function() {
-    var initialSpawn = this.currentMap.getTileCenter(
-        this.currentMap.spawnPlayers[0]
-    );
-    this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
+    return;
 };
 
 Actor.prototype.update = function(msDuration) {
@@ -325,31 +316,32 @@ FourDirection.prototype.draw = function(display) {
 };
 
 FourDirection.prototype.handleEvent = function(event) {
-    if (event.type === gamejs.event.KEY_DOWN) {
-        if (event.key === this.controlMapping['down']) {
+    // Don't use === or breaks gamepad support!
+    if (event.type == gamejs.event.KEY_DOWN) {
+        if (event.key == this.controlMapping['down']) {
             this.movingDown = true;
         }
-        if (event.key === this.controlMapping['up']) {
+        if (event.key == this.controlMapping['up']) {
             this.movingUp = true;
         }
-        if (event.key === this.controlMapping['left']) {
+        if (event.key == this.controlMapping['left']) {
             this.movingLeft = true;
         }
-        if (event.key === this.controlMapping['right']) {
+        if (event.key == this.controlMapping['right']) {
             this.movingRight = true;
         }
     }
-    if (event.type === gamejs.event.KEY_UP) {
-        if (event.key === this.controlMapping['down']) {
+    if (event.type == gamejs.event.KEY_UP) {
+        if (event.key == this.controlMapping['down']) {
             this.movingDown = false;
         }
-        if (event.key === this.controlMapping['up']) {
+        if (event.key == this.controlMapping['up']) {
             this.movingUp = false;
         }
-        if (event.key === this.controlMapping['left']) {
+        if (event.key == this.controlMapping['left']) {
             this.movingLeft = false;
         }
-        if (event.key === this.controlMapping['right']) {
+        if (event.key == this.controlMapping['right']) {
             this.movingRight = false;
         }
     }
