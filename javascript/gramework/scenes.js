@@ -12,6 +12,7 @@ var Actor = require('./actors').Actor,
     Gate = require('./actors').Gate,
     Collectible = require('./actors').Collectible,
     Light = require('./actors').Light;
+var sounds = require('./sounds');
 var MapManager = require('./maps').MapManager;
 
 //Scene Class
