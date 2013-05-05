@@ -50,16 +50,10 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.players = [];
     this.maps = sceneConfig.maps || [];
 
-    var cameraConfig = {
+    this.camera = new Camera(this, {
         width: this.width,
         height: this.height
-    }
-    if (sceneConfig.camera && sceneConfig.camera.config) {
-        cameraConfig.width *= sceneConfig.camera.config.width;
-        cameraConfig.height *= sceneConfig.camera.config.height;
-    }
-    this.camera = new Camera(this, cameraConfig);
-    this.focusedPlayer = 0;
+    });
 
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
@@ -135,7 +129,7 @@ Scene.prototype.mapActors = function(map) {
         if (tile.properties.collectible === true) {
             tile_opts['spriteSheet'] = [config.spray_can, {height:32, width:32}];
             tile_opts['animations'] = {'red': [0], 'green': [1]};
-            tile_opts['startingAnimation'] = 'red'
+            tile_opts['startingAnimation'] = 'red';
             tile_opts['tile'] = tile;
             var collectible = new Collectible(tile_opts);
             this.addProps([collectible]);
@@ -193,16 +187,20 @@ Scene.prototype.draw = function(display) {
     this.props.draw(this.view);
     this.actors.draw(this.view);
 
-    //this.ui.draw(this.view);
-
-    var view = this.view;
-    this.scores.forEach(function(player) {
-        player.draw(view);
-    });
-
     var screen = this.camera.draw();
+    this.ui.draw(screen);
+
+    this.scores.forEach(function(player) {
+        player.draw(screen);
+    });
+    
+    var size = screen.getSize();
+    
+    //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
+    
     display.blit(screen);
     this.ui.draw(display);
+
 
     return;
 };
@@ -212,18 +210,12 @@ Scene.prototype.handleEvent = function(event) {
         actor.handleEvent(event);
     });
 
-    // Sometimes event.type is a string due to a keyboard event shim used by
-    // the gamepad module, so we have to be less strict with comparison here.
-    // Don't use === or this will break gamepad support!
+
     if (event.type == gamejs.event.KEY_DOWN) {
+
     }
     if (event.type == gamejs.event.KEY_UP) {
-        if (event.key == gamejs.event.K_SPACE) {
-            if (this.focusedPlayer === 0) {
-                this.focusedPlayer = 1;
-            } else {
-                this.focusedPlayer = 0;
-            }
+        if (event.key === gamejs.event.K_SPACE) {
         }
     }
     return;
@@ -240,8 +232,6 @@ var order = function(a,b) {
 
 Scene.prototype.update = function(msDuration) { 
     var that = this;
-
-    this.followPlayer(this.focusedPlayer);
 
     if (!this.isFrozen()){
         //step the physics
@@ -317,6 +307,7 @@ Scene.prototype.update = function(msDuration) {
                 });
             }
         });
+
         this.wallState = wallState;
 
         // Reset any buttons the player is not currently colliding with.
@@ -341,6 +332,33 @@ Scene.prototype.update = function(msDuration) {
                 this.triggers.splice(i,1);
             }
         }
+
+    //     //light collisions...
+    //     var lightCollisions = _.reduce(lightCollisions, function(result, collision) {
+    //         var actor = collision.a;
+    //         var light = collision.b;
+
+    //         var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
+    //         if (centerCollision) {
+    //             result.push(collision);
+    //         }
+    //         return result;
+    //     }, []);
+
+    //     lightCollisions.forEach(function(collision) {
+    //         var actor = collision.a;
+    //         var light = collision.b;
+    //         console.log("Hit a light!");
+    //         //if the actor is a player
+    //         if (actor instanceof FourDirection) {
+    //             console.log("List of Props: "+props);
+    //             this.props.forEach(function(prop){
+    //             if (prop.setTarget) {
+    //                     console.log("Setting target of "+actor);
+    //                     prop.setTarget(actor);
+    //             }               
+    //         }
+    //     });       
     }
 
     this.camera.update(msDuration);
