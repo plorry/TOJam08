@@ -16,6 +16,7 @@ var BG_ROFO = STATIC_PATH + 'backgrounds/rofo.jpg';
 var MAP_TILES = STATIC_PATH + 'backgrounds/test_tiles.png';
 var DRAW_TILES = STATIC_PATH + 'backgrounds/draw_tiles.png';
 var player_img = exports.player_img = STATIC_PATH + 'sprites/bike.png';
+var player2_img = exports.player2_img = STATIC_PATH + 'sprites/bike2.png';
 var button_img = exports.button_img = STATIC_PATH + 'sprites/test.png';
 var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 var light_img = exports.light_img = STATIC_PATH + 'sprites/lights.png';
@@ -29,6 +30,7 @@ exports.RESOURCES = [
     BG_ROFO,
     MAP_TILES,
     player_img,
+    player2_img,
     button_img,
     gate_img,
     light_img,

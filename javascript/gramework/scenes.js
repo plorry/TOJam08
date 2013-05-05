@@ -247,7 +247,12 @@ Scene.prototype.update = function(msDuration) {
 
         // Update props
         this.props.forEach(function(prop){
-            prop.update(msDuration);
+            if (prop.doMove) {
+                var newActor = prop.update(msDuration);
+                console.log(newActor);
+            } else {
+                prop.update(msDuration);
+            }
         });
 
         this.ui.forEach(function(element){
