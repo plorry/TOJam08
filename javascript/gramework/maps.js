@@ -197,8 +197,8 @@ var LayerView = function(map, layer, opts) {
 
     // Initialize.
     this.surface = new gamejs.Surface(
-        opts.width * opts.tileWidth,
-        opts.height * opts.tileHeight
+        (opts.width * opts.tileWidth) + map.controller.offset[0],
+        (opts.height * opts.tileHeight) + map.controller.offset[1]
     );
     this.surface.setAlpha(layer.opacity);
 

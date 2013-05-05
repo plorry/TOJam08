@@ -1,6 +1,6 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 1024;
+var WIDTH = exports.WIDTH = 1524;
 var HEIGHT = exports.HEIGHT = 768;
 
 exports.DEBUG = false;
@@ -28,7 +28,7 @@ exports.RESOURCES = [
 
 exports.scenes = {
     'title': {
-        'width': 1024,
+        'width': 1524,
         'height': 768,
         'scale': SCALE,
         'image': BG_TEST,
@@ -39,12 +39,12 @@ exports.scenes = {
             },
             {
                 url: STATIC_PATH + 'maps/test_map_2.tmx',
-                offset: [0, 250]
+                offset: [650, 0]
             },
             {
                 url: STATIC_PATH + 'maps/test_map_4.tmx',
-                offset: [0, 500]
-            }
+                offset: [0, 270]
+            },
         ]
     }
 };
