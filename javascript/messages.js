@@ -9,7 +9,13 @@ var LoseMessage = function(options) {
     LoseMessage.superConstructor.apply(this, arguments);
     this.isLoseMessage = true;
 }
-objects.extend(LoseMessage, TextArea)
+objects.extend(LoseMessage, TextArea);
+
+var LoseImage = function(options) {
+    LoseImage.superConstructor.apply(this, arguments);
+    this.isLoseImage = true;
+}
+objects.extend(LoseImage, TextArea);
 
 var score_opts = {
     pos: 'top left',
@@ -35,6 +41,7 @@ var Player1Lose = {
     text: [
         'Got you! Tell me where your',
         'friend is for lenience!',
+        ' ',
         ' PLAYER 1 CHOOSE!',
         '   UP: Stay Quiet',
         '   DOWN: Rat out your friend'],
@@ -51,23 +58,24 @@ var Player2Lose = {
         'Got you! Tell me where your',
         'friend is for lenience!',
         ' PLAYER 2 CHOOSE!',
+        ' ',
         '   UP: Stay Quiet',
         '   DOWN: Rat out your friend'],
     lineHeight: 17
 };
 
 var Gotcha = {
-    size: [120, 120],
+    size: [240, 240],
     pos: 'middle center',
     image: config.gotcha,
-    active: true
+    active: false
 };
 
 var initialize = exports.initialize = function() {
     return [
         new LoseMessage(Player1Lose),
         new LoseMessage(Player2Lose),
-        new Element(Gotcha)
+        new LoseImage(Gotcha)
     ];
 };
 
