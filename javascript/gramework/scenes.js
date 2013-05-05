@@ -404,7 +404,7 @@ GameScene.prototype.update = function(msDuration) {
     // Cheap hack to only update elapsed during the game
     if (this.players.length > 0) {
         this.elapsed += msDuration;
-        if (this.elapsed > 20000) {
+        if (this.elapsed > 2000000) {
             this.director.nextScene();
         }
     }
