@@ -83,8 +83,6 @@ Scene.prototype.initScene = function(sceneConfig) {
     });
     this.background = new gamejs.Surface(this.view_size);
     this.background.blit(this.view);
-
-    //testing to make sure targeting works
     return;
 };
 
@@ -190,15 +188,11 @@ Scene.prototype.draw = function(display) {
     this.scores.forEach(function(player) {
         player.draw(screen);
     });
-    
+
     var size = screen.getSize();
-    
-    //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
-    
+
     display.blit(screen);
     this.ui.draw(display);
-
-
     return;
 };
 
