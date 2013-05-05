@@ -5,6 +5,9 @@ var gamejs = require('gamejs'),
 
 var Player = function(options) {
     Player.superConstructor.apply(this, arguments);
+    this.isTarget = false;
+    this.targetCounter = 0;
+    this.score = 0;
 };
 objects.extend(Player, FourDirection);
 
@@ -17,6 +20,10 @@ Player.prototype.doCollisions = function(collisions) {
 
         if (tile.properties && tile.properties.teleportPlayer) {
             actor.doTeleport(tile);
+        }
+
+        if (tile.properties && tile.green === false) {
+            actor.targetCounter = 1000;
         }
     });
 
@@ -34,6 +41,16 @@ Player.prototype.spawnAtMapOrigin = function() {
         this.currentMap.spawnPlayers[0]
     );
     this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
+};
+
+Player.prototype.update = function(msDuration, collisionCallback) {
+    FourDirection.prototype.update.apply(this, arguments);
+    if (this.targetCounter > 0) {
+        this.targetCounter -= 1;
+        this.isTarget = true;
+    } else {
+        this.isTarget = false;
+    }
 };
 
 var Player1 = {

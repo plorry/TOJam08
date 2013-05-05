@@ -45,6 +45,8 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.gates = new gamejs.sprite.Group();
     this.lights = new gamejs.sprite.Group();
     this.wallState = 0;
+    this.scores = null;
+    this.players = [];
 
     this.camera = new Camera(this, {
         width: this.width,
@@ -126,6 +128,12 @@ Scene.prototype.addActors = function(actors) {
     return;
 };
 
+Scene.prototype.addPlayers = function(players) {
+    this.players.push.apply(this.players, players);
+    this.actors.add(players);
+    return;
+};
+
 Scene.prototype.addProps = function(props) {
     this.props.add(props);
     if (props.setTarget) {
@@ -137,6 +145,11 @@ Scene.prototype.addProps = function(props) {
 
 Scene.prototype.addUI = function(ui) {
     this.ui.add(ui);
+    return;
+};
+
+Scene.prototype.addScores = function(scores) {
+    this.scores = scores;
     return;
 };
 
@@ -161,6 +174,8 @@ Scene.prototype.draw = function(display) {
 
     var screen = this.camera.draw();
     this.ui.draw(screen);
+    this.scores.player1.draw(screen);
+    this.scores.player2.draw(screen);
     
     var size = screen.getSize();
     
@@ -223,6 +238,11 @@ Scene.prototype.update = function(msDuration) {
         this.ui.forEach(function(element){
             element.update(msDuration);
         });
+
+        if (this.scores.player1) {
+            this.scores.player1.update(msDuration, this.players[0].score);
+            this.scores.player2.update(msDuration, this.players[1].score);
+        }
 
 
         // TODO: !!! Button collisions. We should move this into the Button module.

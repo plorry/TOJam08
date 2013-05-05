@@ -1,6 +1,22 @@
 var gamejs = require('gamejs'),
         TextArea = require('./gramework/ui').TextArea,
         config = require('./config');
+var Score = require('./gramework/ui').Score;
+
+var score_opts = {
+    pos: 'top left',
+    margin: 2,
+    size: [55, 10],
+    text: ['00000000'],
+    active: true
+};
+var score_opts_2 = {
+    pos: 'top right',
+    margin: 2,
+    size: [55, 10],
+    text: ['00000000'],
+    active: true
+};
 
 var Player1Lose = {
     size: [300, 120],
@@ -38,3 +54,10 @@ var initialize = exports.initialize = function() {
         new TextArea(Player2Lose)
     ];
 };
+
+var initializeScores = exports.initializeScores = function() {
+    return {
+        'player1' : new Score(score_opts),
+        'player2' : new Score(score_opts_2)
+    };
+}
