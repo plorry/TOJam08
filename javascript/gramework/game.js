@@ -7,7 +7,6 @@ exports.Director = function() {
     var gamejsKey = null;
     var gamepad = false;
     var directorScenes = [];
-    var directorCallbacks = [];
 
     var display = this.display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE], gamejs.display.DISABLE_SMOOTHING);
 
@@ -79,31 +78,22 @@ exports.Director = function() {
     this.start = function(scene) {
         onAir = true;
         this.replaceScene(scene);
-        // If we have a callback for call it immediately. It's the first scene
-        var index = 0;
-        directorScenes.forEach(function(scene) {
-            if (scene !== currentScene) {
-                index ++;
-            }
-        });
-
-        if (directorCallbacks[index]) {
-            directorCallbacks[index]();
-        }
         return;
     };
 
     this.replaceScene = function(scene) {
-        currentScene = scene;
+        currentScene = scene.scene;
+        if (scene.callback) {
+            scene.callback(scene.scene);
+        }
     };
 
     this.getScene = function() {
         return currentScene;
     };
 
-    this.addScene = function(scene, callback) {
+    this.addScene = function(scene) {
         directorScenes.push(scene);
-        directorCallbacks.push(callback)
     }
     
     this.nextScene = function() {
@@ -120,9 +110,6 @@ exports.Director = function() {
             gamejs.log("No next scene. Add something?");
         } else {
             this.replaceScene(directorScenes[index]);
-            if (directorCallbacks[index]) {
-                directorCallbacks[index]();
-            }
         }
     }
 

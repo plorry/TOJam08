@@ -70,7 +70,6 @@ Player.prototype.triggerDilemna = function(robFord) {
     var that = this;
     // Time out for a bit before trigger.
     window.setTimeout(function() {
-        gamejs.log("Triggering dilemna");
         that.isDilemna = true;
 
         // Reset Robbie.
