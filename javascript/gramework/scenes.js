@@ -238,7 +238,13 @@ var order = function(a,b) {
 // Show the dilemna for the passed player.
 Scene.prototype.showDilemna = function(player) {
     gamejs.log("showDilemna");
-    this.ui.forEach(function(ui, index) {
+    // Get all lose messages.
+    var loseMessages = [];
+    this.ui.forEach(function(ui) {
+        if (ui.isLoseMessage) { loseMessages.push(ui); }
+    });
+
+    loseMessages.forEach(function(ui, index) {
         if (index == player.playerNumber) {
             ui.active = true;
         }
@@ -264,6 +270,11 @@ Scene.prototype.handleDilemna = function(choice) {
             }
         });
     }
+
+    this.ui.forEach(function(ui) {
+        if (ui.isLoseMessage) { ui.active = false; }
+    });
+
     this.inDilemna = null;
     this.unFreeze();
 };
