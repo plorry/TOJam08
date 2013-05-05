@@ -7,7 +7,7 @@ var targetPlayer = null;
 
 var robFord = {
     x: 320,
-    y: 24,
+    y: 64,
     width: 24,
     height: 24,
     spriteSheet: [
