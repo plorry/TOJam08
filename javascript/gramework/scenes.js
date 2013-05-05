@@ -55,6 +55,7 @@ Scene.prototype.initScene = function(sceneConfig) {
         height: this.height
     });
     this.focusedPlayer = 0;
+    this.inDilemna = null;
 
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
@@ -197,6 +198,18 @@ Scene.prototype.draw = function(display) {
 };
 
 Scene.prototype.handleEvent = function(event) {
+    if (this.inDilemna) {
+        var player = this.inDilemna;
+        if (event.type == gamejs.event.KEY_DOWN) {
+            gamejs.log("Hitting a key", event.key, player.controlMapping.up);
+            if (event.key === player.controlMapping.up) {
+                this.handleDilemna('quiet');
+            } else if (event.key === player.controlMapping.down) {
+                this.handleDilemna('ratout');
+            }
+        }
+    }
+
     this.actors.forEach(function(actor) {
         actor.handleEvent(event);
     });
@@ -222,6 +235,50 @@ var order = function(a,b) {
     return a.rect.top-b.rect.top;
 };
 
+// Show the dilemna for the passed player.
+Scene.prototype.showDilemna = function(player) {
+    gamejs.log("showDilemna");
+    // Get all lose messages.
+    var loseMessages = [];
+    this.ui.forEach(function(ui) {
+        if (ui.isLoseMessage) { loseMessages.push(ui); }
+    });
+
+    loseMessages.forEach(function(ui, index) {
+        if (index == player.playerNumber) {
+            ui.active = true;
+        }
+    });
+    this.inDilemna = player;
+    this.freeze();
+};
+
+Scene.prototype.handleDilemna = function(choice) {
+    var player = this.inDilemna;
+    player.isDilemna = false;
+
+    gamejs.log("Dilemna choice", choice);
+    if (choice === 'quiet') {
+        // Go back to the start of current map (player);
+        player.spawnAtMapOrigin();
+    } else if (choice === 'ratout') {
+        player.updateScore(-300);
+        // All other players go back to the start of their mazes.
+        this.players.forEach(function(otherPlayer) {
+            if (player !== otherPlayer) {
+                otherPlayer.spawnAtMapOrigin();
+            }
+        });
+    }
+
+    this.ui.forEach(function(ui) {
+        if (ui.isLoseMessage) { ui.active = false; }
+    });
+
+    this.inDilemna = null;
+    this.unFreeze();
+};
+
 Scene.prototype.update = function(msDuration) { 
     var that = this;
 
@@ -230,6 +287,13 @@ Scene.prototype.update = function(msDuration) {
         if (this.physics) {
             this.physics.step(msDuration / 1000);
         }
+
+        // Check if any player is in a dilemna.
+        this.players.forEach(function(player) {
+            if (player.isDilemna) {
+                that.showDilemna(player);
+            }
+        });
 
         // Update actors
         var props = this.props;

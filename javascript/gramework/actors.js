@@ -42,6 +42,9 @@ Actor.prototype.init = function(options) {
     this.width = options.width;
     this.startingAnimation = options.startingAnimation || 'static';
 
+    // Rob Ford specifics. Ugh!
+    this.isDilemna = false;
+
     // Starting positions can be customized.
     // No start provided? Set defaults for currentMap. We assume there is only a
     // single map in this case.
