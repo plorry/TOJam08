@@ -43,6 +43,10 @@ Player.prototype.doCollisions = function(collisions) {
             if (obj.isButton) {
                 actor.triggerButton(obj);
             } 
+
+            if (obj.isRobFord) {
+                actor.triggerDilemna(obj);
+            }
         }
     });
 
@@ -60,6 +64,19 @@ Player.prototype.triggerButton = function(button) {
         }
 
     }
+};
+
+Player.prototype.triggerDilemna = function(robFord) {
+    var that = this;
+    // Time out for a bit before trigger.
+    window.setTimeout(function() {
+        gamejs.log("Triggering dilemna");
+        that.isDilemna = true;
+
+        // Reset Robbie.
+        robFord.setPosition(robFord.startX, robFord.startY);
+    }, 500);
+
 };
 
 Player.prototype.triggerRedLight = function(light) {

@@ -1,7 +1,14 @@
 var gamejs = require('gamejs'),
         TextArea = require('./gramework/ui').TextArea,
+        objects = require('gamejs/utils/objects'),
         config = require('./config');
 var Score = require('./gramework/ui').Score;
+
+var LoseMessage = function(options) {
+    LoseMessage.superConstructor.apply(this, arguments);
+    this.isLoseMessage = true;
+}
+objects.extend(LoseMessage, TextArea)
 
 var score_opts = {
     pos: 'top left',
@@ -50,8 +57,8 @@ var Player2Lose = {
 
 var initialize = exports.initialize = function() {
     return [
-        new TextArea(Player1Lose),
-        new TextArea(Player2Lose)
+        new LoseMessage(Player1Lose),
+        new LoseMessage(Player2Lose)
     ];
 };
 

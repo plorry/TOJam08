@@ -5,20 +5,6 @@ var gamejs = require('gamejs'),
 var Body = require('./gramework/physics').Body;
 var targetPlayer = null;
 
-var Enemy = function(options) {
-    Enemy.superConstructor.apply(this, arguments);
-};
-objects.extend(Enemy, Actor);
-
-Enemy.prototype.doCollisions = function(collisions) {
-    var actor = this;
-    _.each(collisions, function(tile, key) {
-        if (tile.block === true) {
-            actor._hitWall(tile, key);
-        }
-    });
-};
-
 var robFord = {
     x: 320,
     y: 64,
@@ -64,6 +50,24 @@ var smokeCloud = {
     }
 };
 
+
+var Enemy = function(options) {
+    Enemy.superConstructor.apply(this, arguments);
+    this.isRobFord = true;
+    this.startX = this.x;
+    this.startY = this.y;
+};
+objects.extend(Enemy, Actor);
+
+Enemy.prototype.doCollisions = function(collisions) {
+    var actor = this;
+    _.each(collisions, function(tile, key) {
+        if (tile.block === true) {
+            actor._hitWall(tile, key);
+        }
+    });
+};
+
 Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
@@ -88,6 +92,12 @@ Enemy.prototype.doMove = function(targetX, targetY) {
 
 Enemy.prototype.setTarget = function(target) {
     this.targetPlayer = target;
+};
+
+Enemy.prototype.setPosition = function(x, y) {
+    gamejs.log("setPosition", x, y);
+    this.realRect.left = x - this.width;
+    this.realRect.top = y - this.height;
 };
 
 Enemy.prototype.update = function(msDuration) {
