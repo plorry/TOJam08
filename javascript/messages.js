@@ -1,6 +1,7 @@
 var gamejs = require('gamejs'),
         TextArea = require('./gramework/ui').TextArea,
         objects = require('gamejs/utils/objects'),
+        Element = require('./gramework/ui').Element,
         config = require('./config');
 var Score = require('./gramework/ui').Score;
 
@@ -55,10 +56,18 @@ var Player2Lose = {
     lineHeight: 17
 };
 
+var Gotcha = {
+    size: [120, 120],
+    pos: 'middle center',
+    image: config.gotcha,
+    active: true
+};
+
 var initialize = exports.initialize = function() {
     return [
         new LoseMessage(Player1Lose),
-        new LoseMessage(Player2Lose)
+        new LoseMessage(Player2Lose),
+        new Element(Gotcha)
     ];
 };
 

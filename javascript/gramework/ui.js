@@ -5,7 +5,9 @@ var Animation = require('./animate').Animation;
 
 var Element = exports.Element = function(options) {
     Element.superConstructor.apply(this, arguments);
-    this.image = options.image || null;
+    if (options.image) {
+        this.image = gamejs.image.load(options.image);
+    }
     if (options.animation){
         this.animation = new Animation(options.spriteSheet, options.animation, 12) || null;
     }

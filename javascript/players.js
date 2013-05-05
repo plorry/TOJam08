@@ -97,6 +97,7 @@ Player.prototype.updateScore = function(number) {
 
 Player.prototype.collectItem = function(item) {
     if(item.animation.currentAnimation == 'red') {
+        sounds.playsound(config.aud_spray);
         item.animation.start('green');
         this.updateScore(item.modifier);
         gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
