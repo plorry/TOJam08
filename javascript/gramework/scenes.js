@@ -57,7 +57,6 @@ Scene.prototype.initScene = function(sceneConfig) {
     });
     this.focusedPlayer = 0;
     this.inDilemna = null;
-
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
     }
@@ -132,6 +131,10 @@ Scene.prototype.mapActors = function(map) {
             tile_opts['animations'] = {'red': [0], 'green': [1]};
             tile_opts['startingAnimation'] = 'red';
             tile_opts['tile'] = tile;
+            tile_opts['width'] = 8;
+            tile_opts['height'] = 8;
+            tile_opts['x'] = tile.rect.center[0];
+            tile_opts['y'] = tile.rect.center[1];
             var collectible = new Collectible(tile_opts);
             this.addProps([collectible]);
         }
@@ -199,8 +202,6 @@ Scene.prototype.draw = function(display) {
     this.scores.forEach(function(player) {
         player.draw(screen);
     });
-
-    var size = screen.getSize();
 
     display.blit(screen);
     this.ui.draw(display);
@@ -291,7 +292,6 @@ Scene.prototype.handleDilemna = function(choice) {
 
 Scene.prototype.update = function(msDuration) { 
     var that = this;
-
     if (!this.isFrozen()){
         //step the physics
         if (this.physics) {
@@ -414,7 +414,14 @@ Scene.prototype.update = function(msDuration) {
     }
 
     this.camera.update(msDuration);
-    this.elapsed += msDuration;
+
+    // Cheap hack to only update elapsed during the game
+    if (this.players.length > 0) {
+        this.elapsed += msDuration;
+        if (this.elapsed > 2000) {
+            //this.director.nextScene();
+        }
+    }
     return;
 };
 

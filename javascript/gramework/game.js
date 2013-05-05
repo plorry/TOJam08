@@ -60,7 +60,6 @@ exports.Director = function() {
         gamejs.onEvent(function(event) {
 			currentScene.handleEvent(event);
 		});
-
         if (gamepad) {
             Gamepads.update();
             gamepadInput();
@@ -70,6 +69,7 @@ exports.Director = function() {
             msDuration = 1000/15;
         }
 		currentScene.update(msDuration);
+
         this.display.fill("#000");
 		currentScene.draw(display);
 		return;
@@ -82,6 +82,7 @@ exports.Director = function() {
     };
 
     this.replaceScene = function(scene) {
+        gamejs.log("The new scene is", scene, scene.scene);
         currentScene = scene.scene;
         if (scene.callback) {
             scene.callback(scene.scene);
@@ -99,17 +100,14 @@ exports.Director = function() {
     this.nextScene = function() {
         // Find the current scene in our array, and move to the next if
         // possible.
-        var index = 0;
-        directorScenes.forEach(function(scene) {
-            if (scene !== currentScene) {
-                index ++;
-            }
+        var index =_.findIndex(directorScenes, function(sceneObj) {
+            return sceneObj.scene === currentScene;
         });
 
-        if (directorScenes.length < index) {
+        if (directorScenes.length < (index + 1)) {
             gamejs.log("No next scene. Add something?");
         } else {
-            this.replaceScene(directorScenes[index]);
+            this.replaceScene(directorScenes[index + 1]);
         }
     }
 
