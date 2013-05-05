@@ -45,6 +45,8 @@ var robFord = {
 Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
+    targetX = targetX - (this.width);
+    targetY = targetY - (this.height);
 
     if ((Math.abs(this.realRect.left - targetX) > 1) && (Math.abs(this.realRect.top - targetX) > 1)) {
 
