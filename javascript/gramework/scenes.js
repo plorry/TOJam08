@@ -134,6 +134,15 @@ Scene.prototype.mapActors = function(map) {
             var collectible = new Collectible(tile_opts);
             this.addProps([collectible]);
         }
+        
+        if (tile.properties.goatpole === true) {
+            tile_opts['spriteSheet'] = [config.goatpole, {height:32, width:32}];
+            tile_opts['animations'] = {'red': [0], 'green': [1]};
+            tile_opts['startingAnimation'] = 'red';
+            tile_opts['tile'] = tile;
+            var goatpole = new Collectible(tile_opts);
+            this.addProps([goatpole]);
+        }
     }
 };
 
