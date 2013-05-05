@@ -70,6 +70,7 @@ Enemy.prototype.doMove = function(targetX, targetY) {
     targetX = targetX - (this.width);
     targetY = targetY - (this.height);
 
+    // Move towards target. Stop after awhile, sometimes.
     if ((Math.abs(this.realRect.left - targetX) > 1) && (Math.abs(this.realRect.top - targetX) > 1)) {
 
         xDelta = targetX - this.realRect.left;
@@ -82,25 +83,6 @@ Enemy.prototype.doMove = function(targetX, targetY) {
 
         this.realRect.left = this.realRect.left + unitX; //times speed?
         this.realRect.top = this.realRect.top + unitY; //times speed?
-
-        // this.body.body.GetPosition().x = this.realRect.left;
-        // this.body.body.GetPosition().y = this.realRect.top;
-
-        //Actor.prototype.setPlayerPosition(this.realRect.left, this.realRect.top);
-        // var newSmokeCloud = new Actor(smokeCloud);
-        // newSmokeCloud.realRect.left = this.realRect.left;
-        // newSmokeCloud.realRect.top = this.realRect.top;
-        //console.log(smokeCloud);
-        // var smokeCloudActor = new Enemy(smokeCloud);
-        // console.log(smokeCloudActor);
-        // return new smokeCloudActor;
-        // console.log('Unit Vectors: '+unitX+' '+unitY);
-        // console.log('Vector Delta' +xDelta+' '+yDelta);
-        // console.log('Vector Length' +vectorLength);
-        // console.log('realRectangle Location '+this.realRect.left+' '+this.realRect.top);
-
-    } else {
-        //alert("Reached Destination!");
     }
 };
 
@@ -114,10 +96,6 @@ Enemy.prototype.update = function(msDuration) {
         window.setTimeout(this.doMove(this.targetPlayer.rect.center[0], this.targetPlayer.rect.center[1]),1000);
     }
 };
-
-// Enemy.protoype.handleEvent = function() {
-//     //to go towards a player
-// }
 
 var initialize = function() {
     return new Enemy(robFord);

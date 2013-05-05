@@ -3,7 +3,7 @@ var gamejs = require('gamejs');
 var WIDTH = exports.WIDTH = 1280;
 var HEIGHT = exports.HEIGHT = 512;
 
-exports.DEBUG = true; //false;
+exports.DEBUG = false;
 exports.PHYSICS_DEBUG = true;
 
 var STATIC_PATH = exports.STATIC_PATH = './static/';
@@ -70,15 +70,15 @@ exports.scenes = {
             },
             {
                 url: STATIC_PATH + 'maps/test_map_2.tmx',
-                offset: [650, 0]
+                offset: [640, 0]
             },
             {
                 url: STATIC_PATH + 'maps/test_map_3.tmx',
-                offset: [0, 270]
+                offset: [0, 250]
             },
             {
                 url: STATIC_PATH + 'maps/test_map_4.tmx',
-                offset: [650, 270]
+                offset: [640, 250]
             },
         ]
     }
