@@ -36,10 +36,10 @@ objects.extend(Actor, Sprite);
 
 Actor.prototype.init = function(options) {
     this.scale = options.scale || 1;
-    this.x = options.x * 2;
-    this.y = options.y * 2;
-    this.height = options.height * 2;
-    this.width = options.width * 2;
+    this.x = options.x;
+    this.y = options.y;
+    this.height = options.height;
+    this.width = options.width;
     this.startingAnimation = options.startingAnimation || 'static';
 
     // Starting positions can be customized.
