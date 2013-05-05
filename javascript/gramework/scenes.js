@@ -155,22 +155,24 @@ Scene.prototype.draw = function(display) {
 };
 
 Scene.prototype.handleEvent = function(event) {
-	
-	this.actors.forEach(function(actor) {
-		actor.handleEvent(event);
-	});
+    this.actors.forEach(function(actor) {
+        actor.handleEvent(event);
+    });
 
-	if (event.type === gamejs.event.KEY_DOWN) {
-		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(0.5);
-		}
-	}
-	if (event.type === gamejs.event.KEY_UP) {
-		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(1);
-		}
-	}
-	return;
+    // Sometimes event.type is a string due to a keyboard event shim used by
+    // the gamepad module, so we have to be less strict with comparison here.
+    // Don't use === or this will break gamepad support!
+    if (event.type == gamejs.event.KEY_DOWN) {
+        if (event.key === gamejs.event.K_SPACE) {
+            this.camera.zoomTo(0.5);
+        }
+    }
+    if (event.type == gamejs.event.KEY_UP) {
+        if (event.key === gamejs.event.K_SPACE) {
+            this.camera.zoomTo(1);
+        }
+    }
+    return;
 };
 
 var order = function(a,b) {
