@@ -2,7 +2,8 @@ var gamejs = require('gamejs'),
         FourDirection = require('./gramework/actors').FourDirection,
         objects = require('gamejs/utils/objects'),
         config = require('./config'),
-        Tile = require('./gramework/maps').Tile;
+        Tile = require('./gramework/maps').Tile,
+        sounds = require('./gramework/sounds');
 
 var Player = function(options) {
     Player.superConstructor.apply(this, arguments);
@@ -80,10 +81,15 @@ Player.prototype.triggerDilemna = function(robFord) {
 
 Player.prototype.triggerRedLight = function(light) {
 
+
     if (this.realRect.collideRect(light.centerCollisionRect)) {
+        if (this.targetCounter == 0) {
+            sounds.playsound(config.aud_bike_lanes);
+        }
         this.targetCounter = 1000;
         this.targetSetTime = new Date().getTime();
     }
+
 };
 
 Player.prototype.updateScore = function(number) {
