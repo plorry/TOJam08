@@ -127,7 +127,7 @@ var Player2 = {
     width: 12,
     height: 12,
     spriteSheet: [
-        config.player_img, {width:24, height:24}
+        config.player2_img, {width:24, height:24}
     ],
     controlMapping: {
         down: gamejs.event.K_DOWN,

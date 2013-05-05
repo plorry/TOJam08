@@ -3,7 +3,7 @@ var gamejs = require('gamejs'),
         objects = require('gamejs/utils/objects'),
         config = require('./config');
 var Body = require('./gramework/physics').Body;
-var targetPlayer = null;        
+var targetPlayer = null;
 
 var Enemy = function(options) {
     Enemy.superConstructor.apply(this, arguments);
@@ -42,6 +42,28 @@ var robFord = {
     }
 };
 
+var smokeCloud = {
+    x: 800,
+    y: 500,
+    width : 32,
+    height : 32,
+    spritesheet: [
+        config.smoke_cloud, {width:32, height:32}
+    ],
+    animations: {'static':[0,1]},
+    controlMapping: {
+        down: null,
+        left: null,
+        right: null,
+        up: null
+    },
+    start: {
+        x:500,
+        y:500,
+        map:0
+    }
+};
+
 Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
@@ -65,20 +87,26 @@ Enemy.prototype.doMove = function(targetX, targetY) {
         // this.body.body.GetPosition().y = this.realRect.top;
 
         //Actor.prototype.setPlayerPosition(this.realRect.left, this.realRect.top);
-        return;
-        console.log('Unit Vectors: '+unitX+' '+unitY);
-        console.log('Vector Delta' +xDelta+' '+yDelta);
-        console.log('Vector Length' +vectorLength);
-        console.log('realRectangle Location '+this.realRect.left+' '+this.realRect.top);
+        // var newSmokeCloud = new Actor(smokeCloud);
+        // newSmokeCloud.realRect.left = this.realRect.left;
+        // newSmokeCloud.realRect.top = this.realRect.top;
+        //console.log(smokeCloud);
+        // var smokeCloudActor = new Enemy(smokeCloud);
+        // console.log(smokeCloudActor);
+        // return new smokeCloudActor;
+        // console.log('Unit Vectors: '+unitX+' '+unitY);
+        // console.log('Vector Delta' +xDelta+' '+yDelta);
+        // console.log('Vector Length' +vectorLength);
+        // console.log('realRectangle Location '+this.realRect.left+' '+this.realRect.top);
 
     } else {
         //alert("Reached Destination!");
     }
-}
+};
 
 Enemy.prototype.setTarget = function(target) {
     this.targetPlayer = target;
-}
+};
 
 Enemy.prototype.update = function(msDuration) {
     Actor.prototype.update.apply(this, arguments);
@@ -87,7 +115,7 @@ Enemy.prototype.update = function(msDuration) {
     } else {
         console.log("Target player null..");
     }
-}
+};
 
 // Enemy.protoype.handleEvent = function() {
 //     //to go towards a player
