@@ -65,12 +65,8 @@ Player.prototype.triggerButton = function(button) {
 Player.prototype.triggerRedLight = function(light) {
 
     if (this.realRect.collideRect(light.centerCollisionRect)) {
-        //console.log("Hit Light: "+light);
         this.targetCounter = 1000;
         this.targetSetTime = new Date().getTime();
-        //console.log(this.targetSetTime);
-
-
     }
 };
 

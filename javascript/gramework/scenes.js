@@ -54,6 +54,7 @@ Scene.prototype.initScene = function(sceneConfig) {
         width: this.width,
         height: this.height
     });
+    this.focusedPlayer = 0;
 
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
@@ -150,10 +151,6 @@ Scene.prototype.addPlayers = function(players) {
 
 Scene.prototype.addProps = function(props) {
     this.props.add(props);
-    // if (props.setTarget) {
-    //     console.log("Geting here...");
-    //     props.setTarget(this.actors._sprites[0]);
-    //  }
     return;
 };
 
@@ -210,12 +207,13 @@ Scene.prototype.handleEvent = function(event) {
         actor.handleEvent(event);
     });
 
-
-    if (event.type == gamejs.event.KEY_DOWN) {
-
-    }
     if (event.type == gamejs.event.KEY_UP) {
         if (event.key === gamejs.event.K_SPACE) {
+            if (this.focusedPlayer === 0) {
+                this.focusedPlayer = 1;
+            } else {
+                this.focusedPlayer = 0;
+            }
         }
     }
     return;
@@ -250,6 +248,8 @@ Scene.prototype.update = function(msDuration) {
             });
         });
 
+        this.followPlayer(this.focusedPlayer);
+
         // Update props
         this.props.forEach(function(prop){
             if (prop.setTarget) {
@@ -261,7 +261,6 @@ Scene.prototype.update = function(msDuration) {
                         targetPlayer = player;
                     }
                 });
-                //console.log(targetPlayer);
                 if (targetPlayer) prop.setTarget(targetPlayer);
             }
             prop.update(msDuration);

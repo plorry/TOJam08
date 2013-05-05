@@ -112,8 +112,6 @@ Enemy.prototype.update = function(msDuration) {
     Actor.prototype.update.apply(this, arguments);
     if (this.targetPlayer) {
         window.setTimeout(this.doMove(this.targetPlayer.rect.center[0], this.targetPlayer.rect.center[1]),1000);
-    } else {
-        console.log("Target player null..");
     }
 };
 
