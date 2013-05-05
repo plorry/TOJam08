@@ -15,10 +15,10 @@ function main() {
     var titleScene = {
         scene: new scenes.CutScene(director, config.scenes.title)
     };
-    //director.addScene(titleScene);
+    director.addScene(titleScene);
 
     var gameSceneObject = {
-        scene: new scenes.Scene(director, config.scenes.game),
+        scene: new scenes.GameScene(director, config.scenes.game),
         callback: function(scene) {
             // Called on initialization of this scene.
             scene.addPlayers(players.initialize());
@@ -31,13 +31,12 @@ function main() {
     director.addScene(gameSceneObject);
 
     var gameOverScene = new scenes.CutScene(director, config.scenes.game_over);
-    /*
     director.addScene({
         scene: gameOverScene
     });
-    */
 
-    director.start(gameSceneObject);
+    director.start(titleScene);
+    //director.start(gameSceneObject);
     return;
 }
 

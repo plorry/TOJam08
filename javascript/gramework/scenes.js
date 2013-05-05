@@ -17,7 +17,7 @@ var MapManager = require('./maps').MapManager;
 
 //Scene Class
 
-var Scene = exports.Scene = function(director, sceneConfig) {
+var BaseScene = exports.BaseScene = function(director, sceneConfig) {
     this.director = director;
     this.display = this.director.display;
 
@@ -37,12 +37,24 @@ var Scene = exports.Scene = function(director, sceneConfig) {
     return this;
 };
 
-Scene.prototype.initScene = function(sceneConfig) {
-    var that = this;
-
+BaseScene.prototype.initScene = function(sceneConfig) {
     this.width = sceneConfig.width || 1024;
     this.height = sceneConfig.height || 500;
     this.scale = sceneConfig.scale || 1;
+};
+
+var GameScene = exports.GameScene = function(director, sceneConfig) {
+    GameScene.superConstructor.apply(this, arguments);
+    return this;
+};
+objects.extend(GameScene, BaseScene);
+
+GameScene.prototype.initScene = function(sceneConfig) {
+    gamejs.log(sceneConfig);
+    BaseScene.prototype.initScene.apply(this, arguments);
+
+    var that = this;
+
     this.buttons = new gamejs.sprite.Group();
     this.gates = new gamejs.sprite.Group();
     this.lights = new gamejs.sprite.Group();
@@ -75,6 +87,7 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.view_size = [this.width, this.height]; 
     this.view = new gamejs.Surface(this.view_size);
     if (this.image) {
+        gamejs.log("Adding image", this.image);
         this.view.blit(this.image);
     }
 
@@ -89,7 +102,7 @@ Scene.prototype.initScene = function(sceneConfig) {
 
 // TODO: This may be better suited inside the map module, and it'll be part of
 // its draw command.
-Scene.prototype.mapActors = function(map) {
+GameScene.prototype.mapActors = function(map) {
     for (var i = 0; i < map.getTiles().sprites().length; i++) {
         var tile = map.getTiles().sprites()[i];
         var tile_opts = {
@@ -150,47 +163,47 @@ Scene.prototype.mapActors = function(map) {
     }
 };
 
-Scene.prototype.addActors = function(actors) {
+GameScene.prototype.addActors = function(actors) {
     this.actors.add(actors);
     return;
 };
 
-Scene.prototype.addPlayers = function(players) {
+GameScene.prototype.addPlayers = function(players) {
     this.players.push.apply(this.players, players);
     this.actors.add(players);
     return;
 };
 
-Scene.prototype.addProps = function(props) {
+GameScene.prototype.addProps = function(props) {
     this.props.add(props);
     return;
 };
 
-Scene.prototype.addUI = function(ui) {
+GameScene.prototype.addUI = function(ui) {
     this.ui.add(ui);
     return;
 };
 
-Scene.prototype.addScores = function(scores) {
+GameScene.prototype.addScores = function(scores) {
     this.scores = scores;
     return;
 };
 
-Scene.prototype.isFrozen = function() {
+GameScene.prototype.isFrozen = function() {
     return this._frozen;
 };
 
-Scene.prototype.freeze = function() {
+GameScene.prototype.freeze = function() {
     this._frozen = true;
     return;
 };
 
-Scene.prototype.unFreeze = function() {
+GameScene.prototype.unFreeze = function() {
     this._frozen = false;
     return;
 };
 
-Scene.prototype.draw = function(display) {
+GameScene.prototype.draw = function(display) {
     this.view.blit(this.background);
 
     this.props.draw(this.view);
@@ -208,11 +221,10 @@ Scene.prototype.draw = function(display) {
     return;
 };
 
-Scene.prototype.handleEvent = function(event) {
+GameScene.prototype.handleEvent = function(event) {
     if (this.inDilemna) {
         var player = this.inDilemna;
         if (event.type == gamejs.event.KEY_DOWN) {
-            gamejs.log("Hitting a key", event.key, player.controlMapping.up);
             if (event.key === player.controlMapping.up) {
                 this.handleDilemna('quiet');
             } else if (event.key === player.controlMapping.down) {
@@ -222,8 +234,8 @@ Scene.prototype.handleEvent = function(event) {
     }
 
     this.actors.forEach(function(actor) {
-        actor.handleEvent(event);
-    });
+            actor.handleEvent(event);
+            });
 
     if (event.type == gamejs.event.KEY_UP) {
         if (event.key === gamejs.event.K_SPACE) {
@@ -237,7 +249,7 @@ Scene.prototype.handleEvent = function(event) {
     return;
 };
 
-Scene.prototype.followPlayer = function(index) {
+GameScene.prototype.followPlayer = function(index) {
     var focused = this.players[this.focusedPlayer];
     this.camera.follow([focused.rect.center[0], focused.rect.center[1]]);
 };
@@ -247,24 +259,163 @@ var order = function(a,b) {
 };
 
 // Show the dilemna for the passed player.
-Scene.prototype.showDilemna = function(player) {
+GameScene.prototype.showDilemna = function(player) {
     gamejs.log("showDilemna");
     // Get all lose messages.
     var loseMessages = [];
     this.ui.forEach(function(ui) {
-        if (ui.isLoseMessage) { loseMessages.push(ui); }
-    });
+            if (ui.isLoseMessage) { loseMessages.push(ui); }
+            });
 
     loseMessages.forEach(function(ui, index) {
-        if (index == player.playerNumber) {
+            if (index == player.playerNumber) {
             ui.active = true;
-        }
-    });
+            }
+            });
     this.inDilemna = player;
     this.freeze();
 };
 
-Scene.prototype.handleDilemna = function(choice) {
+GameScene.prototype.update = function(msDuration) { 
+    var that = this;
+    if (!this.isFrozen()){
+        //step the physics
+        if (this.physics) {
+            this.physics.step(msDuration / 1000);
+        }
+
+        // Check if any player is in a dilemna.
+        this.players.forEach(function(player) {
+                if (player.isDilemna) {
+                that.showDilemna(player);
+                }
+                });
+
+        // Update actors
+        var props = this.props;
+        this.actors.forEach(function(actor){
+                actor.update(msDuration, function() {
+                    if (actor.currentMap) {
+                    actor.updateCollisions(actor.currentMap.getTiles());
+                    }
+                    actor.updateCollisions(props);
+                    });
+                });
+
+        this.followPlayer(this.focusedPlayer);
+
+        // Update props
+        this.props.forEach(function(prop){
+                if (prop.isRobFord) {
+                var highestTime = 0;
+                var targetPlayer = null;
+                that.players.forEach(function(player){
+                    if (player.isBeingHunted && player.targetSetTime > highestTime) {
+                    highestTime = player.targetSetTime;
+                    targetPlayer = player;
+                    }
+                    });
+                if (targetPlayer) prop.setTarget(targetPlayer);
+                }
+                prop.update(msDuration);
+                });
+
+        this.ui.forEach(function(element){
+                element.update(msDuration);
+                });
+
+        this.scores.forEach(function(player, index) {
+                player.update(msDuration, that.players[index].playerScore);
+                });
+
+        // TODO: !!! Button collisions. We should move this into the Button module.
+        var gates = this.gates;
+        var buttons = this.buttons;
+        var lights = this.lights;
+        var buttonCollisions = gamejs.sprite.groupCollide(this.actors, buttons);
+
+        // For each collision, reduce it down to only ones that the collision is
+        // happening with the center collision.
+        var buttonCollisions = _.reduce(buttonCollisions, function(result, collision) {
+                var actor = collision.a;
+                var button = collision.b;
+
+                var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
+                if (centerCollision) {
+                result.push(collision);
+                }
+                return result;
+                }, []);
+
+
+        var wallState = this.wallState;
+        buttonCollisions.forEach(function(collision) {
+                var actor = collision.a;
+                var button = collision.b;
+                // For each collision, let's check that
+                if (button.canToggle) {
+                button.canToggle = false;
+
+                if (wallState == 0) {
+                wallState = 1;
+                } else {
+                wallState = 0;
+                }
+                gates.forEach(function(gate) {
+                    gate.setState(wallState);
+                    });
+                buttons.forEach(function(button){
+                    button.setState(wallState);
+                    });
+                lights.forEach(function(light){
+                    light.setState(wallState);
+                    });
+                }
+        });
+
+        this.wallState = wallState;
+
+        // Reset any buttons the player is not currently colliding with.
+        var actors = this.actors;
+        this.buttons.forEach(function(button) {
+                if (gamejs.sprite.spriteCollide(button, actors).length === 0){
+                button.canToggle = true;
+                }
+                });
+
+        for (var i=0; i < this.triggers.length; i++){
+            var trigger = this.triggers[i];
+            if (trigger.condition(this)) {
+                trigger.activate();
+            }
+            if (trigger.isActive()){
+                trigger.update(msDuration, this);
+            }
+            if (trigger.killCondition(this) && trigger.isActive()) {
+                trigger.killEvent(this);
+                trigger.deactivate();
+                this.triggers.splice(i,1);
+            }
+        }     
+    }
+
+    this.camera.update(msDuration);
+
+    // Cheap hack to only update elapsed during the game
+    if (this.players.length > 0) {
+        this.elapsed += msDuration;
+        if (this.elapsed > 2000) {
+            this.director.nextScene();
+        }
+    }
+    return;
+};
+
+var order = function(a,b) {
+    return a.rect.top-b.rect.top;
+};
+
+GameScene.prototype.handleDilemna = function(choice) {
     var player = this.inDilemna;
     player.isDilemna = false;
 
@@ -290,151 +441,44 @@ Scene.prototype.handleDilemna = function(choice) {
     this.unFreeze();
 };
 
-Scene.prototype.update = function(msDuration) { 
-    var that = this;
-    if (!this.isFrozen()){
-        //step the physics
-        if (this.physics) {
-            this.physics.step(msDuration / 1000);
-        }
-
-        // Check if any player is in a dilemna.
-        this.players.forEach(function(player) {
-            if (player.isDilemna) {
-                that.showDilemna(player);
-            }
-        });
-
-        // Update actors
-        var props = this.props;
-        this.actors.forEach(function(actor){
-            actor.update(msDuration, function() {
-                if (actor.currentMap) {
-                    actor.updateCollisions(actor.currentMap.getTiles());
-                }
-                actor.updateCollisions(props);
-            });
-        });
-
-        this.followPlayer(this.focusedPlayer);
-
-        // Update props
-        this.props.forEach(function(prop){
-            if (prop.isRobFord) {
-                var highestTime = 0;
-                var targetPlayer = null;
-                that.players.forEach(function(player){
-                    if (player.isBeingHunted && player.targetSetTime > highestTime) {
-                        highestTime = player.targetSetTime;
-                        targetPlayer = player;
-                    }
-                });
-                if (targetPlayer) prop.setTarget(targetPlayer);
-            }
-            prop.update(msDuration);
-        });
-
-        this.ui.forEach(function(element){
-            element.update(msDuration);
-        });
-
-        this.scores.forEach(function(player, index) {
-            player.update(msDuration, that.players[index].playerScore);
-        });
-
-        // TODO: !!! Button collisions. We should move this into the Button module.
-        var gates = this.gates;
-        var buttons = this.buttons;
-        var lights = this.lights;
-        var buttonCollisions = gamejs.sprite.groupCollide(this.actors, buttons);
-
-        // For each collision, reduce it down to only ones that the collision is
-        // happening with the center collision.
-        var buttonCollisions = _.reduce(buttonCollisions, function(result, collision) {
-            var actor = collision.a;
-            var button = collision.b;
-
-            var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
-            if (centerCollision) {
-                result.push(collision);
-            }
-            return result;
-        }, []);
-
-
-        var wallState = this.wallState;
-        buttonCollisions.forEach(function(collision) {
-            var actor = collision.a;
-            var button = collision.b;
-            // For each collision, let's check that
-            if (button.canToggle) {
-                button.canToggle = false;
-
-                if (wallState == 0) {
-                    wallState = 1;
-                } else {
-                    wallState = 0;
-                }
-                gates.forEach(function(gate) {
-                    gate.setState(wallState);
-                });
-                buttons.forEach(function(button){
-                    button.setState(wallState);
-                });
-                lights.forEach(function(light){
-                    light.setState(wallState);
-                });
-            }
-        });
-
-        this.wallState = wallState;
-
-        // Reset any buttons the player is not currently colliding with.
-        var actors = this.actors;
-        this.buttons.forEach(function(button) {
-            if (gamejs.sprite.spriteCollide(button, actors).length === 0){
-                button.canToggle = true;
-            }
-        });
-
-        for (var i=0; i < this.triggers.length; i++){
-            var trigger = this.triggers[i];
-            if (trigger.condition(this)) {
-                trigger.activate();
-            }
-            if (trigger.isActive()){
-                trigger.update(msDuration, this);
-            }
-            if (trigger.killCondition(this) && trigger.isActive()) {
-                trigger.killEvent(this);
-                trigger.deactivate();
-                this.triggers.splice(i,1);
-            }
-        }     
-    }
-
-    this.camera.update(msDuration);
-
-    // Cheap hack to only update elapsed during the game
-    if (this.players.length > 0) {
-        this.elapsed += msDuration;
-        if (this.elapsed > 2000) {
-            //this.director.nextScene();
-        }
-    }
-    return;
-};
-
 var CutScene = exports.CutScene = function(options) {
     CutScene.superConstructor.apply(this, arguments);
     return this;
 };
-objects.extend(CutScene, Scene);
+objects.extend(CutScene, BaseScene);
+
+CutScene.prototype.initScene = function(sceneConfig) {
+    BaseScene.prototype.initScene.apply(this, arguments);
+
+    if (sceneConfig.image) {
+        this.image = gamejs.image.load(sceneConfig.image);
+        this.image_size = this.image.getSize();
+    }
+
+    this.view_size = [this.width, this.height]; 
+    this.view = new gamejs.Surface(this.view_size);
+    if (this.image) {
+        this.view.blit(this.image);
+    }
+
+    this.background = new gamejs.Surface(this.view_size);
+    this.background.blit(this.view);
+    return;
+};
+
 
 CutScene.prototype.handleEvent = function(event) {
     if (event.type == gamejs.event.KEY_DOWN) {
         this.director.nextScene();
     }
+};
+
+CutScene.prototype.update = function(msDuration) {
+    // no-op
+};
+
+CutScene.prototype.draw = function(display) {
+    this.view.blit(this.background);
 };
 
 var Trigger = exports.Trigger = function(options) {
