@@ -186,10 +186,10 @@ var Map = exports.Map = function(options) {
     // provided by gamejs), and return a LayerView that we can deal with.
     var layerViews = map.layers.map(function(layer) {
         return new LayerView(self, layer, {
-            tileWidth: map.tileWidth * 2,
-            tileHeight: map.tileHeight * 2,
-            width: map.width * 2,
-            height: map.height * 2,
+            tileWidth: map.tileWidth,
+            tileHeight: map.tileHeight,
+            width: map.width,
+            height: map.height,
             tiles: map.tiles
         });
     });
@@ -221,8 +221,8 @@ var LayerView = function(map, layer, opts) {
 
             if (tileSurface) {
                 var tilePos = [
-                    (j * opts.tileWidth) + map.controller.offset[0] * 2, 
-                    (i * opts.tileHeight) + map.controller.offset[1] * 2
+                    (j * opts.tileWidth) + map.controller.offset[0], 
+                    (i * opts.tileHeight) + map.controller.offset[1]
                 ];
                 var tileRect = new gamejs.Rect(
                   tilePos,

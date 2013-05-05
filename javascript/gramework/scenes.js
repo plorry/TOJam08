@@ -51,8 +51,8 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.maps = sceneConfig.maps || [];
 
     this.camera = new Camera(this, {
-        width: this.width,
-        height: this.height
+        width: 640,
+        height: 480
     });
 
     if (sceneConfig.physics) {
@@ -80,6 +80,8 @@ Scene.prototype.initScene = function(sceneConfig) {
         map.draw(that.view);
         that.mapActors(map);
     });
+    this.background = new gamejs.Surface(this.view_size);
+    this.background.blit(this.view);
 
     //testing to make sure targeting works
     return;
@@ -180,9 +182,9 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-    //this.view.clear();
-    //this.props.draw(this.view);
-    //this.actors.draw(this.view);
+    this.view.blit(this.background);
+    this.props.draw(this.view);
+    this.actors.draw(this.view);
 
     var screen = this.camera.draw();
     this.ui.draw(screen);
@@ -210,7 +212,7 @@ Scene.prototype.handleEvent = function(event) {
     // Don't use === or this will break gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
         if (event.key === gamejs.event.K_SPACE) {
-            //this.camera.panTo(500,500);
+            this.camera.panto([500,500]);
         }
     }
     if (event.type == gamejs.event.KEY_UP) {
@@ -247,11 +249,7 @@ Scene.prototype.update = function(msDuration) {
 
         // Update props
         this.props.forEach(function(prop){
-            if (prop.doMove) {
-                var newActor = prop.update(msDuration);
-            } else {
-                prop.update(msDuration);
-            }
+            prop.update(msDuration);
         });
 
         this.ui.forEach(function(element){

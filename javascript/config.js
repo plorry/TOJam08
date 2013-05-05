@@ -8,7 +8,7 @@ exports.PHYSICS_DEBUG = true;
 
 var STATIC_PATH = exports.STATIC_PATH = './static/';
 
-var SCALE = exports.SCALE = 2;
+var SCALE = exports.SCALE = 1;
 
 // BG Images
 var BG_TEST = STATIC_PATH + 'backgrounds/test.jpg';
