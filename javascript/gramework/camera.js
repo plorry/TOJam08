@@ -9,7 +9,7 @@ var Camera = exports.Camera = function(scene, options) {
 	this.dest = null;
 	this.xSpeed = 0;
 	this.ySpeed = 0;
-	this.zoom = 1;
+	this.zoom = 2;
 	this.zoom_multiplier = 1;
 	this.targetZoom = null;
 	this.sharp = options.sharp || true;

@@ -1,7 +1,7 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 640;
-var HEIGHT = exports.HEIGHT = 480;
+var WIDTH = exports.WIDTH = 1280;
+var HEIGHT = exports.HEIGHT = 512;
 
 exports.DEBUG = true; //false;
 exports.PHYSICS_DEBUG = true;
@@ -44,7 +44,7 @@ exports.RESOURCES = [
 // Setup the size of the camera. Width and height will be multiplied based
 // on the scene dimensions.
 var cameraConfig = {
-    width: 0.5,
+    width: 1,
     height: 1
 }
 
@@ -56,7 +56,7 @@ exports.scenes = {
         image: BG_ROFO
     },
     'game': {
-        'width': 1524,
+        'width': 1280,
         'height': 768,
         'scale': SCALE,
         'image': BG_TEST,

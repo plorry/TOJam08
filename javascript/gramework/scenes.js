@@ -199,7 +199,9 @@ Scene.prototype.draw = function(display) {
     //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
     
     display.blit(screen);
-    
+    this.ui.draw(display);
+
+
     return;
 };
 
@@ -208,18 +210,20 @@ Scene.prototype.handleEvent = function(event) {
         actor.handleEvent(event);
     });
 
-    // Sometimes event.type is a string due to a keyboard event shim used by
-    // the gamepad module, so we have to be less strict with comparison here.
-    // Don't use === or this will break gamepad support!
+
     if (event.type == gamejs.event.KEY_DOWN) {
 
     }
     if (event.type == gamejs.event.KEY_UP) {
         if (event.key === gamejs.event.K_SPACE) {
-            this.camera.zoomTo(1);
         }
     }
     return;
+};
+
+Scene.prototype.followPlayer = function(index) {
+    var focused = this.players[this.focusedPlayer];
+    this.camera.follow([focused.rect.center[0], focused.rect.center[1]]);
 };
 
 var order = function(a,b) {
