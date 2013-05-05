@@ -127,7 +127,7 @@ Scene.prototype.mapActors = function(map) {
         if (tile.properties.collectible === true) {
             tile_opts['spriteSheet'] = [config.light_img, {height:32, width:32}];
             tile_opts['animations'] = {'red': [0], 'green': [1]};
-            tile_opts['startingAnimation'] = 'red'
+            tile_opts['startingAnimation'] = 'red';
             tile_opts['tile'] = tile;
             var collectible = new Collectible(tile_opts);
             this.addProps([collectible]);
@@ -306,6 +306,7 @@ Scene.prototype.update = function(msDuration) {
                 });
             }
         });
+
         this.wallState = wallState;
 
         // Reset any buttons the player is not currently colliding with.
@@ -330,6 +331,34 @@ Scene.prototype.update = function(msDuration) {
                 this.triggers.splice(i,1);
             }
         }
+
+        //light collisions...
+        var lightCollisions = _.reduce(lightCollisions, function(result, collision) {
+            var actor = collision.a;
+            var light = collision.b;
+
+            var centerCollision = actor.realRect.collideRect(button.centerCollisionRect);
+            if (centerCollision) {
+                result.push(collision);
+            }
+            return result;
+        }, []);
+
+        lightCollisions.forEach(function(collision) {
+            var actor = collision.a;
+            var light = collision.b;
+            console.log("Hit a light!");
+            //if the actor is a player
+            if (actor instanceof FourDirection) {
+                console.log("List of Props: "+props);
+                this.props.forEach(function(prop){
+                    if (prop.setTarget) {
+                        log("Setting target of ")
+                        prop.setTarget(actor);
+                    }
+                };                
+            }
+        });        
     }
 
     this.camera.update(msDuration);

@@ -67,8 +67,8 @@ var smokeCloud = {
 Enemy.prototype.doMove = function(targetX, targetY) {
     var xDelta;
     var yDelta;
-    targetX = targetX - (this.width);
-    targetY = targetY - (this.height);
+    targetX = targetX - (this.width*2);
+    targetY = targetY - (this.height*2);
 
     if ((Math.abs(this.realRect.left - targetX) > 1) && (Math.abs(this.realRect.top - targetX) > 1)) {
 
