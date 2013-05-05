@@ -22,6 +22,20 @@ Player.prototype.doCollisions = function(collisions) {
 
 };
 
+// Set the players position and all related rects to a specified point.
+Player.prototype.setPlayerPosition = function(x, y) {
+    gamejs.log("setPlayerPosition", x, y);
+    this.realRect.left = x;
+    this.realRect.top = y;
+}
+
+Player.prototype.spawnAtMapOrigin = function() {
+    var initialSpawn = this.currentMap.getTileCenter(
+        this.currentMap.spawnPlayers[0]
+    );
+    this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
+};
+
 var Player1 = {
     x: 48,
     y: 48,
