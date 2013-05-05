@@ -93,19 +93,10 @@ Actor.prototype.init = function(options) {
     return;
 };
 
-// Set the players position and all related rects to a specified point.
-Actor.prototype.setPlayerPosition = function(x, y) {
-    gamejs.log("setPlayerPosition", x, y);
-    this.realRect.left = x;
-    this.realRect.top = y;
-}
 
 // Spawn at the current maps origin.
 Actor.prototype.spawnAtMapOrigin = function() {
-    var initialSpawn = this.currentMap.getTileCenter(
-        this.currentMap.spawnPlayers[0]
-    );
-    this.setPlayerPosition(initialSpawn[0], initialSpawn[1]);
+    return;
 };
 
 Actor.prototype.update = function(msDuration) {
