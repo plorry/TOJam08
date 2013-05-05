@@ -316,8 +316,8 @@ FourDirection.prototype.draw = function(display) {
 };
 
 FourDirection.prototype.handleEvent = function(event) {
+    // Don't use === or breaks gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
-        gamejs.log("Move player", event);
         if (event.key == this.controlMapping['down']) {
             this.movingDown = true;
         }
@@ -332,7 +332,6 @@ FourDirection.prototype.handleEvent = function(event) {
         }
     }
     if (event.type == gamejs.event.KEY_UP) {
-        gamejs.log("Stop moving player", event);
         if (event.key == this.controlMapping['down']) {
             this.movingDown = false;
         }
