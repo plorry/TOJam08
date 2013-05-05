@@ -258,10 +258,6 @@ Scene.prototype.update = function(msDuration) {
             player.update(msDuration, that.players[index].playerScore);
         });
 
-        if (this.players) {
-            this.camera.follow(this.players[0].rect.center[0], this.players[0].rect.center[1]);
-        }
-
         // TODO: !!! Button collisions. We should move this into the Button module.
         var gates = this.gates;
         var buttons = this.buttons;
