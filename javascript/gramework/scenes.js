@@ -133,7 +133,7 @@ Scene.prototype.mapActors = function(map) {
         }
 
         if (tile.properties.collectible === true) {
-            tile_opts['spriteSheet'] = [config.light_img, {height:32, width:32}];
+            tile_opts['spriteSheet'] = [config.spray_can, {height:32, width:32}];
             tile_opts['animations'] = {'red': [0], 'green': [1]};
             tile_opts['startingAnimation'] = 'red'
             tile_opts['tile'] = tile;
