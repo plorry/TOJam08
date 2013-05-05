@@ -112,7 +112,13 @@ var Player1 = {
         x: 48,
         y: 48,
         map: 0
-    }
+    },
+    controlMapping: {
+        down: gamejs.event.K_s,
+        left: gamejs.event.K_a,
+        right: gamejs.event.K_d,
+        up: gamejs.event.K_w
+    },
 };
 
 var Player2 = {
@@ -124,10 +130,10 @@ var Player2 = {
         config.player_img, {width:24, height:24}
     ],
     controlMapping: {
-        down: gamejs.event.K_k,
-        left: gamejs.event.K_j,
-        right: gamejs.event.K_l,
-        up: gamejs.event.K_i
+        down: gamejs.event.K_DOWN,
+        left: gamejs.event.K_LEFT,
+        right: gamejs.event.K_RIGHT,
+        up: gamejs.event.K_UP
     },
     animations: {'static':[0,1]},
     // Have a default start point if the map provides nothing.
