@@ -249,7 +249,6 @@ Scene.prototype.update = function(msDuration) {
         this.props.forEach(function(prop){
             if (prop.doMove) {
                 var newActor = prop.update(msDuration);
-                console.log(newActor);
             } else {
                 prop.update(msDuration);
             }
