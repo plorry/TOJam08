@@ -193,7 +193,7 @@ Scene.prototype.draw = function(display) {
     this.props.draw(this.view);
     this.actors.draw(this.view);
 
-    this.ui.draw(this.view);
+    //this.ui.draw(this.view);
 
     var view = this.view;
     this.scores.forEach(function(player) {
@@ -202,6 +202,7 @@ Scene.prototype.draw = function(display) {
 
     var screen = this.camera.draw();
     display.blit(screen);
+    this.ui.draw(display);
 
     return;
 };
@@ -230,7 +231,7 @@ Scene.prototype.handleEvent = function(event) {
 
 Scene.prototype.followPlayer = function(index) {
     var focused = this.players[this.focusedPlayer];
-    this.camera.follow([focused.rect.left, focused.rect.top]);
+    this.camera.follow([focused.rect.center[0], focused.rect.center[1]]);
 };
 
 var order = function(a,b) {
