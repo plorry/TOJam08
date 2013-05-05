@@ -129,6 +129,26 @@
     <property name="draw" value="true"/>
    </properties>
   </tile>
+  <tile id="10">
+   <properties>
+    <property name="draw" value="true"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="draw" value="true"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="draw" value="true"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="draw" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Draw Layer" width="20" height="20">
   <data encoding="base64">
