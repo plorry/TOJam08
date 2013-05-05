@@ -8,7 +8,8 @@ var Joint = require('./physics').Joint;
 
 var Actor = require('./actors').Actor,
     Button = require('./actors').Button,
-    Gate = require('./actors').Gate;
+    Gate = require('./actors').Gate,
+    Light = require('./actors').Light;
 var MapManager = require('./maps').MapManager;
 
 //Scene Class
@@ -42,6 +43,7 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.scale = sceneConfig.scale || 1;
     this.buttons = new gamejs.sprite.Group();
     this.gates = new gamejs.sprite.Group();
+    this.lights = new gamejs.sprite.Group();
     this.wallState = 0;
 
     this.camera = new Camera(this, {
@@ -95,6 +97,16 @@ Scene.prototype.mapActors = function(map) {
             var button = new Button(tile_opts);
             this.addProps([button]);
             this.buttons.add(button);
+        }
+        if (tile.properties.class == 'light') {
+            tile_opts['spriteSheet'] = [config.light_img, {height:32, width:32}];
+            tile_opts['animations'] = {'red':[0], 'green':[1]};
+            tile_opts['type'] = tile.properties.type;
+            console.log(tile.properties.type);
+            tile_opts['startingAnimation'] = 'red';
+            var light = new Light(tile_opts);
+            this.addProps([light]);
+            this.lights.add(light);
         }
         if (tile.properties.class == 'gate') {
             tile_opts['spriteSheet'] = [config.gate_img, {height:32, width:32}];
@@ -155,22 +167,22 @@ Scene.prototype.draw = function(display) {
 };
 
 Scene.prototype.handleEvent = function(event) {
-	
-	this.actors.forEach(function(actor) {
-		actor.handleEvent(event);
-	});
+    
+    this.actors.forEach(function(actor) {
+        actor.handleEvent(event);
+    });
 
-	if (event.type === gamejs.event.KEY_DOWN) {
-		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(0.5);
-		}
-	}
-	if (event.type === gamejs.event.KEY_UP) {
-		if (event.key === gamejs.event.K_SPACE) {
-			this.camera.zoomTo(1);
-		}
-	}
-	return;
+    if (event.type === gamejs.event.KEY_DOWN) {
+        if (event.key === gamejs.event.K_SPACE) {
+            this.camera.zoomTo(0.5);
+        }
+    }
+    if (event.type === gamejs.event.KEY_UP) {
+        if (event.key === gamejs.event.K_SPACE) {
+            this.camera.zoomTo(1);
+        }
+    }
+    return;
 };
 
 var order = function(a,b) {
@@ -206,23 +218,27 @@ Scene.prototype.update = function(msDuration) {
         var buttonCollisions = gamejs.sprite.groupCollide(this.actors, this.buttons);
         var gates = this.gates;
         var buttons = this.buttons;
+        var lights = this.lights;
         buttonCollisions.forEach(function(collision) {
-        	var actor = collision.a;
-        	var button = collision.b;
-        	if (button.canToggle) {
-        		button.canToggle = false;
-        		if (this.wallState == 0) {
-        			this.wallState = 1;
-        		} else {
-        			this.wallState = 0;
-        		}
-        		gates.forEach(function(gate) {
-        			gate.setState(this.wallState);
-        		});
-        		buttons.forEach(function(button){
-        			button.setState(this.wallState);
-        		});
-        	}
+            var actor = collision.a;
+            var button = collision.b;
+            if (button.canToggle) {
+                button.canToggle = false;
+                if (this.wallState == 0) {
+                    this.wallState = 1;
+                } else {
+                    this.wallState = 0;
+                }
+                gates.forEach(function(gate) {
+                    gate.setState(this.wallState);
+                });
+                buttons.forEach(function(button){
+                    button.setState(this.wallState);
+                });
+                lights.forEach(function(light){
+                    light.setState(this.wallState);
+                });
+            }
         });
         var actors = this.actors;
         this.buttons.forEach(function(button) {
