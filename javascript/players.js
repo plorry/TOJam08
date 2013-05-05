@@ -72,7 +72,6 @@ Player.prototype.triggerDilemna = function(robFord) {
     // Time out for a bit before trigger.
     window.setTimeout(function() {
         that.isDilemna = true;
-
         // Reset Robbie.
         robFord.setPosition(robFord.startX, robFord.startY);
     }, 500);
@@ -97,9 +96,11 @@ Player.prototype.updateScore = function(number) {
 };
 
 Player.prototype.collectItem = function(item) {
-    item.kill();
-    this.updateScore(item.modifier);
-    gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
+    if(item.animation.currentAnimation == 'red') {
+        item.animation.start('green');
+        this.updateScore(item.modifier);
+        gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
+    }
 };
 
 // Set the players position and all related rects to a specified point.
