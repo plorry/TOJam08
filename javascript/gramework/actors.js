@@ -164,7 +164,7 @@ FourDirection.prototype.init = function(options) {
 
     //Define rectangles to detect collisions on each side
     this.collisionTop = new gamejs.Rect(
-        [this.rect.left + 2, this.rect.top - 4],
+        [this.rect.left + 2, this.rect.top + 4],
         [this.rect.width - 4, 4]);
     this.collisionLeft = new gamejs.Rect(
         [this.rect.left - 4, this.rect.top + 2],
