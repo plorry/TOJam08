@@ -60,6 +60,7 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
     }
     this.tiles.add(tile);
 
+    // TODO: This can probably be killed. Make sure "switch" is not used.
     _.each(tile.properties, function(value, key) {
       switch(key) {
         case "obstacle":
