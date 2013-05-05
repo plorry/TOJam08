@@ -9,6 +9,7 @@ var Joint = require('./physics').Joint;
 var Actor = require('./actors').Actor,
     Button = require('./actors').Button,
     Gate = require('./actors').Gate,
+    Collectible = require('./actors').Collectible,
     Light = require('./actors').Light;
 var MapManager = require('./maps').MapManager;
 
@@ -118,6 +119,15 @@ Scene.prototype.mapActors = function(map) {
             this.addProps([light]);
             this.lights.add(light);
         }
+
+        if (tile.properties.collectible === true) {
+            tile_opts['spriteSheet'] = [config.light_img, {height:32, width:32}];
+            tile_opts['animations'] = {'red': [0], 'green': [1]};
+            tile_opts['startingAnimation'] = 'red'
+            tile_opts['tile'] = tile;
+            var collectible = new Collectible(tile_opts);
+            this.addProps([collectible]);
+        }
     }
 };
 
@@ -207,7 +217,6 @@ Scene.prototype.update = function(msDuration) {
 
         // Update actors
         var props = this.props;
-
         this.actors.forEach(function(actor){
             actor.update(msDuration, function() {
                 actor.updateCollisions(actor.currentMap.getTiles());

@@ -351,6 +351,19 @@ FourDirection.prototype.handleEvent = function(event) {
     return;
 };
 
+var Collectible = exports.Collectible = function(options) {
+    Collectible.superConstructor.apply(this, arguments);
+    this.collectible = true;
+    if (options.tile && options.tile.properties) {
+        this.modifier = options.tile.properties.modifier || 0;
+        if (this.modifier === 0) {
+            gamejs.log("Collectible has a modifier of 0, you sure?", this);
+        }
+    }
+    return this;
+};
+objects.extend(Collectible, Actor);
+
 var Button = exports.Button = function(options) {
     Button.superConstructor.apply(this, arguments);
     //toggle state
