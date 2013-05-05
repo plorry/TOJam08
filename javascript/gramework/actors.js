@@ -35,7 +35,7 @@ var Actor = exports.Actor = function(options) {
 objects.extend(Actor, Sprite);
 
 Actor.prototype.init = function(options) {
-    this.scale = options.scale || 1;
+    this.scale = options.scale || 2;
     this.x = options.x;
     this.y = options.y;
     this.height = options.height;
@@ -75,7 +75,9 @@ Actor.prototype.init = function(options) {
     }
     this.physics = options.physics || null;
 
-    this.spawnAtMapOrigin();
+    if (this.currentMap) {
+        this.spawnAtMapOrigin();
+    }
 
     if (this.physics) {
         this.angle = options.angle * (Math.PI / 180) || 0;

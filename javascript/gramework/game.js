@@ -6,6 +6,8 @@ exports.Director = function() {
 	var currentScene = null;
     var gamejsKey = null;
     var gamepad = false;
+    var directorScenes = [];
+    var directorCallbacks = [];
 
     var display = this.display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE], gamejs.display.DISABLE_SMOOTHING);
 
@@ -74,19 +76,44 @@ exports.Director = function() {
 		return;
 	}
 
-	this.start = function(scene) {
-		onAir = true;
-		this.replaceScene(scene);
-		return;
-	};
+    this.start = function(scene) {
+        onAir = true;
+        this.replaceScene(scene);
+        return;
+    };
 
-	this.replaceScene = function(scene) {
+    this.replaceScene = function(scene) {
         currentScene = scene;
     };
 
     this.getScene = function() {
         return currentScene;
     };
+
+    this.addScene = function(scene, callback) {
+        directorScenes.push(scene);
+        directorCallbacks.push(callback)
+    }
+    
+    this.nextScene = function() {
+        // Find the current scene in our array, and move to the next if
+        // possible.
+        var index = 0;
+        directorScenes.forEach(function(scene) {
+            if (scene !== currentScene) {
+                index ++;
+            }
+        });
+
+        if (directorScenes.length < index) {
+            gamejs.log("No next scene. Add something?");
+        } else {
+            this.replaceScene(directorScenes[index]);
+            if (directorCallbacks[index]) {
+                directorCallbacks[index]();
+            }
+        }
+    }
 
     //var display = gamejs.display.setMode([config.WIDTH * config.SCALE, config.HEIGHT * config.SCALE]);
 	if (config.DEBUG) {

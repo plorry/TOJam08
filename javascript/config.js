@@ -1,7 +1,7 @@
 var gamejs = require('gamejs');
 
-var WIDTH = exports.WIDTH = 1524;
-var HEIGHT = exports.HEIGHT = 768;
+var WIDTH = exports.WIDTH = 640;
+var HEIGHT = exports.HEIGHT = 480;
 
 exports.DEBUG = true; //false;
 exports.PHYSICS_DEBUG = true;
@@ -12,6 +12,7 @@ var SCALE = exports.SCALE = 2;
 
 // BG Images
 var BG_TEST = STATIC_PATH + 'backgrounds/test.jpg';
+var BG_ROFO = STATIC_PATH + 'backgrounds/rofo.jpg';
 var MAP_TILES = STATIC_PATH + 'backgrounds/test_tiles.png';
 var DRAW_TILES = STATIC_PATH + 'backgrounds/draw_tiles.png';
 var player_img = exports.player_img = STATIC_PATH + 'sprites/bike.png';
@@ -26,6 +27,7 @@ var aud_bike_lanes = exports.aud_bike_lanes = STATIC_PATH + 'sounds/bike_lanes.o
 //Add every resource variable to this array, please
 exports.RESOURCES = [
     BG_TEST,
+    BG_ROFO,
     MAP_TILES,
     player_img,
     player2_img,
@@ -39,6 +41,12 @@ exports.RESOURCES = [
 
 exports.scenes = {
     'title': {
+        width: 1524,
+        height: 768,
+        scale: SCALE,
+        image: BG_ROFO
+    },
+    'game': {
         'width': 1524,
         'height': 768,
         'scale': SCALE,

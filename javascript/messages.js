@@ -23,7 +23,7 @@ var Player1Lose = {
     margin: 4,
     pos: 'top left',
     background: "#000",
-    active: false,
+    active: true,
     text: [
         'Got you! Tell me where your',
         'friend is for lenience!',
@@ -38,7 +38,7 @@ var Player2Lose = {
     margin: 4,
     pos: 'top right',
     background: "#000",
-    active: false,
+    active: true,
     text: [
         'Got you! Tell me where your',
         'friend is for lenience!',
