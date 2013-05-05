@@ -25,6 +25,9 @@ var spray_can = exports.spray_can = STATIC_PATH + 'sprites/spray.png';
 var goatpole = exports.goatpole = STATIC_PATH + 'sprites/goatonpole.png';
 var GAME_OVER = exports.GAME_OVER = STATIC_PATH + 'backgrounds/ford_wins.png';
 var gotcha = exports.gotcha = STATIC_PATH + 'backgrounds/gotya.png';
+var win = exports.win = STATIC_PATH + 'backgrounds/win.png';
+var title_screen = exports.title_screen = STATIC_PATH + 'backgrounds/title.png';
+var intro = exports.intro = STATIC_PATH + 'backgrounds/intro.png';
 
 var music_main = exports.music_main = STATIC_PATH + 'sounds/beat.ogg';
 var aud_spray = exports.aud_spray = STATIC_PATH + 'sounds/e_selected.ogg';
@@ -50,7 +53,10 @@ exports.RESOURCES = [
     gotcha,
     aud_roads,
     aud_spray,
-    music_main
+    music_main,
+    title_screen,
+    win,
+    intro
 ];
 
 // Setup the size of the camera. Width and height will be multiplied based
@@ -62,10 +68,16 @@ var cameraConfig = {
 
 exports.scenes = {
     'title': {
-        width: 1524,
-        height: 768,
+        width: 1280,
+        height: 512,
         scale: SCALE,
-        image: BG_ROFO
+        image: title_screen
+    },
+    'intro': {
+        width: 1280,
+        height: 512,
+        scale: SCALE,
+        image: intro
     },
     'game_over': {
         width: 1280,
