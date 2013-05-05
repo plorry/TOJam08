@@ -80,6 +80,8 @@ Scene.prototype.initScene = function(sceneConfig) {
         map.draw(that.view);
         that.mapActors(map);
     });
+    this.background = new gamejs.Surface(this.view_size);
+    this.background.blit(this.view);
 
     //testing to make sure targeting works
     return;
@@ -125,7 +127,7 @@ Scene.prototype.mapActors = function(map) {
         }
 
         if (tile.properties.collectible === true) {
-            tile_opts['spriteSheet'] = [config.light_img, {height:32, width:32}];
+            tile_opts['spriteSheet'] = [config.spray_can, {height:32, width:32}];
             tile_opts['animations'] = {'red': [0], 'green': [1]};
             tile_opts['startingAnimation'] = 'red';
             tile_opts['tile'] = tile;
@@ -180,9 +182,10 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-    //this.view.clear();
-    //this.props.draw(this.view);
-    //this.actors.draw(this.view);
+    this.view.blit(this.background);
+
+    this.props.draw(this.view);
+    this.actors.draw(this.view);
 
     var screen = this.camera.draw();
     this.ui.draw(screen);
@@ -209,9 +212,7 @@ Scene.prototype.handleEvent = function(event) {
     // the gamepad module, so we have to be less strict with comparison here.
     // Don't use === or this will break gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
-        if (event.key === gamejs.event.K_SPACE) {
-            //this.camera.panTo(500,500);
-        }
+
     }
     if (event.type == gamejs.event.KEY_UP) {
         if (event.key === gamejs.event.K_SPACE) {
@@ -247,11 +248,7 @@ Scene.prototype.update = function(msDuration) {
 
         // Update props
         this.props.forEach(function(prop){
-            if (prop.doMove) {
-                var newActor = prop.update(msDuration);
-            } else {
-                prop.update(msDuration);
-            }
+            prop.update(msDuration);
         });
 
         this.ui.forEach(function(element){

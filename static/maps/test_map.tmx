@@ -4,7 +4,7 @@
   <image source="../backgrounds/test_tiles.png" width="352" height="32"/>
   <tile id="0">
    <properties>
-    <property name="draw" value="true"/>
+    <property name="" value=""/>
     <property name="obstacle" value="true"/>
     <property name="ref" value="wall"/>
    </properties>

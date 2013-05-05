@@ -8,7 +8,7 @@ exports.PHYSICS_DEBUG = true;
 
 var STATIC_PATH = exports.STATIC_PATH = './static/';
 
-var SCALE = exports.SCALE = 2;
+var SCALE = exports.SCALE = 1;
 
 // BG Images
 var BG_TEST = STATIC_PATH + 'backgrounds/test.jpg';
@@ -21,6 +21,7 @@ var button_img = exports.button_img = STATIC_PATH + 'sprites/test.png';
 var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 var light_img = exports.light_img = STATIC_PATH + 'sprites/lights.png';
 var ford_img = exports.ford_img = STATIC_PATH + 'sprites/suv.png';
+var spray_can = exports.spray_can = STATIC_PATH + 'sprites/spray.png';
 
 var aud_bike_lanes = exports.aud_bike_lanes = STATIC_PATH + 'sounds/bike_lanes.ogg';
 
@@ -36,7 +37,8 @@ exports.RESOURCES = [
     light_img,
     ford_img,
     aud_bike_lanes,
-    DRAW_TILES
+    DRAW_TILES,
+    spray_can
 ];
 
 // Setup the size of the camera. Width and height will be multiplied based

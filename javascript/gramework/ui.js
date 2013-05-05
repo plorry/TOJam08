@@ -9,9 +9,9 @@ var Element = exports.Element = function(options) {
     if (options.animation){
         this.animation = new Animation(options.spriteSheet, options.animation, 12) || null;
     }
-    this.size = [options.size[0] * 2, options.size[1] * 2] || [10,10];
+    this.size = options.size || [10,10];
     this.spriteSheet = options.spriteSheet || null;
-    this.margin = options.margin * 2 || 0;
+    this.margin = options.margin  || 0;
     this.active = options.active || false;
     if (this.spriteSheet) {
         this.size[0] = this.spriteSheet.width;
@@ -22,7 +22,7 @@ var Element = exports.Element = function(options) {
     } else if (typeof options.pos == "string") {
         this.pos = [];
         if (options.pos.match('bottom')) {
-            this.pos[1] = config.HEIGHT * 2 - this.size[1] - this.margin;
+            this.pos[1] = config.HEIGHT - this.size[1] - this.margin;
         }
         if (options.pos.match('top')) {
             this.pos[1] = this.margin;
@@ -31,7 +31,7 @@ var Element = exports.Element = function(options) {
             this.pos[0] = this.margin;
         }
         if (options.pos.match('right')) {
-            this.pos[0] = config.WIDTH * 2 - this.size[0] - this.margin;
+            this.pos[0] = config.WIDTH - this.size[0] - this.margin;
         }
         if (options.pos.match('center')) {
             this.pos[0] = (config.WIDTH) - (this.size[0] / 2);
@@ -85,7 +85,7 @@ var TextArea = exports.TextArea = function(options) {
     this.textSurface = new gamejs.Surface(this.rect);
     this.currentChar = 1;
     this.counter = 0;
-    this.lineHeight = options.lineHeight * 2 || 10;
+    this.lineHeight = options.lineHeight || 10;
     
     return this;
 };
