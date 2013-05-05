@@ -3,7 +3,9 @@
 
 - [x] screeching tires
 
-- [ ] picking something up
+- [x] picking something up
 
-- [ ] menu select sound
+- [x] menu select up down
+
+- [x] menu select final
 
