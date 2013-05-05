@@ -22,6 +22,7 @@ var gate_img = exports.gate_img = STATIC_PATH + 'sprites/gate.png';
 var light_img = exports.light_img = STATIC_PATH + 'sprites/lights.png';
 var ford_img = exports.ford_img = STATIC_PATH + 'sprites/suv.png';
 var spray_can = exports.spray_can = STATIC_PATH + 'sprites/spray.png';
+var GAME_OVER = exports.GAME_OVER = STATIC_PATH + 'backgrounds/ford_wins.png';
 
 var aud_bike_lanes = exports.aud_bike_lanes = STATIC_PATH + 'sounds/bike_lanes.ogg';
 
@@ -38,7 +39,8 @@ exports.RESOURCES = [
     ford_img,
     aud_bike_lanes,
     DRAW_TILES,
-    spray_can
+    spray_can,
+    GAME_OVER
 ];
 
 // Setup the size of the camera. Width and height will be multiplied based
@@ -54,6 +56,12 @@ exports.scenes = {
         height: 768,
         scale: SCALE,
         image: BG_ROFO
+    },
+    'game_over': {
+        width: 1280,
+        height: 768,
+        scale: SCALE,
+        image: GAME_OVER
     },
     'game': {
         'width': 1280,
