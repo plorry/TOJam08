@@ -316,31 +316,32 @@ FourDirection.prototype.draw = function(display) {
 };
 
 FourDirection.prototype.handleEvent = function(event) {
-    if (event.type === gamejs.event.KEY_DOWN) {
-        if (event.key === this.controlMapping['down']) {
+    // Don't use === or breaks gamepad support!
+    if (event.type == gamejs.event.KEY_DOWN) {
+        if (event.key == this.controlMapping['down']) {
             this.movingDown = true;
         }
-        if (event.key === this.controlMapping['up']) {
+        if (event.key == this.controlMapping['up']) {
             this.movingUp = true;
         }
-        if (event.key === this.controlMapping['left']) {
+        if (event.key == this.controlMapping['left']) {
             this.movingLeft = true;
         }
-        if (event.key === this.controlMapping['right']) {
+        if (event.key == this.controlMapping['right']) {
             this.movingRight = true;
         }
     }
-    if (event.type === gamejs.event.KEY_UP) {
-        if (event.key === this.controlMapping['down']) {
+    if (event.type == gamejs.event.KEY_UP) {
+        if (event.key == this.controlMapping['down']) {
             this.movingDown = false;
         }
-        if (event.key === this.controlMapping['up']) {
+        if (event.key == this.controlMapping['up']) {
             this.movingUp = false;
         }
-        if (event.key === this.controlMapping['left']) {
+        if (event.key == this.controlMapping['left']) {
             this.movingLeft = false;
         }
-        if (event.key === this.controlMapping['right']) {
+        if (event.key == this.controlMapping['right']) {
             this.movingRight = false;
         }
     }
