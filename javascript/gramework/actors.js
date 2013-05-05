@@ -165,16 +165,16 @@ FourDirection.prototype.init = function(options) {
     //Define rectangles to detect collisions on each side
     this.collisionTop = new gamejs.Rect(
         [this.rect.left + 2, this.rect.top + 4],
-        [this.rect.width - 4, 4]);
+        [this.rect.width - 8, 4]);
     this.collisionLeft = new gamejs.Rect(
-        [this.rect.left - 4, this.rect.top + 2],
-        [4, this.rect.height - 4]);
+        [this.rect.left - 8, this.rect.top + 2],
+        [4, this.rect.height - 8]);
     this.collisionRight = new gamejs.Rect(
         [this.rect.right, this.rect.top + 2],
-        [4, this.rect.height - 4]);
+        [4, this.rect.height - 8]);
     this.collisionBottom = new gamejs.Rect(
         [this.rect.left + 2, this.rect.bottom],
-        [this.rect.width - 4, 4]);
+        [this.rect.width - 8, 4]);
 
     this.collisionRects = [
         {key: 'bottom', rect: this.collisionBottom},
@@ -233,14 +233,14 @@ FourDirection.prototype.update = function(msDuration, collisionCallback) {
     this.realRect.left += this.xSpeed;
     this.realRect.top += this.ySpeed;
 
-    this.collisionTop.top = this.rect.top - 4;
-    this.collisionTop.left = this.rect.left + 2;
-    this.collisionLeft.left = this.rect.left - 4;
-    this.collisionLeft.top = this.rect.top + 2;
-    this.collisionRight.left = this.rect.right;
-    this.collisionRight.top = this.rect.top + 2;
-    this.collisionBottom.left = this.rect.left + 2;
-    this.collisionBottom.top = this.rect.bottom;
+    this.collisionTop.top = this.rect.top;
+    this.collisionTop.left = this.rect.left + 4;
+    this.collisionLeft.left = this.rect.left;
+    this.collisionLeft.top = this.rect.top + 4;
+    this.collisionRight.left = this.rect.right - 4;
+    this.collisionRight.top = this.rect.top + 4;
+    this.collisionBottom.left = this.rect.left + 4;
+    this.collisionBottom.top = this.rect.bottom - 4;
 
     Actor.prototype.update.apply(this, arguments);
     return;
