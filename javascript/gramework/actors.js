@@ -395,7 +395,7 @@ var Gate = exports.Gate = function(options) {
 objects.extend(Gate, Actor);
 
 Gate.prototype.setState = function(wallState) {
-    if ((this.type == 0 && wallState == 0) || (this.type == 1 && wallState == 1) ) {
+    if ((this.type == 0 && wallState == 0) || (this.type == 1 && wallState == 1)) {
         this.block = true;
     } else if ((this.type == 0 && wallState == 1) || (this.type == 1 && wallState == 0)) {
         this.block = false;
@@ -409,6 +409,33 @@ Gate.prototype.update = function(msDuration) {
         this.animation.start('closed');
     } else if (!this.block && this.animation.currentAnimation == 'closed') {
         this.animation.start('open');
+    }
+    return;
+};
+
+var Light = exports.Light = function(options) {
+    Light.superConstructor.apply(this, arguments);
+    this.type = options.type || 0;
+    this.green = true;
+    return;
+};
+objects.extend(Light, Actor);
+
+Light.prototype.setState = function(wallState) {
+    if ((this.type == 0 && wallState == 0) || (this.type == 1 && wallState == 1)) {
+        this.green = true;
+    } else if ((this.type == 0 && wallState == 1) || (this.type == 1 && wallState == 0)) {
+        this.green = false;
+    }
+    return;
+};
+
+Light.prototype.update = function(msDuration) {
+    Actor.prototype.update.apply(this, arguments);
+    if (this.green && this.animation.currentAnimation == 'green') {
+        this.animation.start('red');
+    } else if (!this.green && this.animation.currentAnimation == 'red') {
+        this.animation.start('green');
     }
     return;
 };

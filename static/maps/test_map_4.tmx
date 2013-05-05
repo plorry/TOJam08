@@ -39,6 +39,18 @@
     <property name="teleportPlayer" value="next"/>
    </properties>
   </tile>
+  <tile id="6">
+   <properties>
+    <property name="class" value="light"/>
+    <property name="type" value="0"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="class" value="light"/>
+    <property name="type" value="1"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Primary Layer" width="20" height="20">
   <data encoding="base64">
