@@ -57,7 +57,6 @@ Scene.prototype.initScene = function(sceneConfig) {
     });
     this.focusedPlayer = 0;
     this.inDilemna = null;
-
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
     }
@@ -204,8 +203,6 @@ Scene.prototype.draw = function(display) {
         player.draw(screen);
     });
 
-    var size = screen.getSize();
-
     display.blit(screen);
     this.ui.draw(display);
     return;
@@ -295,7 +292,6 @@ Scene.prototype.handleDilemna = function(choice) {
 
 Scene.prototype.update = function(msDuration) { 
     var that = this;
-
     if (!this.isFrozen()){
         //step the physics
         if (this.physics) {
@@ -418,7 +414,14 @@ Scene.prototype.update = function(msDuration) {
     }
 
     this.camera.update(msDuration);
-    this.elapsed += msDuration;
+
+    // Cheap hack to only update elapsed during the game
+    if (this.players.length > 0) {
+        this.elapsed += msDuration;
+        if (this.elapsed > 2000) {
+            //this.director.nextScene();
+        }
+    }
     return;
 };
 

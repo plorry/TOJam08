@@ -74,8 +74,8 @@ Player.prototype.triggerDilemna = function(robFord) {
         that.isDilemna = true;
         // Reset Robbie.
         robFord.setPosition(robFord.startX, robFord.startY);
+        robFord.setTarget(null);
     }, 500);
-
 };
 
 Player.prototype.triggerRedLight = function(light) {

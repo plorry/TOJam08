@@ -10,13 +10,12 @@ var messages = require('./messages');
 var enemy = require('./enemy');
 
 function main() {
-
     var director = new Director();
 
-    var titleScene = new scenes.CutScene(director, config.scenes.title);
-    director.addScene({
-        scene: titleScene
-    });
+    var titleScene = {
+        scene: new scenes.CutScene(director, config.scenes.title)
+    };
+    //director.addScene(titleScene);
 
     var gameSceneObject = {
         scene: new scenes.Scene(director, config.scenes.game),
@@ -32,9 +31,11 @@ function main() {
     director.addScene(gameSceneObject);
 
     var gameOverScene = new scenes.CutScene(director, config.scenes.game_over);
+    /*
     director.addScene({
         scene: gameOverScene
     });
+    */
 
     director.start(gameSceneObject);
     return;
