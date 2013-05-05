@@ -356,6 +356,9 @@ var Button = exports.Button = function(options) {
     //toggle state
     this.state = 0;
     this.canToggle = true;
+
+    // A smaller collision rect so buttons are activated when we hit the center,
+    // rather than when we touch the edges.
     this.centerCollisionRect = new gamejs.Rect(
         [this.rect.left, this.rect.top],
         [
@@ -389,7 +392,14 @@ Button.prototype.update = function(msDuration) {
 var Gate = exports.Gate = function(options) {
     Gate.superConstructor.apply(this, arguments);
     this.type = options.type || 0;
-    this.block = true;
+
+    // On initialization, we block based on the type. When `type` is 0, the door
+    // starts off closed.
+    this.block = false;
+    if (options.type === 0) {
+        this.block = true;
+    }
+
     return this;
 };
 objects.extend(Gate, Actor);

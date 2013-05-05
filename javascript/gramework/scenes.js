@@ -247,28 +247,32 @@ Scene.prototype.update = function(msDuration) {
             return result;
         }, []);
 
+
+        var wallState = this.wallState;
         buttonCollisions.forEach(function(collision) {
             var actor = collision.a;
             var button = collision.b;
             // For each collision, let's check that
             if (button.canToggle) {
                 button.canToggle = false;
-                if (this.wallState == 0) {
-                    this.wallState = 1;
+
+                if (wallState == 0) {
+                    wallState = 1;
                 } else {
-                    this.wallState = 0;
+                    wallState = 0;
                 }
                 gates.forEach(function(gate) {
-                    gate.setState(this.wallState);
+                    gate.setState(wallState);
                 });
                 buttons.forEach(function(button){
-                    button.setState(this.wallState);
+                    button.setState(wallState);
                 });
                 lights.forEach(function(light){
-                    light.setState(this.wallState);
+                    light.setState(wallState);
                 });
             }
         });
+        this.wallState = wallState;
 
         // Reset any buttons the player is not currently colliding with.
         var actors = this.actors;
