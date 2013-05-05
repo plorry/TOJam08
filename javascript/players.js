@@ -19,12 +19,12 @@ Player.prototype.doCollisions = function(collisions) {
         // to know what route we should take
         if (obj instanceof Tile) {
             var tile = obj;
-            if (tile.block === true) {
-                actor._hitWall(tile, key);
-            }
-
             if (tile.properties && tile.properties.teleportPlayer) {
                 actor.doTeleport(tile);
+            }
+
+            if (tile.properties && tile.properties.obstacle) {
+                actor._hitWall(tile, key);
             }
         } else {
             // Colliding with an actor of some sorts.
@@ -33,6 +33,9 @@ Player.prototype.doCollisions = function(collisions) {
             }
             if (obj.green === false) {
                 actor.targetCounter = 1000;
+            }
+            if (obj.block === true) {
+                actor._hitWall(obj, key);
             }
         }
     });
