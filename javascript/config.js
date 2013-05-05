@@ -1,7 +1,7 @@
 var gamejs = require('gamejs');
 
 var WIDTH = exports.WIDTH = 1280;
-var HEIGHT = exports.HEIGHT = 512;
+var HEIGHT = exports.HEIGHT = 1000;
 
 exports.DEBUG = false;
 exports.PHYSICS_DEBUG = true;
@@ -73,7 +73,7 @@ exports.scenes = {
     },
     'game': {
         'width': 1280,
-        'height': 768,
+        'height': 1000,
         'scale': SCALE,
         'image': BG_TEST,
         camera: {
