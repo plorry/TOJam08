@@ -210,7 +210,7 @@ Scene.prototype.handleEvent = function(event) {
     // Don't use === or this will break gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
         if (event.key === gamejs.event.K_SPACE) {
-            this.camera.zoomTo(0.5);
+            //this.camera.panTo(500,500);
         }
     }
     if (event.type == gamejs.event.KEY_UP) {
