@@ -79,6 +79,17 @@ exports.Director = function() {
     this.start = function(scene) {
         onAir = true;
         this.replaceScene(scene);
+        // If we have a callback for call it immediately. It's the first scene
+        var index = 0;
+        directorScenes.forEach(function(scene) {
+            if (scene !== currentScene) {
+                index ++;
+            }
+        });
+
+        if (directorCallbacks[index]) {
+            directorCallbacks[index]();
+        }
         return;
     };
 

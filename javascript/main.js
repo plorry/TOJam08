@@ -25,7 +25,7 @@ function main() {
         gameScene.addUI(messages.initialize());
     });
 
-    director.start(titleScene);
+    director.start(gameScene); // titleScene);
     return;
 }
 
