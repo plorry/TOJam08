@@ -1,32 +1,52 @@
 var gamejs = require('gamejs'),
         FourDirection = require('./gramework/actors').FourDirection,
         objects = require('gamejs/utils/objects'),
-        config = require('./config');
+        config = require('./config'),
+        Tile = require('./gramework/maps').Tile;
 
 var Player = function(options) {
     Player.superConstructor.apply(this, arguments);
     this.isTarget = false;
     this.targetCounter = 0;
-    this.score = 0;
+    this.playerScore = 0;
 };
 objects.extend(Player, FourDirection);
 
 Player.prototype.doCollisions = function(collisions) {
     var actor = this;
-    _.each(collisions, function(tile, key) {
-        if (tile.block === true) {
-            actor._hitWall(tile, key);
-        }
+    _.each(collisions, function(obj, key) {
+        // We can be colliding with a tile or a prop object. Do a simple check
+        // to know what route we should take
+        if (obj instanceof Tile) {
+            var tile = obj;
+            if (tile.block === true) {
+                actor._hitWall(tile, key);
+            }
 
-        if (tile.properties && tile.properties.teleportPlayer) {
-            actor.doTeleport(tile);
-        }
-
-        if (tile.properties && tile.green === false) {
-            actor.targetCounter = 1000;
+            if (tile.properties && tile.properties.teleportPlayer) {
+                actor.doTeleport(tile);
+            }
+        } else {
+            // Colliding with an actor of some sorts.
+            if (obj.collectible) {
+                actor.collectItem(obj);
+            }
+            if (obj.green === false) {
+                actor.targetCounter = 1000;
+            }
         }
     });
 
+};
+
+Player.prototype.updateScore = function(number) {
+    this.playerScore += number;
+};
+
+Player.prototype.collectItem = function(item) {
+    item.kill();
+    this.updateScore(item.modifier);
+    gamejs.log("Collected an item, add " + item.modifier + " to score. Total Score: " + this.playerScore);
 };
 
 // Set the players position and all related rects to a specified point.

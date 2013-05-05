@@ -135,6 +135,6 @@ objects.extend(Score, TextArea);
 Score.prototype.update = function(msDuration, value) {
     TextArea.prototype.update(this, arguments);
     var scoreString = value.toString();
-    this.currentText = ("00000000" + scoreString).substring(8 - scoreString.length, 8);
+    this.text = [("00000000" + scoreString).substring(scoreString.length)];
     return;
 };

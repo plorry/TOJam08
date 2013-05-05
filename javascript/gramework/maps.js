@@ -80,7 +80,7 @@ TileMapModel.prototype.push = function(tile, tilePos, i, j) {
 };
 
 // Loads the Map at `url` and holds all layers.
-var Tile = function(rect, properties) {
+var Tile = exports.Tile = function(rect, properties) {
     Tile.superConstructor.apply(this, arguments);
 
     this.rect = rect;
