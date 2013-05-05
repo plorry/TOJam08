@@ -26,6 +26,7 @@ var goatpole = exports.goatpole = STATIC_PATH + 'sprites/goatonpole.png';
 var GAME_OVER = exports.GAME_OVER = STATIC_PATH + 'backgrounds/ford_wins.png';
 var gotcha = exports.gotcha = STATIC_PATH + 'backgrounds/gotya.png';
 
+var music_main = exports.music_main = STATIC_PATH + 'sounds/beat.ogg';
 var aud_spray = exports.aud_spray = STATIC_PATH + 'sounds/e_selected.ogg';
 var aud_roads = exports.aud_roads = STATIC_PATH + 'sounds/roads.ogg';
 var aud_bike_lanes = exports.aud_bike_lanes = STATIC_PATH + 'sounds/bike_lanes.ogg';
@@ -48,7 +49,8 @@ exports.RESOURCES = [
     GAME_OVER,
     gotcha,
     aud_roads,
-    aud_spray
+    aud_spray,
+    music_main
 ];
 
 // Setup the size of the camera. Width and height will be multiplied based

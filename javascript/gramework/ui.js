@@ -36,10 +36,10 @@ var Element = exports.Element = function(options) {
             this.pos[0] = config.WIDTH - this.size[0] - this.margin;
         }
         if (options.pos.match('center')) {
-            this.pos[0] = (config.WIDTH) - (this.size[0] / 2);
+            this.pos[0] = (config.WIDTH / 2) - (this.size[0] / 2);
         }
         if (options.pos.match('middle')) {
-            this.pos[1] = (config.HEIGHT) - (this.size[1] / 2);
+            this.pos[1] = (config.HEIGHT / 2) - (this.size[1] / 2);
         }
     }
     this.rect = new gamejs.Rect(this.pos, this.size);
