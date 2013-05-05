@@ -50,10 +50,16 @@ Scene.prototype.initScene = function(sceneConfig) {
     this.players = [];
     this.maps = sceneConfig.maps || [];
 
-    this.camera = new Camera(this, {
+    var cameraConfig = {
         width: this.width,
         height: this.height
-    });
+    }
+    if (sceneConfig.camera && sceneConfig.camera.config) {
+        cameraConfig.width *= sceneConfig.camera.config.width;
+        cameraConfig.height *= sceneConfig.camera.config.height;
+    }
+    this.camera = new Camera(this, cameraConfig);
+    this.focusedPlayer = 0;
 
     if (sceneConfig.physics) {
         this.physics = new Physics(document.getElementById("gjs-canvas"));
@@ -180,23 +186,20 @@ Scene.prototype.unFreeze = function() {
 };
 
 Scene.prototype.draw = function(display) {
-    //this.view.clear();
-    //this.props.draw(this.view);
-    //this.actors.draw(this.view);
+    this.view.clear();
+    this.props.draw(this.view);
+    this.actors.draw(this.view);
+
+    this.ui.draw(this.view);
+
+    var view = this.view;
+    this.scores.forEach(function(player) {
+        player.draw(view);
+    });
 
     var screen = this.camera.draw();
-    this.ui.draw(screen);
-
-    this.scores.forEach(function(player) {
-        player.draw(screen);
-    });
-    
-    var size = screen.getSize();
-    
-    //var scaledScreen = gamejs.transform.scale(screen, [size[0] * this.scale, size[1] * this.scale]);
-    
     display.blit(screen);
-    
+
     return;
 };
 
@@ -209,13 +212,17 @@ Scene.prototype.handleEvent = function(event) {
     // the gamepad module, so we have to be less strict with comparison here.
     // Don't use === or this will break gamepad support!
     if (event.type == gamejs.event.KEY_DOWN) {
-        if (event.key === gamejs.event.K_SPACE) {
-            //this.camera.panTo(500,500);
-        }
+        // no op
     }
     if (event.type == gamejs.event.KEY_UP) {
-        if (event.key === gamejs.event.K_SPACE) {
-            this.camera.zoomTo(1);
+        if (event.key == gamejs.event.K_SPACE) {
+            if (this.focusedPlayer === 0) {
+                this.focusedPlayer = 1;
+            } else {
+                this.focusedPlayer = 0;
+            }
+            var focused = this.players[this.focusedPlayer];
+            this.camera.follow([focused.rect.left, focused.rect.top]);
         }
     }
     return;
