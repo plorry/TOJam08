@@ -72,6 +72,8 @@ Player.prototype.triggerDilemna = function(robFord) {
     var that = this;
 
     this.isBeingHunted = false;
+    robFord.setPosition(robFord.startX, robFord.startY);
+    sounds.playsound(config.aud_roads);
 
     // Time out for a bit before trigger.
     window.setTimeout(function() {
