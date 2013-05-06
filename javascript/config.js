@@ -27,7 +27,7 @@ var GAME_OVER = exports.GAME_OVER = STATIC_PATH + 'backgrounds/ford_wins.png';
 var gotcha = exports.gotcha = STATIC_PATH + 'backgrounds/gotya.png';
 var win = exports.win = STATIC_PATH + 'backgrounds/win.png';
 var title_screen = exports.title_screen = STATIC_PATH + 'backgrounds/title.png';
-var intro = exports.intro = STATIC_PATH + 'backgrounds/intro.png';
+var intro = exports.intro = STATIC_PATH + 'backgrounds/ford_angry.png';
 
 var music_main = exports.music_main = STATIC_PATH + 'sounds/beat.ogg';
 var aud_spray = exports.aud_spray = STATIC_PATH + 'sounds/e_selected.ogg';

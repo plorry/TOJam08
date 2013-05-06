@@ -72,6 +72,8 @@ Player.prototype.triggerDilemna = function(robFord) {
     var that = this;
 
     this.isBeingHunted = false;
+    robFord.setPosition(robFord.startX, robFord.startY);
+    sounds.playsound(config.aud_roads);
 
     // Time out for a bit before trigger.
     window.setTimeout(function() {
@@ -86,7 +88,7 @@ Player.prototype.triggerRedLight = function(light) {
 
     if (this.realRect.collideRect(light.centerCollisionRect)) {
         this.isBeingHunted = true;
-        if (this.targetCounter == 0) {
+        if (this.targetCounter < 950) {
             sounds.playsound(config.aud_bike_lanes);
         }
         this.targetCounter = 1000;
